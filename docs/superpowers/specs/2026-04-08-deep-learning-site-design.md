@@ -114,25 +114,25 @@ study-hub/
 ### Fase 0 — Scaffolding e infrastruttura
 > Preparare tutto il necessario per poi lavorare capitolo per capitolo
 
-- [ ] Inizializzare progetto Astro con MDX, KaTeX, Pagefind
-- [ ] Creare CourseLayout.astro e ChapterLayout.astro (sidebar + TOC + prev/next)
-- [ ] Creare CourseCard.astro per la homepage
-- [ ] Configurare Content Collections multi-corso (schema con _meta.json per corso)
-- [ ] Creare homepage (index.astro) con lista corsi
-- [ ] Creare pagina overview corso ([course]/index.astro)
-- [ ] Creare routing dinamico capitoli ([course]/[slug].astro)
-- [ ] Creare script di migrazione: markdown Notion -> MDX puliti (fix nomi, path immagini, frontmatter)
-- [ ] Migrare immagini in public/images/deep-learning/ organizzate per capitolo
-- [ ] Verificare: sito funzionante con 1 capitolo di test, navigazione e ricerca attivi
+- [x] Inizializzare progetto Astro con MDX, KaTeX, Pagefind
+- [x] Creare CourseLayout.astro e ChapterLayout.astro (sidebar + TOC + prev/next)
+- [x] Creare CourseCard.astro per la homepage
+- [x] Configurare Content Collections multi-corso (schema con _meta.json per corso)
+- [x] Creare homepage (index.astro) con lista corsi
+- [x] Creare pagina overview corso ([course]/index.astro)
+- [x] Creare routing dinamico capitoli ([course]/[slug].astro)
+- [x] Creare script di migrazione: markdown Notion -> MDX puliti (fix nomi, path immagini, frontmatter)
+- [x] Migrare immagini in public/images/deep-learning/ organizzate per capitolo
+- [x] Verificare: sito funzionante con tutti i capitoli, navigazione e ricerca attivi
 
-**Stato**: `DA FARE`
+**Stato**: `COMPLETATA`
 
 ---
 
 ### Fase 1 — Primi 5 capitoli (fondamenti)
 > I capitoli fondamentali delle architetture neurali
 
-Per ogni capitolo: migrazione contenuto, fix formule LaTeX, verifica immagini, diagrammi con visual-explainer dove utile.
+Per ogni capitolo: revisione contenuto, fix formule LaTeX, verifica immagini, diagrammi con visual-explainer dove utile.
 
 - [ ] 01 — Deep Neural Networks
 - [ ] 02 — Convolutional Neural Networks
@@ -187,4 +187,8 @@ Per ogni capitolo: migrazione contenuto, fix formule LaTeX, verifica immagini, d
 
 ## Note e problemi aperti
 
-_Nessuno per ora._
+- Contenuti migrati as-is da Notion; le fasi 1-3 servono per revisione e rifinitura di ogni capitolo
+- Sorgenti Notion originali rimossi dal repo dopo migrazione (2026-04-08)
+- Package manager: pnpm
+- Tailwind CSS v4 (via @tailwindcss/vite, non @astrojs/tailwind)
+- Astro v6 Content Layer API con render() standalone
