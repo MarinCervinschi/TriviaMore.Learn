@@ -1,0 +1,43 @@
+---
+import ChapterLayout from '../../layouts/ChapterLayout.astro';
+import { getCollection, render } from 'astro:content';
+import { getCourseMeta, getSlugFromId } from '../../utils/courses';
+
+export async function getStaticPaths() {
+  const allChapters = await getCollection('courses');
+  const byCourse = Map.groupBy(allChapters, (ch) => ch.data.course);
+
+  return [...byCourse.entries()].flatMap(([courseSlug, chapters]) => {
+    const sorted = chapters.sort((a, b) => a.data.order - b.data.order);
+    return sorted.map((entry) => ({
+      params: { course: courseSlug, slug: getSlugFromId(entry.id) },
+      props: {
+        entry,
+        chapters: sorted.map((ch) => ({
+          title: ch.data.title,
+          slug: getSlugFromId(ch.id),
+          order: ch.data.order,
+        })),
+      },
+    }));
+  });
+}
+
+const { entry, chapters } = Astro.props;
+const { course: courseSlug } = Astro.params;
+const courseMeta = getCourseMeta(courseSlug);
+const { Content, headings } = await render(entry);
+const currentSlug = getSlugFromId(entry.id);
+---
+
+<ChapterLayout
+  title={entry.data.title}
+  courseTitle={courseMeta.title}
+  courseSlug={courseSlug}
+  chapters={chapters}
+  currentSlug={currentSlug}
+  currentOrder={entry.data.order}
+  headings={headings}
+>
+  <Content />
+</ChapterLayout>

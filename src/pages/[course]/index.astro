@@ -1,0 +1,33 @@
+---
+import CourseLayout from '../../layouts/CourseLayout.astro';
+import { getCollection } from 'astro:content';
+import { getAllCourseMetas } from '../../utils/courses';
+
+export async function getStaticPaths() {
+  const metas = getAllCourseMetas();
+  return metas.map((meta) => ({
+    params: { course: meta.slug },
+    props: { meta },
+  }));
+}
+
+const { meta } = Astro.props;
+const allChapters = await getCollection('courses', (entry) => entry.data.course === meta.slug);
+const sorted = allChapters.sort((a, b) => a.data.order - b.data.order);
+---
+
+<CourseLayout title={meta.title} description={meta.description}>
+  <ol class="space-y-3">
+    {sorted.map((ch) => (
+      <li>
+        <a
+          href={`/${meta.slug}/${ch.id.split('/').pop()}`}
+          class="flex items-center gap-3 px-4 py-3 rounded-lg bg-white border border-slate-200 shadow-sm hover:shadow-md hover:border-slate-300 transition-all duration-200"
+        >
+          <span class="text-sm font-mono text-slate-400">{String(ch.data.order).padStart(2, '0')}</span>
+          <span class="text-sm font-medium text-slate-700">{ch.data.title}</span>
+        </a>
+      </li>
+    ))}
+  </ol>
+</CourseLayout>

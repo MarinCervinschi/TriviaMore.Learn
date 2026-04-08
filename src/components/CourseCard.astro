@@ -1,0 +1,20 @@
+---
+interface Props {
+  title: string;
+  slug: string;
+  description: string;
+  chapters: number;
+}
+
+const { title, slug, description, chapters } = Astro.props;
+---
+
+<a href={`/${slug}/`} class="block group">
+  <article class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm transition-all duration-200 group-hover:shadow-md group-hover:border-slate-300">
+    <h2 class="text-xl font-semibold text-slate-900 group-hover:text-blue-600 transition-colors duration-200">
+      {title}
+    </h2>
+    <p class="mt-2 text-slate-600 text-sm leading-relaxed">{description}</p>
+    <p class="mt-4 text-xs text-slate-400">{chapters} chapters</p>
+  </article>
+</a>

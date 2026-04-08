@@ -1,0 +1,42 @@
+---
+interface Chapter {
+  title: string;
+  slug: string;
+  order: number;
+}
+
+interface Props {
+  chapters: Chapter[];
+  currentSlug: string;
+  courseSlug: string;
+}
+
+const { chapters, currentSlug, courseSlug } = Astro.props;
+const sorted = [...chapters].sort((a, b) => a.order - b.order);
+---
+
+<nav class="sidebar sticky top-20 h-[calc(100vh-5rem)] overflow-y-auto pr-4" aria-label="Chapter navigation">
+  <h2 class="text-sm font-semibold uppercase tracking-wide text-slate-500 mb-4">Chapters</h2>
+  <ol class="space-y-1">
+    {sorted.map((ch) => {
+      const isActive = ch.slug === currentSlug;
+      return (
+        <li>
+          <a
+            href={`/${courseSlug}/${ch.slug}`}
+            class:list={[
+              'block px-3 py-2 rounded-md text-sm transition-colors duration-200',
+              isActive
+                ? 'bg-blue-50 text-blue-600 font-medium'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50',
+            ]}
+            aria-current={isActive ? 'page' : undefined}
+          >
+            <span class="text-slate-400 mr-2">{String(ch.order).padStart(2, '0')}</span>
+            {ch.title}
+          </a>
+        </li>
+      );
+    })}
+  </ol>
+</nav>

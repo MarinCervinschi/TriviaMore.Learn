@@ -1,0 +1,13 @@
+---
+interface Props {
+  type?: 'warning' | 'example' | 'insight' | 'tip' | 'note';
+}
+
+const { type = 'note' } = Astro.props;
+---
+
+<div class={`callout callout-${type}`} role="note">
+  <div class="callout-content">
+    <slot />
+  </div>
+</div>
