@@ -1,0 +1,42 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* Callout styles */
+.callout {
+  border-left: 4px solid;
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.callout-warning {
+  border-color: #f59e0b;
+  background: #fffbeb;
+}
+
+.callout-example {
+  border-color: #3b82f6;
+  background: #eff6ff;
+}
+
+.callout-insight {
+  border-color: #8b5cf6;
+  background: #f5f3ff;
+}
+
+.callout-tip {
+  border-color: #10b981;
+  background: #ecfdf5;
+}
+
+.callout-note {
+  border-color: #6b7280;
+  background: #f9fafb;
+}
+
+/* KaTeX display math overflow */
+.katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.5rem 0;
+}
