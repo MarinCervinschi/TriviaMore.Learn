@@ -27,7 +27,7 @@ const sorted = [...chapters].sort((a, b) => a.order - b.order);
             class:list={[
               'block px-3 py-2 rounded-md text-sm transition-colors duration-200',
               isActive
-                ? 'bg-blue-50 text-blue-600 font-medium'
+                ? 'bg-brand/10 text-brand font-medium'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50',
             ]}
             aria-current={isActive ? 'page' : undefined}

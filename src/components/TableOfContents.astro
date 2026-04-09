@@ -36,9 +36,9 @@ const filtered = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
     (entries) => {
       for (const entry of entries) {
         if (entry.isIntersecting) {
-          document.querySelectorAll('.toc a').forEach((a) => a.classList.remove('text-blue-600', 'font-medium'));
+          document.querySelectorAll('.toc a').forEach((a) => a.classList.remove('text-brand', 'font-medium'));
           const link = document.querySelector(`.toc a[href="#${entry.target.id}"]`);
-          link?.classList.add('text-blue-600', 'font-medium');
+          link?.classList.add('text-brand', 'font-medium');
         }
       }
     },
