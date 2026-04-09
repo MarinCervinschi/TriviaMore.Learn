@@ -1,4 +1,4 @@
-# Study Hub
+# TriviaMore Learn
 
 Static multi-course study site built with Astro, MDX, and Tailwind CSS. First course: **Deep Learning** (15 chapters).
 

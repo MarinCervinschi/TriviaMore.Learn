@@ -31,7 +31,7 @@ Sito statico multi-corso per presentare materiale di studio universitario. Strut
 ## Architettura
 
 ```
-study-hub/
+triviamore-learn/
 ├── astro.config.mjs
 ├── package.json
 ├── src/
