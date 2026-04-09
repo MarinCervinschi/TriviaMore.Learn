@@ -12,6 +12,7 @@
     "@astrojs/mdx": "^5.0.3",
     "astro": "^6.1.5",
     "katex": "^0.16.45",
+    "mermaid": "^11.14.0",
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0"
   },
@@ -23,8 +24,20 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
+      ",",
+      "a",
+      "b",
+      "d",
+      "e",
       "esbuild",
-      "sharp"
+      "h",
+      "i",
+      "l",
+      "p",
+      "r",
+      "s",
+      "sharp",
+      "u"
     ]
   }
 }

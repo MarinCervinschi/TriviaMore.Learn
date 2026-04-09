@@ -117,6 +117,52 @@ const next = currentIndex < sorted.length - 1 ? sorted[currentIndex + 1] : null;
         panel?.classList.toggle('p-6');
         panel?.classList.toggle('overflow-y-auto');
       });
+
+      // Mermaid support
+      import mermaid from 'mermaid';
+      mermaid.initialize({ startOnLoad: false, theme: 'neutral' });
+
+      async function renderMermaid() {
+        const blocks = document.querySelectorAll('pre[data-language="mermaid"]');
+        
+        for (const block of blocks) {
+          if (block.getAttribute('data-rendered')) continue;
+
+          // Shiki splits code into lines. textContent might lose newlines 
+          // if Shiki doesn't include them in the spans.
+          // Let's get it line by line to be safe.
+          const lines = block.querySelectorAll('.line');
+          let code = "";
+          
+          if (lines.length > 0) {
+            code = Array.from(lines).map(line => line.textContent).join('\n');
+          } else {
+            code = block.textContent?.trim() || "";
+          }
+
+          if (!code) continue;
+
+          const id = 'mermaid-' + Math.random().toString(36).substr(2, 9);
+          
+          try {
+            const { svg } = await mermaid.render(id, code);
+            const container = document.createElement('div');
+            container.className = 'mermaid-container my-8 flex justify-center bg-white p-4 rounded-lg shadow-sm border border-slate-100 overflow-x-auto';
+            container.innerHTML = svg;
+            
+            block.setAttribute('data-rendered', 'true');
+            block.replaceWith(container);
+          } catch (e) {
+            console.error('Mermaid render error:', e);
+          }
+        }
+      }
+
+      // Run on initial load
+      renderMermaid();
+
+      // Support for Astro's view transitions (if enabled)
+      document.addEventListener('astro:after-swap', renderMermaid);
     </script>
   </body>
 </html>
