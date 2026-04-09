@@ -28,15 +28,24 @@ We consider a Linear Classifier a **linear function** that maps a $D$-dimensiona
 
 So let’s assume we have a training dataset of **$N$ images**
 
-$x_i \in \mathbb{R}^D, \quad i = 1, \ldots, N$ 
+$$
+
+x_i \in \mathbb{R}^D, \quad i = 1, \ldots, N
+$$
 
 that we want to classify into **$K$ distinct classes**. Thus, the training set is made by couples:
 
-$(x_i, y_i), \quad \text{where } y_i \in {1, \ldots, K}.$ 
+$$
+
+(x_i, y_i), \quad \text{where } y_i \in {1, \ldots, K}.
+$$
 
 Our goal is to define a **function**:
 
-$f : \mathbb{R}^D \to \mathbb{R}^K$
+$$
+
+f : \mathbb{R}^D \to \mathbb{R}^K
+$$
 
 that maps **images** to **class scores**.
 
@@ -46,11 +55,17 @@ Consider the **CIFAR-10 dataset**, which contains $N = 60{,}000$ images of size 
 
 Each image can be represented as a **column vector:**
 
-$x_i \in \mathbb{R}^{32 \times 32 \times 3} = \mathbb{R}^{3072}$
+$$
+
+x_i \in \mathbb{R}^{32 \times 32 \times 3} = \mathbb{R}^{3072}
+$$
 
 We define a **linear mapping** as follows:
 
-$f(x_i, W, b) = W x_i + b$
+$$
+
+f(x_i, W, b) = W x_i + b
+$$
 
 where the parameters are:
 
@@ -59,7 +74,7 @@ where the parameters are:
 
 When a new input image  $x_i^{\text{test}}$ is provided, the model outputs a **vector of scores**, one for each of the 10 classes. The predicted class is the one corresponding to the **highest score**.
 
-![image.png](/images/deep-learning/01-deep-neural-networks/image 1.png)
+![image.png](/images/deep-learning/01-deep-neural-networks/image%201.png)
 
 **Goal:** Learn the parameters $W$ and $b$ from the training data so that, for any new test image, the **score of the correct class** is higher than the scores of all other classes.
 
@@ -71,11 +86,17 @@ The **logistic regression model** is primarily used for **binary classification*
 
 If we add a **sigmoid nonlinearity** to our linear mapping, we get a **logistic regression classifier**:
 
-$f(x_i, W, b) = \sigma(W x_i + b) \quad \text{where} \quad \sigma(x) = \frac{1}{1 + e^{-x}}$
+$$
+
+f(x_i, W, b) = \sigma(W x_i + b) \quad \text{where} \quad \sigma(x) = \frac{1}{1 + e^{-x}}
+$$
 
 This model is trained by minimizing the **binary cross-entropy loss**:
 
-$L(W, b) = -\frac{1}{m} \sum_{i=1}^m \big( y_i \log(f_{x_i}) + (1 - y_i) \log(1 - f_{x_i}) \big)$
+$$
+
+L(W, b) = -\frac{1}{m} \sum_{i=1}^m \big( y_i \log(f_{x_i}) + (1 - y_i) \log(1 - f_{x_i}) \big)
+$$
 
 where:
 
@@ -92,7 +113,10 @@ In this case the label $y_i$ acts as a **selector:**
 
 The **Softmax Classifier** is a generalization of **Logistic Regression** to the **multi-class classification.** In order to map raw class **scores** into interpretable **probabilities**, we apply the **softmax function**, defined as:
 
-$\text{softmax}_j(z) = \frac{e^{z_j}}{\sum_k e^{z_k}}$
+$$
+
+\text{softmax}_j(z) = \frac{e^{z_j}}{\sum_k e^{z_k}}
+$$
 
 Intuitively, for each class $j$ we exponentiate its score $z_j$, then divide it by the sum of the exponentials of all class scores.
 
@@ -108,13 +132,19 @@ So, the softmax function takes a vector of arbitrary real-valued scores $z$ and 
 
 In the **Softmax Classifier**, the outputs of the linear mapping:
 
-$f(x_i, W) = W x_i$
+$$
+
+f(x_i, W) = W x_i
+$$
 
 are interpreted as **unnormalized log probabilities** — often called *logits*.
 
 To train the classifier, we use the **cross-entropy loss**, which measures the distance between the **true output distribution** and the **predicted distribution**:
 
-$L = \sum_i y_i^{\text{true}} \log \big( y_i^{\text{pred}} \big)$
+$$
+
+L = \sum_i y_i^{\text{true}} \log \big( y_i^{\text{pred}} \big)
+$$
 
 where:
 
@@ -127,7 +157,7 @@ where:
 
 Neural networks are a mathematical model **loosely inspired by the structure and function of the human brain**.
 
-![image.png](/images/deep-learning/01-deep-neural-networks/image 2.png)
+![image.png](/images/deep-learning/01-deep-neural-networks/image%202.png)
 
 In the brain, **neurons** are the fundamental computational units. The human nervous system contains approximately **86 billion neurons**, interconnected by roughly $10^{14} - 10^{15}$ **synapses**. Each neuron receives input signals through its **dendrites**, processes these signals in its **cell body (nucleus)**, where synapses **combine the incoming signals** into a single output. If the total signal exceeds a certain **threshold**, the neuron “fires,” sending an output signal along its **axon**, which branches out to connect with dendrites of other neurons.
 
@@ -147,14 +177,17 @@ More formally, we can model a **single neuron** as follows:
     
     The neuron computes a **weighted sum** of its inputs:
     
-    $z = \sum_{i} w_i x_i + b = \mathbf{w} \cdot \mathbf{x} + b$
-    
+    $$
+
+    z = \sum_{i} w_i x_i + b = \mathbf{w} \cdot \mathbf{x} + b
+    $$
+
 3. **Non-linear activation**
     
     The result of the linear combination is then passed through a **non-linear activation function** $f(\cdot)$  to produce the output of the neuron. So, the neuron’s output is the dot product between the inputs and its weights, plus the bias: then, a non-linearity is applied.
     
 
-![image.png](/images/deep-learning/01-deep-neural-networks/image 3.png)
+![image.png](/images/deep-learning/01-deep-neural-networks/image%203.png)
 
 A **single neuron with a sigmoid activation** can naturally implement a **binary classifier**, and applying gradient descent on its loss is equivalent to optimizing a **binary Softmax classifier** (i.e., logistic regression).
 
@@ -167,11 +200,14 @@ A **single neuron with a sigmoid activation** can naturally implement a **binary
     
     The **sigmoid function** is defined as:
     
-    $\sigma(x) = \frac{1}{1 + e^{-x}}$
-    
+    $$
+
+    \sigma(x) = \frac{1}{1 + e^{-x}}
+    $$
+
     It **squashes any real-valued input** into the range $[0, 1]$. While it was widely used in the past, it is now rarely preferred due to two major drawbacks:
     
-    ![image.png](/images/deep-learning/01-deep-neural-networks/image 4.png)
+    ![image.png](/images/deep-learning/01-deep-neural-networks/image%204.png)
     
     1.  **Saturates and kills the gradient**
         - For large positive inputs **`e.g., x > 2.5`** the output approaches 1.
@@ -190,19 +226,25 @@ A **single neuron with a sigmoid activation** can naturally implement a **binary
     
     The **tanh function** can be seen as a **scaled version of the sigmoid**:
     
-    $\tanh(x) = 2 \sigma(x) - 1$
-    
+    $$
+
+    \tanh(x) = 2 \sigma(x) - 1
+    $$
+
     Unlike the sigmoid, which maps inputs to $[0,1]$, **tanh squashes inputs to the range $[-1, 1]$**. This makes the output **zero-centered**, solving one of the main limitations of the sigmoid: when the input is 0, the output is also 0, reducing bias in gradient updates and helping optimization. However, **tanh still suffers from saturation** for large positive or negative inputs. 
     
-    ![image.png](/images/deep-learning/01-deep-neural-networks/image 5.png)
+    ![image.png](/images/deep-learning/01-deep-neural-networks/image%205.png)
     
 - **Relu**
     
     
     **ReLU** stands for **Rectified Linear Unit** and is defined as:
     
-    $f(x) = \max(0, x)$
-    
+    $$
+
+    f(x) = \max(0, x)
+    $$
+
     This activation function is widely used in modern neural networks because it **greatly accelerates the convergence of stochastic gradient descent (SGD)** compared to sigmoid or tanh functions.
     
     The behavior of ReLU is simple:
@@ -216,7 +258,7 @@ ReLU is **non-linear** because the $\max$ operation
 </Callout>
 
     
-    ![image.png](/images/deep-learning/01-deep-neural-networks/image 6.png)
+    ![image.png](/images/deep-learning/01-deep-neural-networks/image%206.png)
     
 
 **Why Non-Linear Activations Are Necessary?**
@@ -225,11 +267,17 @@ The key reason to use **non-linear activation functions** in neural networks is 
 
 For example, consider a two-layer network with non-linear activations $\phi$ :
 
-$f(x) = \phi(W_2 , \phi(W_1 x))$
+$$
+
+f(x) = \phi(W_2 , \phi(W_1 x))
+$$
 
 If we **remove the non-linearities**, the function becomes:
 
-$f(x) = W_2 W_1 x = W x \quad \text{where} \quad W = W_2 W_1$ 
+$$
+
+f(x) = W_2 W_1 x = W x \quad \text{where} \quad W = W_2 W_1
+$$
 
 This is just a **linear transformation**, regardless of the number of layers.
 
@@ -243,7 +291,7 @@ Neural networks are **organized in layers**:
 - **Hidden layers (N layers)** perform intermediate computations using non-linear activations.
 - **Output layer** produces the final predictions.
 
-![image.png](/images/deep-learning/01-deep-neural-networks/image 7.png)
+![image.png](/images/deep-learning/01-deep-neural-networks/image%207.png)
 
 The key idea is that the **composition of non-linear functions** performed by the layers allows the network to model **complex, non-linear mappings** from inputs to outputs.
 
@@ -257,7 +305,10 @@ Some of the characteristics of MLP are:
 
 The previously depicted **4-layer neural network** can be expressed compactly as:
 
-$\text{out} = \phi \Big( W_3 , \phi \big( W_2 , \phi(W_1 x) \big) \Big)$
+$$
+
+\text{out} = \phi \Big( W_3 , \phi \big( W_2 , \phi(W_1 x) \big) \Big)
+$$
 
 where:
 
@@ -279,13 +330,16 @@ Forward propagation is the process of computing the network output given its inp
 
 *The formula of forward propagation is the one seen in the previous paragraph.*
 
-![image.png](/images/deep-learning/01-deep-neural-networks/image 8.png)
+![image.png](/images/deep-learning/01-deep-neural-networks/image%208.png)
 
 **REPRESENTATIONAL POWER**
 
 It has been mathematically proven that **any continuous function** $f(x)$ can be approximated to **arbitrary precision** $\epsilon > 0$ by a neural network $g(x)$ with **at least one hidden layer**:
 
-$\forall x, \quad |f(x) - g(x)| < \epsilon$
+$$
+
+\forall x, \quad |f(x) - g(x)| < \epsilon
+$$
 
 Because of this property, neural networks with at least one hidden layer are called **universal approximators**.
 
@@ -305,7 +359,7 @@ Adding more hidden layers often improves performance, even if in theory a 2-laye
 
 The **number of layers** in a neural network, along with the **number of neurons in each layer**, are known as **hyperparameters** of the network architecture:
 
-![image.png](/images/deep-learning/01-deep-neural-networks/image 9.png)
+![image.png](/images/deep-learning/01-deep-neural-networks/image%209.png)
 
 - Increasing the **number of layers or neurons** **increases the capacity** of the network, which is good because it allows to capture more complex patterns in the data.
 - However, **larger networks without proper regularization** are more likely to **overfit the training data**, memorizing it rather than learning generalizable patterns.
@@ -316,7 +370,7 @@ In practice, choosing hyperparameters involves balancing network capacity with r
 
 In training Deep Neural Networks (DNNs), the **objective or loss function** measures the quality of the mapping from input to output. This function has a form of this kind:
 
-![image.png](/images/deep-learning/01-deep-neural-networks/image 10.png)
+![image.png](/images/deep-learning/01-deep-neural-networks/image%2010.png)
 
 Where:
 
@@ -351,8 +405,11 @@ Depending on the **task** we want to solve, we can use different kinds of **loss
         
         The hinge loss measures how much a classifier fails to correctly separate the data, heavily penalizing misclassifications and points that lie **close to the decision boundary**.
         
-        $L_i = \sum_{j \neq y_i}\max\left(0, f_j - f_{y_i} + 1\right)$
-        
+        $$
+
+        L_i = \sum_{j \neq y_i}\max\left(0, f_j - f_{y_i} + 1\right)
+        $$
+
         The hinge loss is commonly used for **classification problems**, particularly in Support Vector Machines (SVMs), where it is introduced the concept of a **margin.** 
         
         For each class **$j$,** we compute **$f_j - f_{y_i} + 1$:**
@@ -363,8 +420,11 @@ Depending on the **task** we want to solve, we can use different kinds of **loss
         
         The softmax loss, also known as the **cross-entropy loss**, is commonly used for **multi-class classification** problems.
         
-        $L_i = - \log \frac{e^{f_{y_i}}}{\sum_j e^{f_j}}$
-        
+        $$
+
+        L_i = - \log \frac{e^{f_{y_i}}}{\sum_j e^{f_j}}
+        $$
+
         Here, $e^{f_{y_i}}$represents the exponentiated score of the correct class $y_i$, while the denominator sums the exponentiated scores of all classes. The logarithm is applied to ensure numerical stability; it does not change the optimal solution since the logarithm is a monotonic function.
         
 
@@ -373,8 +433,11 @@ Depending on the **task** we want to solve, we can use different kinds of **loss
         
         When the task involves predicting a **continuous value**, we typically use the **Mean Squared Error (MSE)** loss:
         
-        $L_i = || f - y_i ||^2_2$
-        
+        $$
+
+        L_i = || f - y_i ||^2_2
+        $$
+
         It measures the squared difference between the predicted value $f$ and the true value $y_i$.
         
 
@@ -384,8 +447,10 @@ During the **training phase**, we want to learn the set of network parameters th
 
 Formally:
 
-$\theta^{*} = \arg \min_{\theta} \frac{1}{N} \sum_i L_i(\theta; x_i, y_i) + \lambda \Omega(\theta)$
+$$
 
+\theta^{*} = \arg \min_{\theta} \frac{1}{N} \sum_i L_i(\theta; x_i, y_i) + \lambda \Omega(\theta)
+$$
 
 <Callout type="warning">
 The key difference between **logistic regression** and **neural networks** lies in the structure of the function we are optimizing:
@@ -403,7 +468,10 @@ The **backpropagation** algorithm efficiently computes all the gradients of the 
 
 For example, if we have $z = f(g(x))$ and $y = g(x)$, the final output $z$ depends on $x$ through both $f$ and $g$. To compute how $z$ changes with respect to $x$, we must consider both functions together. This is expressed by the **chain rule**:
 
-$\frac{dz}{dx} = \frac{dz}{dy} \cdot \frac{dy}{dx}$
+$$
+
+\frac{dz}{dx} = \frac{dz}{dy} \cdot \frac{dy}{dx}
+$$
 
 Backpropagation proceeds **backwards** with respect to the flow of computations used to compute the loss itself — hence the name.
 
@@ -420,24 +488,29 @@ compute two things:
 
 - Derivative of its output with respect to its weights:
     
-    $\frac{\partial h^{(i+1)}}{\partial W^{(i+1)}}$
-    
+    $$
+
+    \frac{\partial h^{(i+1)}}{\partial W^{(i+1)}}
+    $$
+
 - Derivative of its output with respect to its inputs:
     
-    $\frac{\partial h^{(i+1)}}{\partial h^{(i)}}$
-    
+    $$
 
-![image.png](/images/deep-learning/01-deep-neural-networks/image 11.png)
+    \frac{\partial h^{(i+1)}}{\partial h^{(i)}}
+    $$
 
-**FLUSSO DEL BACKPROPAGATION**
+![image.png](/images/deep-learning/01-deep-neural-networks/image%2011.png)
+
+**BACKPROPAGATION FLOW**
 
 During backpropagation, each neuron receives information about how its output affects the final network loss through the gradient:
 
-![image.png](/images/deep-learning/01-deep-neural-networks/image 12.png)
+![image.png](/images/deep-learning/01-deep-neural-networks/image%2012.png)
 
 This gradient flows backward from the output layer toward the input layer, allowing each neuron to understand its contribution to the overall error. Once a neuron receives this gradient, it applies the chain rule of calculus to compute the gradient with respect to its own inputs by multiplying the received gradient with its local gradient — the derivative of its activation function. This chained gradient is then passed to the neurons in the previous layer, propagating the error signal backward through the network. 
 
-![image.png](/images/deep-learning/01-deep-neural-networks/image 13.png)
+![image.png](/images/deep-learning/01-deep-neural-networks/image%2013.png)
 
 To train the network, we need to update all the weights $W₁, W₂, W₃$ to reduce this loss. As we said Backpropagation achieves this by sending gradient information backward through the network, starting from the loss and flowing back to each layer.
 
@@ -452,7 +525,10 @@ To find $\frac{∂L}{∂W₂}$we break it into two parts:
 
 The clever part is that $\frac{∂L}{∂h₂}$ itself can be computed by chaining backward from the next layer:
 
-$\frac{∂L}{∂h₂} = \frac{∂L}{∂o} \frac{∂o}{∂h₂}$
+$$
+
+\frac{∂L}{∂h₂} = \frac{∂L}{∂o} \frac{∂o}{∂h₂}
+$$
 
 This same pattern continues for $W₁$. Each layer receives the gradient from the layer ahead, multiplies it by its local gradient (how its output changes with respect to its input), and passes this information backward. 
 
@@ -484,7 +560,7 @@ For example, if a layer has a dropout probability of 0.5, each neuron in that la
 
 In effect, dropout **samples a different sub-network at each training step**, updating only the corresponding subset of parameters. During testing, dropout is not applied. This can be interpreted as computing the **average prediction of an ensemble of these sub-networks**.
 
-![image.png](/images/deep-learning/01-deep-neural-networks/image 14.png)
+![image.png](/images/deep-learning/01-deep-neural-networks/image%2014.png)
 
 The regularization effect arises because neurons **cannot rely on specific neighboring neurons** and are prevented from memorizing the training data. This encourages the network to learn more **robust and generalizable features**.
 
@@ -495,7 +571,7 @@ One of the most effective ways to improve a machine learning model’s generaliz
 Data augmentation consists of generating new training examples by applying some
 **transformation** to **$x$** **inputs in our training set**. Of course, is important that  these transformations must **preserve the original label**.
 
-![image.png](/images/deep-learning/01-deep-neural-networks/image 15.png)
+![image.png](/images/deep-learning/01-deep-neural-networks/image%2015.png)
 
 
 <Callout type="example">
@@ -509,6 +585,27 @@ By augmenting the dataset in this way, the model is **less likely to memorize** 
 
 During training, it is common to set aside a small portion of the data as a **validation set**. A typical sign of overfitting is when the **training loss continues to decrease** while the **validation loss starts increasing**. This divergence indicates that the model is beginning to **memorize the training data** rather than learning to generalize.
 
-![image.png](/images/deep-learning/01-deep-neural-networks/image 16.png)
+![image.png](/images/deep-learning/01-deep-neural-networks/image%2016.png)
 
 **Early stopping** addresses this by **stopping the training process** when the **validation loss stops improving**. In practice, we often introduce a **patience parameter**, which defines the number of additional epochs to wait in which the validation loss is stable (or started increasing) before actually stopping the training.
+
+---
+
+## Key Takeaways
+
+| Concept | Formula / Description |
+|---|---|
+| **Linear classifier** | $f(x) = Wx + b$ |
+| **Sigmoid** | $\sigma(x) = \frac{1}{1 + e^{-x}}$ — range $[0,1]$, saturates at extremes |
+| **Tanh** | $\tanh(x) = 2\sigma(x) - 1$ — range $[-1,1]$, zero-centered |
+| **ReLU** | $f(x) = \max(0, x)$ — no saturation, default choice |
+| **Softmax** | $\text{softmax}_j(z) = \frac{e^{z_j}}{\sum_k e^{z_k}}$ — maps scores to probabilities |
+| **Cross-entropy loss** | $L = -\sum_i y_i^{\text{true}} \log(y_i^{\text{pred}})$ |
+| **MSE loss** | $L = \|f - y\|_2^2$ |
+| **Chain rule** | $\frac{dz}{dx} = \frac{dz}{dy} \cdot \frac{dy}{dx}$ — the basis of backpropagation |
+| **L1 regularization** | $\Omega(\theta) = \sum |\theta|$ — promotes sparsity |
+| **L2 regularization** | $\Omega(\theta) = \sum \theta^2$ — smooth weight decay |
+| **Dropout** | Randomly disable neurons with probability $p$ during training |
+| **Data augmentation** | Generate new training examples via label-preserving transformations |
+| **Early stopping** | Stop training when validation loss stops improving |
+

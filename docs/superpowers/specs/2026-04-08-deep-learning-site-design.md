@@ -20,7 +20,7 @@ Sito statico multi-corso per presentare materiale di studio universitario. Strut
 | Framework | Astro + MDX | Content-first, output statico, componenti dentro markdown |
 | Formule | KaTeX (rehype-katex) | Rendering LaTeX veloce, integrazione nativa con MDX |
 | Ricerca | Pagefind | Full-text search client-side, zero backend, indicizza al build |
-| Diagrammi | visual-explainer plugin | Schemi e diagrammi strutturati per i concetti teorici |
+| Diagrammi | Mermaid inline in MDX | Diagrammi solo dove aggiungono valore, il contenuto e' gia' ricco. No standalone HTML. |
 | Lingua | Inglese | I markdown originali sono in inglese |
 | Deploy | Da decidere (Vercel / GitHub Pages / VPS) | Flessibile, sito statico deployabile ovunque |
 | Design | Pulito e semplice | Focus sul contenuto, niente complessita' inutile |
@@ -132,16 +132,16 @@ study-hub/
 ### Fase 1 — Primi 5 capitoli (fondamenti)
 > I capitoli fondamentali delle architetture neurali
 
-Per ogni capitolo: revisione contenuto, fix formule LaTeX, verifica immagini, diagrammi con visual-explainer dove utile.
+Per ogni capitolo: revisione contenuto, fix formule LaTeX, verifica immagini, Mermaid inline dove utile, tabella riassuntiva a fine capitolo.
 
-- [ ] 01 — Deep Neural Networks
+- [x] 01 — Deep Neural Networks
 - [ ] 02 — Convolutional Neural Networks
 - [ ] 03 — Recurrent Neural Networks
 - [ ] 04 — Transformers
 - [ ] 05 — Graph Neural Networks
 - [ ] Verifica: tutti e 5 navigabili, formule renderizzate, immagini visibili, ricerca funzionante
 
-**Stato**: `DA FARE`
+**Stato**: `IN CORSO`
 
 ---
 
@@ -192,3 +192,5 @@ Per ogni capitolo: revisione contenuto, fix formule LaTeX, verifica immagini, di
 - Package manager: pnpm
 - Tailwind CSS v4 (via @tailwindcss/vite, non @astrojs/tailwind)
 - Astro v6 Content Layer API con render() standalone
+- Approccio diagrammi rivisto (2026-04-09): niente visual-explainer/HTML standalone, solo Mermaid inline dove serve. Focus su contenuto pulito + tabella riassuntiva a fine capitolo.
+- Per ogni capitolo: fix contenuto → buona formattazione → Mermaid se utile → tabella Key Takeaways
