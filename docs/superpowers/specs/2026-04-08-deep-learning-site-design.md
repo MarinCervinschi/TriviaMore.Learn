@@ -135,7 +135,7 @@ study-hub/
 Per ogni capitolo: revisione contenuto, fix formule LaTeX, verifica immagini, Mermaid inline dove utile, tabella riassuntiva a fine capitolo.
 
 - [x] 01 — Deep Neural Networks
-- [ ] 02 — Convolutional Neural Networks
+- [x] 02 — Convolutional Neural Networks
 - [ ] 03 — Recurrent Neural Networks
 - [ ] 04 — Transformers
 - [ ] 05 — Graph Neural Networks

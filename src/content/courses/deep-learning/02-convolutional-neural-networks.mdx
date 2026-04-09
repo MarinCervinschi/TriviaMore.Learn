@@ -1,5 +1,5 @@
 ---
-title: "Convutional Neural Network"
+title: "Convolutional Neural Network"
 order: 2
 course: "deep-learning"
 ---
@@ -26,7 +26,7 @@ When dealing with **images**, the data are naturally organized in a **2D grid st
     
 
 <Callout type="example">
-A small $32 \times 32$ pixel color image ($32 \times 32  \times 3 = 3.072$ input features) connected to a $512$-neuron hidden layer would need over $1.5$ million weights for that single layer! This is computationally expensive and prone to overfitting.
+A small $32 \times 32$ pixel color image ($32 \times 32  \times 3 = 3{,}072$ input features) connected to a $512$-neuron hidden layer would need over $1.5$ million weights for that single layer! This is computationally expensive and prone to overfitting.
 </Callout>
 
     
@@ -70,6 +70,20 @@ CNNs derive their efficiency and power from a combination of specialized buildin
 - **Activation Functions**
 - **Pooling Layers**
 
+```mermaid
+flowchart LR
+    In([Input Volume]) --> Conv[Convolutional Layer]
+    Conv --> Act[Activation Function]
+    Act --> Pool[Pooling Layer]
+    Pool --> Out([Output/Next Layer])
+    
+    subgraph "Typical CNN Block"
+    Conv
+    Act
+    Pool
+    end
+```
+
 These foundational blocks will be detailed in the subsequent sections.
 
 ## Architecture
@@ -104,13 +118,15 @@ The Convolutional Layer is the fundamental building block of Convolutional Neura
 - **height**
 - **depth** (Channels)
 
-![image.png](/images/deep-learning/02-convolutional-neural-networks/image 1.png)
+![image.png](/images/deep-learning/02-convolutional-neural-networks/image%201.png)
 
 **LOCAL CONNECTIVITY**
 
 At its core, each neuron in a **Convolutional Neural Network (CNN)** still performs a **weighted sum** of its inputs plus a bias, just like in an MLP:
 
-$\sum_i w_ix_i+b$
+$$
+\sum_i w_ix_i+b
+$$
 
 However, unlike neurons in an **MLP** — which are **fully connected** to all inputs (meaning each neuron “sees” the entire image) — neurons in a **convolutional layer** are connected only to a **small, localized region** of the input volume, known as their **receptive fields**. 
 
@@ -129,7 +145,7 @@ As this filter slides over the input (the **convolution operation**), it compute
 
 A separate feature map is generated for each filter, and the **final output volume** of the layer is obtained by **stacking all the feature maps together**.
 
-![image.png](/images/deep-learning/02-convolutional-neural-networks/image 2.png)
+![image.png](/images/deep-learning/02-convolutional-neural-networks/image%202.png)
 
 
 <Callout type="example">
@@ -138,7 +154,9 @@ Suppose we have an image of size $5 \times 5 \times 3$ and **6 learnable filters
 1. Each filter is **slid across the image** (convolution). If we move it **one pixel at a time** (stride = 1), we get **one output value per position**.
 2. At each position, the filter computes:
     
-    $\text{output} = \sum (\text{local pixels} \times \text{filter weights}) + \text{bias}$
+    $$
+    \text{output} = \sum (\text{local pixels} \times \text{filter weights}) + \text{bias}
+    $$
     
 3. The result of each filter is a **2D feature map**, showing **where that feature was detected** in the image.
 
@@ -156,16 +174,16 @@ This explains why **early layers** capture **local features** (edges, corners), 
 
 **WHAT IS CONVOLUTION?**
 
-![image.png](/images/deep-learning/02-convolutional-neural-networks/image 3.png)
+![image.png](/images/deep-learning/02-convolutional-neural-networks/image%203.png)
 
-**`Note`** that this diagram **simplifies the process for a single channel**. In practice, a filter’s **depth must match the input volume’s depth** (e.g., a $3×3×3$ filter for a $32×32×3$ RGB image). The convolution involves **element-wise multiplications across all channels**, and the results are **summed together**, along with a **single bias term**, to produce **one pixel** in the output feature map.
+**`Note`** that this diagram **simplifies the process for a single channel**. In practice, a filter’s **depth must match the input volume’s depth** (e.g., a $3 \times 3 \times 3$ filter for a $32 \times 32 \times 3$ RGB image). The convolution involves **element-wise multiplications across all channels**, and the results are **summed together**, along with a **single bias term**, to produce **one pixel** in the output feature map.
 
 **HYPERPARAMETERS**
 
 Each convolutional layer is defined by the following hyperparameters:
 
 - **Number of Filters** $C_{out}$: Determines the depth of the output volume — that is, how many **feature maps** the layer produces.
-- **Kernel Size** ($K × K$): Specifies the **spatial dimensions** of each filter. Kernels are usually square and always extend across the **entire depth** $C_{in}$ of the input volume.
+- **Kernel Size** ($K \times K$): Specifies the **spatial dimensions** of each filter. Kernels are usually square and always extend across the **entire depth** $C_{in}$ of the input volume.
 - **Stride** $S$: The number of pixels the convolutional filter shifts across the input at each step.
     
 
@@ -189,14 +207,16 @@ To mitigate this, it’s often preferable to use **padding strategies** that pre
 
 **NUMBER OF LEARNABLE PARAMETERS**
 
-Given an input volume of size $H × W × C_{in}$, the number of learnable parameters for a convolutional layer with $C_{out}$ filters and a kernel size of $K × K$ is:
+Given an input volume of size $H \times W \times C_{in}$, the number of learnable parameters for a convolutional layer with $C_{out}$ filters and a kernel size of $K \times K$ is:
 
-$\text{Number of learnable parameters} = (K × K × C_{in}) × C_{out} + C_{out}$
+$$
+\text{Number of learnable parameters} = (K \times K \times C_{in}) \times C_{out} + C_{out}
+$$
 
 **Explanation**
 
 - There are $C_{out}$ distinct filters (kernels) in the layer.
-- Each filter has spatial dimensions $K × K$ and extends through the full depth of the input volume ($C_{in}$). So, each filter has K × K × Cin weights.
+- Each filter has spatial dimensions $K \times K$ and extends through the full depth of the input volume ($C_{in}$). So, each filter has $K \times K \times C_{in}$ weights.
 - Additionally, each of the $C_{out}$ filters has its own additive learnable bias term.
 
 ### Activation Functions
@@ -205,28 +225,28 @@ The output of a **convolutional layer** is an **activation map**, obtained throu
 
 To overcome this, CNNs introduce **nonlinear activation functions** after each convolutional layer. The most common ones include:
 
-![image.png](/images/deep-learning/02-convolutional-neural-networks/image 4.png)
+![image.png](/images/deep-learning/02-convolutional-neural-networks/image%204.png)
 
 Each activation function is applied **element-wise** to the activation map, making the model capable of learning complex, nonlinear patterns. Because these activation maps can themselves be interpreted as images, they can also be **visualized or overlaid on the original input** to show which regions the network focuses on. By upsampling maps from different layers, we can see how the CNN’s attention evolves across stages.
 
-![image.png](/images/deep-learning/02-convolutional-neural-networks/image 5.png)
+![image.png](/images/deep-learning/02-convolutional-neural-networks/image%205.png)
 
 **WHY RELU IS PREFERRED**
 
 The ReLU activation function has gained significant popularity for several reasons:
 
 - **Accelerated Convergence:** ReLU was empirically found to greatly accelerate the convergence of Stochastic Gradient Descent compared to Sigmoid and Tanh functions.
-- **Computational Efficiency:** ReLU can be implemented by a simple thresholding operation $f(x) = max(0, x)$, whereas Sigmoid and Tanh involve more complex exponential calculations.
+- **Computational Efficiency:** ReLU can be implemented by a simple thresholding operation $f(x) = \max(0, x)$, whereas Sigmoid and Tanh involve more complex exponential calculations.
 
 ### Pooling Layers
 
 Pooling layers **spatially downsample the input volume**, reducing its **width and height** while preserving the most important information. Pooling is typically applied **independently to each depth slice** (channel) of the input.
 
-![image.png](/images/deep-learning/02-convolutional-neural-networks/image 6.png)
+![image.png](/images/deep-learning/02-convolutional-neural-networks/image%206.png)
 
 The main **hyperparameters** of pooling layers are:
 
-- **Pool Size** ($K$): The spatial dimensions of the pooling window (e.g., 2 × 2).
+- **Pool Size** ($K$): The spatial dimensions of the pooling window (e.g., $2 \times 2$).
 - **Stride** ($S$): The number of pixels the pooling window moves across the input at each step.
     
     When $S = K$, the pooling windows are **non-overlapping**.
@@ -270,7 +290,7 @@ Pooling layers are widely used because they provide several key advantages:
 
 
 <Callout type="warning">
-The most common configuration is a **pool size** of $K = 2$ (a $2×2$ window) with a **stride** of $S = 2$, meaning that 75% of activations are discarded at each pooling step
+The most common configuration is a **pool size** of $K = 2$ (a $2 \times 2$ window) with a **stride** of $S = 2$, meaning that 75% of activations are discarded at each pooling step
 </Callout>
 
 
@@ -283,7 +303,7 @@ Pooling reduces the spatial dimensions of the feature maps, which can be problem
     
     In such cases, reducing the image size destroys the one-to-one correspondence between **input** and **output** pixels. Therefore, modern architectures often use **alternative downsampling methods** or add **upsampling layers** later in the network to restore the original resolution when pixel-level predictions are needed.
     
-    ![image.png](/images/deep-learning/02-convolutional-neural-networks/image 7.png)
+    ![image.png](/images/deep-learning/02-convolutional-neural-networks/image%207.png)
     
 
 ## Batch Normalization
@@ -294,7 +314,7 @@ As the network learns, the parameters in these earlier layers continuously chang
 
 This forces the network to constantly adapt to shifting input distributions, making the training process slower and more unstable.
 
-![image.png](/images/deep-learning/02-convolutional-neural-networks/image 8.png)
+![image.png](/images/deep-learning/02-convolutional-neural-networks/image%208.png)
 
 **THE SOLUTION: BATCH NORMALIZATION**
 
@@ -306,25 +326,33 @@ For a mini-batch $B$ containing $m$ activations $x$, the process involves four k
 
 1. **Calculate mini-batch mean:**
     
-     $\mu_B = \frac{1}{m} \sum_{i=1}^{m} x_i$ 
+     $$
+     \mu_B = \frac{1}{m} \sum_{i=1}^{m} x_i
+     $$ 
     
     This represents the average activation across the batch.
     
 2. **Calculate mini-batch variance:**
     
-     $\sigma^2_B = \frac{1}{m} \sum_{i=1}^{m} (x_i - \mu_B)^2$ 
+     $$
+     \sigma^2_B = \frac{1}{m} \sum_{i=1}^{m} (x_i - \mu_B)^2
+     $$ 
     
     This measures how much the activations deviate from the mean.
     
 3. **Normalize:**
     
-     $\hat{x}_i = \frac{x_i - \mu_B}{\sqrt{\sigma^2_B + \epsilon}}$ 
+     $$
+     \hat{x}_i = \frac{x_i - \mu_B}{\sqrt{\sigma^2_B + \epsilon}}
+     $$ 
     
     Each activation is standardized to have approximately zero mean and variance (standard deviation) one. The small constant $\epsilon$ prevents division by zero.
     
 4. **Scale and shift:**
     
-     $y_i = \gamma \hat{x}_i + \beta$ 
+     $$
+     y_i = \gamma \hat{x}_i + \beta
+     $$ 
     
     Here, $\gamma$ and $\beta$ are **learnable parameters,** without them, all normalized outputs would be constrained to have mean 0 and variance 1, which might limit the network’s representational capacity. 
     
@@ -339,9 +367,13 @@ These values are obtained by using a **moving average** of the mini-batch means 
 
 The normalization equation becomes:
 
- $\hat{x} = \frac{x - \mu_{\text{population}}}{\sqrt{\sigma^2_{\text{population}} + \epsilon}}$ 
+ $$
+ \hat{x} = \frac{x - \mu_{\text{population}}}{\sqrt{\sigma^2_{\text{population}} + \epsilon}}
+ $$ 
 
- $y = \gamma \hat{x} + \beta$ 
+ $$
+ y = \gamma \hat{x} + \beta
+ $$ 
 
 **BENEFITS**
 
@@ -349,3 +381,12 @@ The normalization equation becomes:
 - **Reduces Internal Covariate Shift:** Stabilizes the distribution of layer inputs.
 - **Regularization Effect:** The noise from mini-batch statistics has a slight regularizing effect, sometimes reducing the need for dropout.
 - **Less Sensitive to Initialization:** Makes the network less dependent on the initial weights.
+
+## Key Takeaways
+
+| Feature | Description | Key Benefits |
+|---------|-------------|--------------|
+| **Convolutional Layer** | Learns local patterns via sliding filters and parameter sharing. | Parameter efficiency, spatial hierarchy, translation invariance. |
+| **Activation Function (ReLU)** | Introduces non-linearity element-wise (e.g., $\max(0, x)$). | Faster convergence, computational efficiency, avoids linearity trap. |
+| **Pooling Layer** | Spatially downsamples feature maps (Max or Average). | Robustness to shifts, reduced computation, increased receptive field. |
+| **Batch Normalization** | Normalizes layer inputs per mini-batch during training. | Stabilizes training, faster convergence, slight regularization. |
