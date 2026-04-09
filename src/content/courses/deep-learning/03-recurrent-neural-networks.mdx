@@ -8,7 +8,7 @@ import Callout from '../../../components/Callout.astro';
 
 ## Introduction to Time Series
 
-A **time series** is a **set of observations** $\{xₜ\}_{t \in \tau}$  collected over time, that spans from a starting time $t$to an ending time $\tau$, where $\tau$ is the total number of observations. 
+A **time series** is a **set of observations** $\{x_t\}_{t \in \tau}$  collected over time, that spans from a starting time $t$ to an ending time $\tau$, where $\tau$ is the total number of observations. 
 
 The key characteristic of a time series is that **the observations are ordered**, meaning the order in which the data points are collected is meaningful and often important for analysis.
 
@@ -31,7 +31,7 @@ Traditional analysis approaches decompose a time series into specific elements:
 - **Cycle:** periodic fluctuation around the trend.
 - **Outliers:** values that appear out-of-distribution with respect to the rest of the data.
 
-A time series is **stationary** if its **statistical properties** — such as mean and variance — **remain do not change over time**. Conversely, if the **trend is non-constant**, the time series is considered **non-stationary.**
+A time series is **stationary** if its **statistical properties** — such as mean and variance — **do not change over time**. Conversely, if the **trend is non-constant**, the time series is considered **non-stationary.**
 
 **STL DECOMPOSITION**
 
@@ -56,7 +56,9 @@ Most forecasting models consider a **limited window of observations** $\{x_t, \d
 
 The model is generally expressed as:
 
-$x_t = f(x_{t-1}, \dots, x_{t-q}; \phi) + g(\xi_{t-1}, \dots, \xi_{t-q}; \theta)$
+$$
+x_t = f(x_{t-1}, \dots, x_{t-q}; \phi) + g(\xi_{t-1}, \dots, \xi_{t-q}; \theta)
+$$
 
 - $f(\cdot; \phi)$ represents the **deterministic part** of the model, which depends on past data.
 - $g(\cdot; \theta)$ represents the **stochastic part**, capturing the influence of random noise or unpredictable components.
@@ -73,7 +75,9 @@ Forecasting models can generally be divided into two main types:
     
     Assumes that the **current value of the series** depends from its **own past values**.  Formally an **autoregressive model of order $p$**, denoted as $AR(p)$, is defined as:
     
-    $x_t = \sum_{i=1}^{p} \phi_i x_{t-i} + \xi_t$
+    $$
+    x_t = \sum_{i=1}^{p} \phi_i x_{t-i} + \xi_t
+    $$
     
     Here:
     
@@ -89,7 +93,9 @@ These past values may represent either the raw observations or intermediate repr
     
     Assumes that the current value depends not on past observations but on **past random fluctuations** (errors). A **moving average model of order $q$**, denoted as $MA(q)$, is defined as:
     
-    $x_t = \mu + \xi_t + \sum_{i=1}^{q} \theta_i \xi_{t-i}$
+    $$
+    x_t = \mu + \xi_t + \sum_{i=1}^{q} \theta_i \xi_{t-i}
+    $$
     
     where 
     
@@ -120,7 +126,7 @@ At a higher level, transformations can be applied to represent the data in **dif
     In this representation, the x-axis corresponds to **frequency** rather than time, and the y-axis indicates the **amplitude** of each frequency component — forming the **spectrum** of the time series.
     
 
-![image.png](/images/deep-learning/03-recurrent-neural-networks/image 1.png)
+![image.png](/images/deep-learning/03-recurrent-neural-networks/image%201.png)
 
 - **Non-linear transforms**, such as the **Hilbert–Huang Transform (HHT)**
 
@@ -130,11 +136,13 @@ Time-related variables like **hours**, **days**, or **months** are **cyclical** 
 
 A common and effective approach is to use **sine and cosine transformations**, which map cyclical variables onto the **unit circle**:
 
-$\text{Sin(hour)} = \sin\left(\frac{\text{hour} \cdot 2\pi}{24}\right)\quad \text{and} \quad\text{Cos(hour)} = \cos\left(\frac{\text{hour} \cdot 2\pi}{24}\right)$
+$$
+\text{Sin(hour)} = \sin\left(\frac{\text{hour} \cdot 2\pi}{24}\right)\quad \text{and} \quad\text{Cos(hour)} = \cos\left(\frac{\text{hour} \cdot 2\pi}{24}\right)
+$$
 
 The same approach applies to other cyclical variables, such as **months of the year**. Neural networks also benefit from this encoding since their inputs become **centered around zero** with a **fixed variance.**
 
-![image.png](/images/deep-learning/03-recurrent-neural-networks/image 2.png)
+![image.png](/images/deep-learning/03-recurrent-neural-networks/image%202.png)
 
 ## Recurrent Neural Networks
 
@@ -142,7 +150,23 @@ The same approach applies to other cyclical variables, such as **months of the y
 
 This core feature allows RNNs to understand **context and temporal dependencies**, making them particularly suited for tasks involving **variable-length sequences**.
 
-![image.png](/images/deep-learning/03-recurrent-neural-networks/image 3.png)
+```mermaid
+flowchart LR
+    X0[x_t-1] --> H0[h_t-1]
+    X1[x_t] --> H1[h_t]
+    X2[x_t+1] --> H2[h_t+1]
+    
+    H0 --> H1
+    H1 --> H2
+    
+    subgraph "RNN Unrolled in Time"
+    H0
+    H1
+    H2
+    end
+```
+
+![image.png](/images/deep-learning/03-recurrent-neural-networks/image%203.png)
 
 - **One-to-one:** the classic feedforward neural network architecture, with one input and one output.
 - **One-to-many:** used when the input has fixed size but the output (e.g., a sequence of words) has variable length.
@@ -151,7 +175,7 @@ This core feature allows RNNs to understand **context and temporal dependencies*
 
 **VANILLA RNN**
 
-![image.png](/images/deep-learning/03-recurrent-neural-networks/image 4.png)
+![image.png](/images/deep-learning/03-recurrent-neural-networks/image%204.png)
 
 The simplest Recurrent Neural Network, often called a "Vanilla RNN", operates using three sets of **shared parameters:**
 
@@ -194,7 +218,7 @@ $$
 h^{(t)} = f(h^{(t-1)}, x^{(t)}; \theta)
 $$
 
-![image.png](/images/deep-learning/03-recurrent-neural-networks/image 5.png)
+![image.png](/images/deep-learning/03-recurrent-neural-networks/image%205.png)
 
 During training, the weight matrices $U$, $W$, and $V$ are **shared across all time steps**, meaning the same parameters are reused to process every input. This **parameter sharing** allows the RNN to handle **variable-length sequences** without increasing its parameter count.
 
@@ -204,7 +228,7 @@ The ability to **unfold a recurrent graph into a Directed Acyclic Graph (DAG)** 
 
 **Example:** Processing sequences of length $\tau = 3$ with an output at the end of the sequence.
 
-![image.png](/images/deep-learning/03-recurrent-neural-networks/image 6.png)
+![image.png](/images/deep-learning/03-recurrent-neural-networks/image%206.png)
 
 Given a **differentiable loss** $L(y, o)$, the derivatives of the objective $L$ with respect to the weights $V, W, U$ are:
 
@@ -229,7 +253,9 @@ $$
 
 Recalling that:
 
-$h^{(t)} = \phi(W h^{(t-1)} + U x^{(t)})$
+$$
+h^{(t)} = \phi(W h^{(t-1)} + U x^{(t)})
+$$
 
 and temporarily ignoring the nonlinearity 	$\phi$ we can approximate:
 
@@ -237,7 +263,7 @@ $$
 \frac{\partial h^{(t)}}{\partial h^{(t-1)}} \approx W \quad \Rightarrow \quad \frac{\partial h^{(t)}}{\partial h^{(k)}} \approx W^{(t-k)}
 $$
 
-This repeated multiplication of the *same matrix* $W$ can two numerical instabilities:
+This repeated multiplication of the *same matrix* $W$ can lead to two numerical instabilities:
 
 1. **Vanishing Gradient Problem** 
     
@@ -296,9 +322,11 @@ A gate in an RNN functions like a **controllable switch**, regulating the flow o
 
 **LONG SHORT-TERM MEMORY (LSTM) NETWORKS**
 
-$\begin{cases}i = \sigma\!\left(x^{(t)} U_i + h^{(t-1)} W_i\right) \\[6pt]f = \sigma\!\left(x^{(t)} U_f + h^{(t-1)} W_f\right) \\[6pt]o = \sigma\!\left(x^{(t)} U_o + h^{(t-1)} W_o\right) \\[6pt]\tilde{C}= \tanh\!\left(x^{(t)} U_C + h^{(t-1)} W_C\right) \\[6pt]C^{(t)} = C^{(t-1)} \odot f + \tilde{C} \odot i \\[6pt]h^{(t)} = \tanh\!\left(C^{(t)}\right) \odot o \end{cases}$
+$$
+\begin{cases}i = \sigma\!\left(x^{(t)} U_i + h^{(t-1)} W_i\right) \\[6pt]f = \sigma\!\left(x^{(t)} U_f + h^{(t-1)} W_f\right) \\[6pt]o = \sigma\!\left(x^{(t)} U_o + h^{(t-1)} W_o\right) \\[6pt]\tilde{C}= \tanh\!\left(x^{(t)} U_C + h^{(t-1)} W_C\right) \\[6pt]C^{(t)} = C^{(t-1)} \odot f + \tilde{C} \odot i \\[6pt]h^{(t)} = \tanh\!\left(C^{(t)}\right) \odot o \end{cases}
+$$
 
-![image.png](/images/deep-learning/03-recurrent-neural-networks/image 7.png)
+![image.png](/images/deep-learning/03-recurrent-neural-networks/image%207.png)
 
 Here $\odot$ denotes **element-wise multiplication**
 
@@ -310,7 +338,7 @@ Here $\odot$ denotes **element-wise multiplication**
     
 $$
 \begin{cases}i = \sigma\!\left(x^{(t)} U_i + h^{(t-1)} W_i\right) \\[6pt]f = \sigma\!\left(x^{(t)} U_f + h^{(t-1)} W_f\right) \\[6pt]o = \sigma\!\left(x^{(t)} U_o + h^{(t-1)} W_o\right) \\
-...\end{cases}
+\dots\end{cases}
 $$
     
     Each gate is computed similarly to a standard RNN cell: 
@@ -323,16 +351,20 @@ $$
     
 - **Candidate State**
     
-    $\begin{cases} ... \\[6pt]\tilde{C}= \tanh\!\left(x^{(t)} U_C + h^{(t-1)} W_C\right) \\... \end{cases}$
+    $$
+    \begin{cases} \tilde{C}= \tanh\!\left(x^{(t)} U_C + h^{(t-1)} W_C\right) \end{cases}
+    $$
     
     This equation computes what could intuitively be described as a **candidate state**. Indeed, again the equation is pretty much the same as that we saw for vanilla RNN architecture. Nonetheless,
     the amount of influence of $\tilde{C}$ on the LSTM memory cell is controlled by the input gate $i$.
     
 - **Memory Cell’s update and hidden state**
     
-    $\begin{cases}... \\[6pt]C^{(t)} = C^{(t-1)} \odot f + \tilde{C} \odot i \\[6pt]h^{(t)} = \tanh\!\left(C^{(t)}\right) \odot o \end{cases}$
+    $$
+    \begin{cases}C^{(t)} = C^{(t-1)} \odot f + \tilde{C} \odot i \\[6pt]h^{(t)} = \tanh\!\left(C^{(t)}\right) \odot o \end{cases}
+    $$
     
-    First equation computes the u**pdate for memory cell** $C$. Here:
+    First equation computes the **update for memory cell** $C$. Here:
     
     - The **forget gate** $f$ controls how much of the previous memory $C^{(t-1)}$ must be kept.
     - **Input gate $i$** supervises the amount of newly computed state $\tilde{C}$ that has to flow into the memory.
@@ -341,10 +373,20 @@ $$
     
     - **Output gate $o$** regulates the amount of information to be exposed to successive layers.
     
-    So I will pass to the next cell two things, HT and CT. Because I'm both needed. HT is used for computing I, F, O, and C tilde, and CT is needed for computing CT plus one
+    So I will pass to the next cell two things, $h^{(t)}$ and $C^{(t)}$. Because I'm both needed. $h^{(t)}$ is used for computing I, F, O, and C tilde, and $C^{(t)}$ is needed for computing $C^{(t+1)}$.
     
 
 Thus, each LSTM cell passes forward **two internal states:**
 
 - The **cell state** $C$ represents the long-term memory of the network, and can hold past information without being overwritten quickly.
 - The **hidden state** $h$, which also acts as the output, represents the short-term memory; it changes frequently, reflecting the most recent processing, thus containing the information needed for the prediction of the current time step.
+
+## Key Takeaways
+
+| Concept | Description | Main Advantage |
+|---------|-------------|----------------|
+| **Autoregressive (AR)** | Predicts $x_t$ based on its own past values $x_{t-p}$. | Simple, effective for linear dependencies. |
+| **Moving Average (MA)** | Predicts $x_t$ based on past random fluctuations $\xi_{t-q}$. | Captures shocks and residual fluctuations. |
+| **Vanilla RNN** | Maintains a hidden state $h^{(t)}$ to store sequence context. | Handles variable-length inputs via parameter sharing. |
+| **GRU** | Simplified gated RNN with Update and Reset gates. | Faster training than LSTM, mitigates vanishing gradients. |
+| **LSTM** | Advanced gated RNN with Input, Forget, and Output gates. | Best for long-term dependencies; separates cell state from hidden state. |
