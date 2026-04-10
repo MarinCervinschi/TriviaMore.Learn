@@ -1,0 +1,236 @@
+---
+---
+
+<div id="chapter-search" class="chapter-search">
+  <div class="chapter-search-bar">
+    <svg class="chapter-search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+    </svg>
+    <input
+      id="chapter-search-input"
+      type="text"
+      class="chapter-search-input"
+      placeholder="Search in this chapter..."
+      autocomplete="off"
+      aria-label="Search in this chapter"
+    />
+    <span id="chapter-search-count" class="chapter-search-count" aria-live="polite"></span>
+    <button id="chapter-search-prev" class="chapter-search-nav" aria-label="Previous match" hidden>
+      <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+      </svg>
+    </button>
+    <button id="chapter-search-next" class="chapter-search-nav" aria-label="Next match" hidden>
+      <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </button>
+    <button id="chapter-search-clear" class="chapter-search-nav" aria-label="Clear search" hidden>
+      <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+</div>
+
+<script is:inline>
+document.addEventListener('DOMContentLoaded', function() {
+  const input = document.getElementById('chapter-search-input');
+  const countEl = document.getElementById('chapter-search-count');
+  const prevBtn = document.getElementById('chapter-search-prev');
+  const nextBtn = document.getElementById('chapter-search-next');
+  const clearBtn = document.getElementById('chapter-search-clear');
+  const article = document.querySelector('article');
+  if (!input || !countEl || !prevBtn || !nextBtn || !clearBtn || !article) return;
+
+  let marks = [];
+  let currentIndex = -1;
+  let debounceTimer = null;
+
+  function clearHighlights() {
+    marks.forEach(mark => {
+      const parent = mark.parentNode;
+      parent.replaceChild(document.createTextNode(mark.textContent), mark);
+      parent.normalize();
+    });
+    marks = [];
+    currentIndex = -1;
+    countEl.textContent = '';
+    prevBtn.hidden = true;
+    nextBtn.hidden = true;
+    clearBtn.hidden = true;
+  }
+
+  function highlightMatches(query) {
+    clearHighlights();
+    if (!query.trim()) return;
+
+    const lower = query.toLowerCase();
+    const walker = document.createTreeWalker(article, NodeFilter.SHOW_TEXT, {
+      acceptNode(node) {
+        if (node.parentElement.closest('#chapter-search, script, style, .mermaid-container')) {
+          return NodeFilter.FILTER_REJECT;
+        }
+        return node.textContent.toLowerCase().includes(lower)
+          ? NodeFilter.FILTER_ACCEPT
+          : NodeFilter.FILTER_REJECT;
+      }
+    });
+
+    const textNodes = [];
+    while (walker.nextNode()) textNodes.push(walker.currentNode);
+
+    for (const node of textNodes) {
+      const frag = document.createDocumentFragment();
+      let text = node.textContent;
+      let idx = 0;
+
+      while (true) {
+        const pos = text.toLowerCase().indexOf(lower, idx);
+        if (pos === -1) break;
+
+        if (pos > idx) {
+          frag.appendChild(document.createTextNode(text.slice(idx, pos)));
+        }
+
+        const mark = document.createElement('mark');
+        mark.className = 'chapter-highlight';
+        mark.textContent = text.slice(pos, pos + query.length);
+        frag.appendChild(mark);
+        marks.push(mark);
+
+        idx = pos + query.length;
+      }
+
+      if (idx < text.length) {
+        frag.appendChild(document.createTextNode(text.slice(idx)));
+      }
+
+      node.parentNode.replaceChild(frag, node);
+    }
+
+    if (marks.length > 0) {
+      prevBtn.hidden = false;
+      nextBtn.hidden = false;
+      clearBtn.hidden = false;
+      goTo(0);
+    } else {
+      countEl.textContent = '0 results';
+    }
+  }
+
+  function goTo(index) {
+    if (marks.length === 0) return;
+    marks.forEach(m => m.classList.remove('chapter-highlight-active'));
+    currentIndex = ((index % marks.length) + marks.length) % marks.length;
+    marks[currentIndex].classList.add('chapter-highlight-active');
+    marks[currentIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    countEl.textContent = `${currentIndex + 1} of ${marks.length}`;
+  }
+
+  input.addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => highlightMatches(input.value), 200);
+  });
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (e.shiftKey) goTo(currentIndex - 1);
+      else goTo(currentIndex + 1);
+    }
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      input.value = '';
+      clearHighlights();
+      input.blur();
+    }
+  });
+
+  prevBtn.addEventListener('click', () => goTo(currentIndex - 1));
+  nextBtn.addEventListener('click', () => goTo(currentIndex + 1));
+  clearBtn.addEventListener('click', () => {
+    input.value = '';
+    clearHighlights();
+  });
+});
+</script>
+
+<style is:global>
+  .chapter-search {
+    margin-bottom: 1rem;
+  }
+
+  .chapter-search-bar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 6px 8px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+  }
+
+  .chapter-search-icon {
+    width: 16px;
+    height: 16px;
+    color: #94a3b8;
+    flex-shrink: 0;
+  }
+
+  .chapter-search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 13px;
+    font-family: 'Inter', system-ui, sans-serif;
+    color: #0f172a;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .chapter-search-input::placeholder {
+    color: #94a3b8;
+  }
+
+  .chapter-search-count {
+    font-size: 12px;
+    color: #64748b;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .chapter-search-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border: none;
+    border-radius: 4px;
+    background: transparent;
+    color: #64748b;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 80ms ease;
+  }
+
+  .chapter-search-nav:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+  }
+
+  mark.chapter-highlight {
+    background: #fef08a;
+    color: inherit;
+    border-radius: 2px;
+    padding: 0 1px;
+  }
+
+  mark.chapter-highlight-active {
+    background: #f97316;
+    color: #fff;
+  }
+</style>

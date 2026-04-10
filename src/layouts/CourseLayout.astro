@@ -1,5 +1,6 @@
 ---
-import SearchBar from '../components/SearchBar.astro';
+import SearchTrigger from '../components/SearchTrigger.astro';
+import SearchModal from '../components/SearchModal.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -30,9 +31,7 @@ const { title, description } = Astro.props;
     <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-sm border-b border-slate-200">
       <div class="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
         <a href="/" class="text-sm font-bold gradient-text transition-all hover:opacity-80">TriviaMore Learn</a>
-        <div class="hidden md:block w-64">
-          <SearchBar />
-        </div>
+        <SearchTrigger />
       </div>
     </header>
 
@@ -43,5 +42,6 @@ const { title, description } = Astro.props;
         <slot />
       </div>
     </main>
+    <SearchModal />
   </body>
 </html>
