@@ -33,7 +33,7 @@ Where:
 </Callout>
 
 
-**THE EULIDEAN LATTICE ASSUMPTION**
+**THE EUCLIDEAN LATTICE ASSUMPTION**
 
 From a geometric point of view, the input image can be seen as a **regular 2D grid of values.** Conceptually, each **pixel** exists on a **discrete 2D lattice** (e.g., $\mathbb{Z}^2$), which can be viewed as a 2D **Euclidean plane**.
 
@@ -59,7 +59,7 @@ Just like in 2D, the 1D grid can be seen as a **discretization of a continuous E
 
 Both the **input signal** and the **kernel** are defined on a **1D Euclidean lattice**, and the **kernel slides** along this lattice, computing **local interactions** at each position.
 
-**A GRAPH BASEF PERSPECTIVE**
+**A GRAPH-BASED PERSPECTIVE**
 
 Under this new viewpoint, the input image can be seen as a **signal** defined on a **(Euclidean) graph**.
 
@@ -73,7 +73,7 @@ Graphs can be:
 - **Directed** or **undirected**
 - **Weighted** or **unweighted**
 
-![image.png](/images/deep-learning/05-graph-neural-networks/image 1.png)
+![image.png](/images/deep-learning/05-graph-neural-networks/image%201.png)
 
 A graph is defined as a **lattice graph** when its nodes are arranged on a **regular grid** (e.g., 1D, 2D, or 3D). In this model, we can map the image structure as follows:
 
@@ -87,7 +87,7 @@ Traditional convolutional architectures assume data is defined over **regular Eu
 
 However, not all types of data exhibit this regular structure. Many real-world domains — such as:
 
-![image.png](/images/deep-learning/05-graph-neural-networks/image 2.png)
+![image.png](/images/deep-learning/05-graph-neural-networks/image%202.png)
 
  are **non-Euclidean**. 
 
@@ -118,7 +118,7 @@ The main challenges in a **Graph Neural Network (GNN)** are:
 - It includes **input features**, **hidden activations** (often called **node embeddings**), **activation functions**, and **output responses**.
 - **Gradient descent** and **backpropagation** are used to update the model parameters.
 
-The key idea in GCNs is **message passing,** meaning that the ****information is propagated across the graph by allowing each node to **communicate with its neighbors**.
+The key idea in GCNs is **message passing,** meaning that the information is propagated across the graph by allowing each node to **communicate with its neighbors**.
 
 In practice, this means that each node updates its state by **aggregating information** from its neighbors and **updating** its own representation accordingly. So we have two main steps:
 
@@ -135,7 +135,7 @@ In practice, this means that each node updates its state by **aggregating inform
 
 This process can be stacked across multiple layers, enabling nodes to gradually capture information from larger neighborhoods.
 
-![image.png](/images/deep-learning/05-graph-neural-networks/image 3.png)
+![image.png](/images/deep-learning/05-graph-neural-networks/image%203.png)
 
 **AN EXAMPLE: GCN**
 
@@ -148,7 +148,7 @@ It takes in input:
     - **binary**
     - **weighted**.
 
-![image.png](/images/deep-learning/05-graph-neural-networks/image 4.png)
+![image.png](/images/deep-learning/05-graph-neural-networks/image%204.png)
 
 In a simple, unweighted graph, if node *i* and node *j* are connected, then $A_{ij} = 1$; otherwise, $A_{ij} = 0$
 
@@ -184,11 +184,11 @@ $$
 - $W^{(l)} \in R^{F_{l-1} \times F_l}$ → **learnable weight matrix** (projection)
 - $\sigma(\cdot)$ → activation function (e.g., ReLU)
 
-![image.png](/images/deep-learning/05-graph-neural-networks/image 5.png)
+![image.png](/images/deep-learning/05-graph-neural-networks/image%205.png)
 
-![image.png](/images/deep-learning/05-graph-neural-networks/image 6.png)
+![image.png](/images/deep-learning/05-graph-neural-networks/image%206.png)
 
-![image.png](/images/deep-learning/05-graph-neural-networks/image 7.png)
+![image.png](/images/deep-learning/05-graph-neural-networks/image%207.png)
 
 **PROJECTION**
 
@@ -227,7 +227,7 @@ The GCN can be **theoretically motivated by spectral graph theory**:
 - It represents a **first-order approximation** of **spectral graph convolutions.**
 - Based on the **spectral formulation of convolution on graphs.**
 
-![image.png](/images/deep-learning/05-graph-neural-networks/image 8.png)
+![image.png](/images/deep-learning/05-graph-neural-networks/image%208.png)
 
 ## Applications of GNNs
 
@@ -259,7 +259,7 @@ where:
 - **Transductive setting**, the entire graph is available during training, but only a subset of nodes has known labels. The main objective is to predict the labels of the remaining nodes within the same graph. Since the full structure is accessible, the model can take advantage of the connections among all nodes — both labeled and unlabeled. Even though the unlabeled nodes are not directly supervised, they still contribute to the learning process by sharing structural information that helps the model understand the overall graph context.
 - **Inductive setting** requires the model to generalize to completely new nodes or even entirely unseen graphs. These nodes are not part of the training data, so the model cannot rely on their connections during learning. Instead, it must base its predictions on the available node features and their local neighborhood structure. The goal is for the model to learn representations that can effectively transfer across different graphs and remain useful in new, unseen scenarios.
 
-![image.png](/images/deep-learning/05-graph-neural-networks/image 9.png)
+![image.png](/images/deep-learning/05-graph-neural-networks/image%209.png)
 
 ### Link Prediction
 
@@ -267,7 +267,7 @@ In **link prediction**, the task is to predict whether a link (or edge) exists b
 
 This is typically formulated as a **binary classification problem** on node pairs, although it can also become a **multi-class problem** when different edge types are considered.
 
-![image.png](/images/deep-learning/05-graph-neural-networks/image 10.png)
+![image.png](/images/deep-learning/05-graph-neural-networks/image%2010.png)
 
 A common pipeline involves three main steps:
 
@@ -284,7 +284,7 @@ Each graph $G = (V, E)$ is treated as a single data point. Node features are fir
 
 $h_{\text{graph}} = \text{POOLING}(\{h_v \mid v \in V\})$
 
-![image.png](/images/deep-learning/05-graph-neural-networks/image 11.png)
+![image.png](/images/deep-learning/05-graph-neural-networks/image%2011.png)
 
 Finally, a **multi-layer perceptron (MLP)** is used to predict the label for the entire graph:
 
@@ -311,7 +311,7 @@ Common global pooling methods include:
 
 While these methods summarize all node embeddings in a single step, other approaches introduce **hierarchical pooling**, similar to what convolutional neural networks (CNNs) do in image processing.
 
-![image.png](/images/deep-learning/05-graph-neural-networks/image 12.png)
+![image.png](/images/deep-learning/05-graph-neural-networks/image%2012.png)
 
 **EXAMPLE**
 
@@ -322,7 +322,7 @@ A common application of graph classification is **action recognition** from huma
 
 By applying **Graph Neural Networks (GNNs)** or **Spatio-Temporal Graph Convolutional Networks (ST-GCNs)**, it becomes possible to jointly model both spatial and temporal relationships, enabling accurate classification of the performed action.
 
-![image.png](/images/deep-learning/05-graph-neural-networks/image 13.png)
+![image.png](/images/deep-learning/05-graph-neural-networks/image%2013.png)
 
 ## Graph Attention Networks (GAT)
 
@@ -353,7 +353,7 @@ Although this formulation enables effective message passing across graph nodes, 
     Different neighbors receive different weights, allowing the model to focus more on relevant nodes.
     
 
-![image.png](/images/deep-learning/05-graph-neural-networks/image 14.png)
+![image.png](/images/deep-learning/05-graph-neural-networks/image%2014.png)
 
 In essence, through the attention mechanism, each node *attends* to its local neighborhood, using the adjacency matrix as a structural guide.
 
@@ -392,22 +392,22 @@ This is done in five steps:
     **Advantage.** The graph is not required to be undirected; the computation of the attention coefficient $\alpha_{ij}$ can be simply omitted if the edge $j \rightarrow i$ is not present.
     
 
-1. **Normalization:**
+3. **Normalization:**
     
-    The unnormalized attention coefficients are converted into normalized attention score across all neighbors of $i$:
+    The unnormalized attention coefficients are converted into normalized attention scores across all neighbors of $i$:
     
     $\alpha_{ij} = \frac{\exp(e_{ij})}{\sum_{k \in N(i)} \exp(e_{ik})}$
     
-2. **Aggregation**
+4. **Aggregation**
     
     The final node representation is obtained by taking a weighted sum of the transformed features of its neighbors:
     
     $h'_i = \sigma \left( \sum_{j \in N(i)} \alpha_{ij} h_j^W \right)$
     
 
-![image.png](/images/deep-learning/05-graph-neural-networks/image 15.png)
+![image.png](/images/deep-learning/05-graph-neural-networks/image%2015.png)
 
-1. **Multi-head Attention** 
+5. **Multi-head Attention** 
     
     To stabilize learning and enhance expressivity, GATs often employ **multi-head attention**. In this case $K$ independent attention mechanisms are applied, and their outputs are concatenated:
     
@@ -451,7 +451,7 @@ GraphCast combines **temporal sequence modeling** with GNN-based message passing
 - **Message-passing GNN layers** are used to propagate information across neighboring nodes in the atmospheric graph.
 - The model is trained on **decades of historical weather data** to predict future states at each grid point.
 
-![image.png](/images/deep-learning/05-graph-neural-networks/image 16.png)
+![image.png](/images/deep-learning/05-graph-neural-networks/image%2016.png)
 
 To capture both global and local weather patterns, GraphCast represents the Earth’s atmosphere using **graph meshes at multiple resolutions**:
 
@@ -460,7 +460,7 @@ To capture both global and local weather patterns, GraphCast represents the Eart
 
 This hierarchical graph representation allows GraphCast to effectively balance **computational efficiency** with **high-resolution predictive accuracy**, making it one of the most advanced GNN-based weather forecasting systems to date.
 
-![image.png](/images/deep-learning/05-graph-neural-networks/image 17.png)
+![image.png](/images/deep-learning/05-graph-neural-networks/image%2017.png)
 
 ## Conclusions
 
@@ -474,3 +474,19 @@ Graph Neural Networks (GNNs) extend traditional neural networks to **graph-struc
     - **Graph classification** – assigning labels to entire graphs
     - Applications span **social networks, biological networks, recommendation systems**, and many more domains.
 - Despite their successes, **challenges remain**, including scalability to very large graphs, over-smoothing of node representations, interpretability of learned embeddings, and handling of dynamic or evolving graphs.
+
+## Key Takeaways
+
+| Topic | Key Point |
+| --- | --- |
+| **From grids to graphs** | CNNs assume regular Euclidean grids; GNNs generalize to irregular, non-Euclidean structures |
+| **Message passing** | Core GNN mechanism: each node aggregates neighbor features, then updates its own embedding |
+| **GCN layer** | Uses symmetric normalization of the adjacency matrix with self-loops for stable propagation |
+| **Adjacency matrix** | Encodes graph structure as a fixed prior; enforces locality and reduces overfitting |
+| **Receptive field** | Stacking $k$ GNN layers lets each node capture information from its $k$-hop neighborhood |
+| **Node classification** | Predict labels per node; can be transductive (same graph) or inductive (new graphs) |
+| **Link prediction** | Predict edges between node pairs using learned embeddings + decoder |
+| **Graph classification** | Global pooling aggregates all node embeddings into a single graph-level representation |
+| **GAT** | Learns attention coefficients over neighbors instead of using fixed adjacency weights |
+| **GAT multi-head** | Runs $K$ independent attention heads in parallel; concatenates outputs for richer representations |
+| **GraphCast** | State-of-the-art weather forecasting using GNNs on multi-resolution spherical meshes |

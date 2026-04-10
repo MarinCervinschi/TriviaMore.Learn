@@ -1,5 +1,5 @@
 ---
-title: "Trasformers"
+title: "Transformers"
 order: 4
 course: "deep-learning"
 ---
@@ -22,7 +22,7 @@ While sequence modeling is historically associated with **Recurrent Neural Netwo
 
 Even though **Convolutional Neural Networks (CNNs)** are primarily associated with **image analysis**, their operations can also be effectively **adapted for sequence data**.
 
-![image.png](/images/deep-learning/04-transformers/image 1.png)
+![image.png](/images/deep-learning/04-transformers/image%201.png)
 
 In image processing, a **Conv2D** operation uses a **two-dimensional kernel** that slides across the image’s spatial dimensions (height and width). In contrast, for **time series** or **sequential data**, this same principle is applied through a **Conv1D** operation.
 
@@ -35,15 +35,17 @@ In this approach, the kernel is a **one-dimensional filter** that moves along th
 
 When shifting from 2D to 1D, we still operate on **multi-featured data**. For example, a sentence is a sequence where each token is described by multiple features.
 
-![image.png](/images/deep-learning/04-transformers/image 2.png)
+![image.png](/images/deep-learning/04-transformers/image%202.png)
 
 In this context, the **1D convolution kernel** (e.g., of size 5) slides along only **one** dimension: the **temporal axis** (the sequence length). 
 
-There is, however, an "implicit" second dimension: the **feature size**. The kernel's second dimension must *always* match the number of features in the input sequence. For instance, if the input tokens have 3 features and the kernel size is 5, the kernel's actual shape is **`(5, 3)`**. It slides temporally, but at each step, it processes all 3 features simultaneously.
+There is, however, an "implicit" second dimension: the **feature size**. The kernel's second dimension must *always* match the number of features in the input sequence. For instance, if the input tokens have 3 features and the kernel size is 5, the kernel's actual shape is **(5, 3)**. It slides temporally, but at each step, it processes all 3 features simultaneously.
 
 The discrete 1D convolution is mathematically defined as:
 
-$(x * \omega)(n) = \sum_{i=0}^{k-1} x(n - i)\omega(i)$
+$$
+(x * \omega)(n) = \sum_{i=0}^{k-1} x(n - i)\omega(i)
+$$
 
 Where:
 
@@ -52,7 +54,7 @@ Where:
 
 
 <Callout type="warning">
-Pay attention to the term $x(n - i)$. This indicates that the kernel "goes back" to compute the output. To calculate the value at step $n$, it needs input from steps $n$ back to $n-k+1$This has a critical consequence: without **padding**, we cannot compute the output for the very first time steps (e.g., at $n=0$ or $n=1$), because the kernel would need to access data from "before" the start of the sequence, where there is nothing. The first output can only be computed once the kernel has $k$ items to process
+Pay attention to the term $x(n - i)$. This indicates that the kernel "goes back" to compute the output. To calculate the value at step $n$, it needs input from steps $n$ back to $n-k+1$. This has a critical consequence: without **padding**, we cannot compute the output for the very first time steps (e.g., at $n=0$ or $n=1$), because the kernel would need to access data from "before" the start of the sequence, where there is nothing. The first output can only be computed once the kernel has $k$ items to process.
 </Callout>
 
 
@@ -64,7 +66,9 @@ To mitigate this, **dilated convolutions** can be used. This technique introduce
 
 The discrete dilated convolution is defined as:
 
-$(x * \omega)(n) = \sum_{i=0}^{k-1} x(n - d \cdot i)\omega(i)$
+$$
+(x * \omega)(n) = \sum_{i=0}^{k-1} x(n - d \cdot i)\omega(i)
+$$
 
 Where:
 
@@ -94,23 +98,23 @@ For a kernel of size $k = 3$:
 
 In a standard convolution (as used in image processing), the kernel is typically centered, meaning it "looks" at data both backward and forward around the current position.
 
-However, when **dealing** with time series, this is not desirable because ****the output at a given time $t$should not depend on *future* inputs, as the future has not yet occurred.
+However, when **dealing** with time series, this is not desirable because the output at a given time $t$ should not depend on *future* inputs, as the future has not yet occurred.
 
 To enforce this constraint, we use a **causal convolution**, which ensures that the output at time step $t$ depends only on inputs from previous or current time steps $\le t$. This is typically achieved by shifting the kernel (or using padding) so that it only looks backward.
 
 This simple causal constraint makes CNNs suitable for sequence modeling tasks where causality is critical, such as in **autoregressive models**.
 
-![image.png](/images/deep-learning/04-transformers/image 3.png)
+![image.png](/images/deep-learning/04-transformers/image%203.png)
 
 **TEMPORAL CONVOLUTIONAL NETWORK**
 
 A **Temporal Convolutional Network (TCN)** is a model architecture composed of stacked **residual blocks**, where each block utilizes **dilated causal convolutions**.
 
-![image.png](/images/deep-learning/04-transformers/image 4.png)
+![image.png](/images/deep-learning/04-transformers/image%204.png)
 
 A key feature is the use of increasing dilation factors $d = 1, 2, 4$ in successive layers. As the network deepens, the **receptive field grows exponentially**, this allows the model to efficiently capture long-range dependencies and "see" a large portion of the input sequence without requiring an excessive number of layers.
 
-![image.png](/images/deep-learning/04-transformers/image 5.png)
+![image.png](/images/deep-learning/04-transformers/image%205.png)
 
 Similar to how architectures like VGG are built from blocks, a TCN is composed of these residual blocks. Each individual block contains a small pipeline that is typically applied twice:
 
@@ -165,7 +169,7 @@ Transformers have become ubiquitous across AI applications:
 - **Question answering and dialogue systems**
 - **Computer vision (Vision Transformer, ViT)**
 
-**TRANFORMER ENCODER**
+**TRANSFORMER ENCODER**
 
 A **Transformer encoder block** receives an **input sequence of tokens** — for example, $T$ tokens, each represented by a vector of dimension $d_{model}$ — and produces an **output sequence of the same shape**. 
 
@@ -184,9 +188,9 @@ Each **encoder block** is composed of the following main components:
     - A **Residual (skip) connection** is applied, adding the input of the MHA layer to its output, to facilitate gradient flow.
     - **Layer Normalization** is applied to the result.
 
-![image.png](/images/deep-learning/04-transformers/image 6.png)
+![image.png](/images/deep-learning/04-transformers/image%206.png)
 
-- A **Feed-Forward Neural Network (FFN)**, This is a simple MLP )
+- A **Feed-Forward Neural Network (FFN)**, a simple MLP
 applied **independently and in parallel** to each token embedding. Typically is composed of **two linear layers** with a ReLU activation in between.
     
     The standard design first **expands** the dimensionality and then **contracts** it back to the original size:
@@ -291,24 +295,22 @@ $s_i \leftarrow \text{similarity}(q, k_i)$
 
 **end for**
 
-$$
-\alpha \leftarrow \text{softmax}(s)$ // attention weights
+$\alpha \leftarrow \text{softmax}(s)$ — attention weights
 
-$z \leftarrow \sum_i \alpha_i v_i$ // retrieved information
+$z \leftarrow \sum_i \alpha_i v_i$ — retrieved information
 
-**return** $z
-$$
+**return** $z$
 
 ---
 
 **QUERY, KEYS AND VALUES**
 
-![image.png](/images/deep-learning/04-transformers/image 7.png)
+![image.png](/images/deep-learning/04-transformers/image%207.png)
 
 In the attention mechanism, the **Query $Q$**, **Key $K$**, and **Value $V$** matrices are generated by projecting the entire input sequence $X$ through three distinct, trainable linear layers (weight matrices):
 
 $$
-Q=XW^Q \quad K=XW^K \quad C=XW^V
+Q=XW^Q \quad K=XW^K \quad V=XW^V
 $$
 
 The input tokens are projected into a new dimension **$d_k$**, following these relationships:
@@ -333,7 +335,7 @@ Where $Q, K, V$ are the **matrices** representing **Queries**, **Keys**, and **V
     
     The dot product $QK^T$ produces a similarity matrix where the entry $(t, i)$ measures how much every token $t$ (query) is similar to token $i$ (key).
     
-    **`Shape:`** $(T, d_k) \cdot (d_k, T) \rightarrow (T, T)$
+    **Shape:** $(T, d_k) \cdot (d_k, T) \rightarrow (T, T)$
     
 2. **Scale**
     
@@ -346,38 +348,42 @@ A typical value for the dimension is **$d_k = 64$**
 
     
 
-![image.png](/images/deep-learning/04-transformers/image 8.png)
+![image.png](/images/deep-learning/04-transformers/image%208.png)
 
-1. **Normalize (Softmax)**
+3. **Normalize (Softmax)**
     
     To convert the raw scaled scores into attention weights (which sum to 1), a **softmax** function is applied to each row (row-wise) of the scaled score matrix. Let's call this resulting attention matrix $A$.
     
-2. **Compute Weighted Sum**
+4. **Compute Weighted Sum**
     
     Finally, the attention weight matrix $A$ is multiplied by the **Value matrix $V$:**
     
     $Z = A \cdot V$
     
-    **`Shape:`** $(T, T) \cdot (T, d_v) \rightarrow (T, d_v)$
+    **Shape:** $(T, T) \cdot (T, d_v) \rightarrow (T, d_v)$
     
-    Il risultato $Z$ è la nuova matrice di output, dove ogni riga $z_i$ è la nuova rappresentazione del token $i$, calcolata come la somma pesata di tutti i valori $v_j$ della sequenza
+    The result $Z$ is the new output matrix, where each row $z_i$ is the new representation of token $i$, computed as a weighted sum of all value vectors $v_j$ in the sequence.
     
 
 **MULTI-HEAD ATTENTION**
 
-![image.png](/images/deep-learning/04-transformers/image 9.png)
+![image.png](/images/deep-learning/04-transformers/image%209.png)
 
 In **multi-head attention** the *linear projections* and the *attention* are repeated in parallel multiple times (e.g., $h = 8$), each using a distinct set of weights.
 
 Each head produces an output of dimension $d_k$, and the resulting outputs are concatenated along the feature axis. The concatenated vector is then projected through a final linear layer to restore the dimensionality of $d_{model}$
 
-$\text{MHA}(Q, K, V) = \text{concat}(Z_1, ..., Z_h)W^O$
+$$
+\text{MHA}(Q, K, V) = \text{concat}(Z_1, ..., Z_h)W^O
+$$
 
 where:
 
-$Z_i = \text{head}_i = \text{Attention}\left( XW^Q_i, XW^K_i, XW^V_i \right)$
+$$
+Z_i = \text{head}_i = \text{Attention}\left( XW^Q_i, XW^K_i, XW^V_i \right)
+$$
 
-![image.png](/images/deep-learning/04-transformers/image 10.png)
+![image.png](/images/deep-learning/04-transformers/image%2010.png)
 
 **FROM TOKEN REPRESENTATION TO CLASSIFICATION**
 
@@ -390,8 +396,6 @@ To perform **classification**, this sequence must be reduced to a single, fixed-
     $z_{\text{avg}} = \frac{1}{T} \sum_{t=1}^{T} z_t$
     
     This produces a single feature vector with the same dimensionality as the original embeddings. The MLP then maps this vector to the number of output classes through a final linear layer.
-    
-    Fun in, number of features. Fun out, number of classes. And then the percent
     
 - **[CLS] token**: Introduce a special **classification token** prepended to the input sequence. Its embedding, $z_{\text{[CLS]}}$, after passing through the encoder, serves as a **global representation** of the entire sequence.
     
@@ -416,14 +420,18 @@ Both **Temporal Convolutional Networks (TCNs)** and **Transformers** are powerfu
 
 - **Mean Squared Error (MSE)**
     
-    $L_{MSE} = \frac{1}{N} \sum_{t=1}^{N} (y_t - \hat{y}_t)^2$
+    $$
+    L_{MSE} = \frac{1}{N} \sum_{t=1}^{N} (y_t - \hat{y}_t)^2
+    $$
     
     - **Penalizes large errors quadratically**: This characteristic makes the loss function highly sensitive to **outliers**.
     - **Reduces small errors**: Conversely, if an error is small ($< 1$), squaring it makes it even smaller (e.g., $0.2^2 = 0.04$).
     - **Optimization**: The function is smooth and continuously differentiable, making it stable and well-suited for gradient-based optimization.
 - **Mean Absolute Error (MAE)**
     
-    $L_{MAE} = \frac{1}{N} \sum_{t=1}^{N} |y_t - \hat{y}_t|$
+    $$
+    L_{MAE} = \frac{1}{N} \sum_{t=1}^{N} |y_t - \hat{y}_t|
+    $$
     
     - **Robust to outliers**: It penalizes all deviations **linearly.**
     - **Optimization**: The function is **not differentiable at zero** (it has a "kink" or a discontinuous gradient). This can lead to instability during the training and optimization process, especially when using standard gradient-based methods.
@@ -436,14 +444,14 @@ By **discretizing a continuous target variable** into intervals (**bins**), we c
 <Callout type="example">
 **Age Prediction from an Image**
 
-- **Target variable (Regression):** **`age`** $\in [0, 100]$
+- **Target variable (Regression):** age $\in [0, 100]$
 - **Target variable (Classification):** Define $K$ bins, e.g.:
-    - *Class 1:* **`[0−10]`**
-    - *Class 2:* **`[10−20]`**
+    - *Class 1:* [0–10]
+    - *Class 2:* [10–20]
     - ...
-    - *Class 10:* **`[90−100]`**
+    - *Class 10:* [90–100]
 - Train a classifier with $K$ output classes (one per age interval)
-- The final prediction can be the center of the predicted bin (e.g., 25 for the **`[20–30]`** bin) or, more robustly, a weighted average of all bin centers based on the output class probabilities.
+- The final prediction can be the center of the predicted bin (e.g., 25 for the [20–30] bin) or, more robustly, a weighted average of all bin centers based on the output class probabilities.
 </Callout>
 
 
@@ -473,7 +481,8 @@ To address this limitation, we can use the **Quantile Loss.**
 The $\tau$-quantile of a probability distribution is the value $q_\tau$ such that a random variable $Y$ from the distribution will be less than or equal to $q_\tau$ with probability $\tau$:
 
 $$
-P(Y \le q_\tau) = \tau$,
+P(Y \le q_\tau) = \tau
+$$
 
 ![image.png](/images/deep-learning/04-transformers/2a441aed-76b9-46e0-b185-8c242968feb5.png)
 
@@ -512,7 +521,8 @@ In income data, the 10th percentile is the income level below which the **poores
 
 The **Quantile Loss** allows the model to estimate **specific quantiles** of the target distribution, rather than just the **mean**. This introduces **asymmetry** in the loss, because the penalty for **overestimation** and **underestimation** depends on the chosen quantile **$\tau$.**
 
-$L_\tau(y, \hat{y}) = \begin{cases} \tau (y - \hat{y}) & \text{if } y \ge \hat{y}, \\ (1 - \tau)(\hat{y} - y) & \text{otherwise.} \end{cases}
+$$
+L_\tau(y, \hat{y}) = \begin{cases} \tau (y - \hat{y}) & \text{if } y \ge \hat{y}, \\ (1 - \tau)(\hat{y} - y) & \text{otherwise.} \end{cases}
 $$
 
 **Properties**:
@@ -535,3 +545,18 @@ By adjusting $\tau$, we can control how much the model penalizes one side of the
 
 The model “pays” more for errors on one side of the prediction, depending on the chosen quantile $\tau$.
 </Callout>
+
+## Key Takeaways
+
+| Topic | Key Point |
+| --- | --- |
+| **1D Convolution** | Adapts CNN convolutions to sequential data by sliding a kernel along the temporal axis |
+| **Dilated Convolution** | Introduces gaps between kernel elements to exponentially expand the receptive field without adding parameters |
+| **Causal Convolution** | Ensures output at time $t$ depends only on inputs $\le t$, enforcing temporal causality |
+| **TCN** | Stacks residual blocks with dilated causal convolutions; parallelizable and stable vs. RNNs |
+| **Transformer** | Encoder–decoder architecture using attention instead of convolutions to model arbitrary long-range dependencies |
+| **Self-Attention** | Each token queries all others via Q, K, V projections; computes weighted combinations based on content similarity |
+| **Multi-Head Attention** | Runs multiple attention heads in parallel, then concatenates — captures diverse relational patterns |
+| **Layer Normalization** | Normalizes per-token features (not across the batch) to stabilize training in deep transformers |
+| **MSE vs MAE** | MSE penalizes outliers quadratically; MAE is robust but non-differentiable at zero |
+| **Quantile Loss** | Asymmetric loss that estimates specific quantiles of the target distribution, useful when over/underprediction costs differ |

@@ -137,11 +137,11 @@ Per ogni capitolo: revisione contenuto, fix formule LaTeX, verifica immagini, Me
 - [x] 01 — Deep Neural Networks
 - [x] 02 — Convolutional Neural Networks
 - [x] 03 — Recurrent Neural Networks
-- [ ] 04 — Transformers
-- [ ] 05 — Graph Neural Networks
-- [ ] Verifica: tutti e 5 navigabili, formule renderizzate, immagini visibili, ricerca funzionante
+- [x] 04 — Transformers
+- [x] 05 — Graph Neural Networks
+- [x] Verifica: tutti e 5 navigabili, formule renderizzate, immagini visibili, ricerca funzionante
 
-**Stato**: `IN CORSO`
+**Stato**: `COMPLETATA`
 
 ---
 
