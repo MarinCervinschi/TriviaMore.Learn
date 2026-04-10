@@ -176,7 +176,7 @@ This explains why **early layers** capture **local features** (edges, corners), 
 
 ![image.png](/images/deep-learning/02-convolutional-neural-networks/image%203.png)
 
-**`Note`** that this diagram **simplifies the process for a single channel**. In practice, a filter’s **depth must match the input volume’s depth** (e.g., a $3 \times 3 \times 3$ filter for a $32 \times 32 \times 3$ RGB image). The convolution involves **element-wise multiplications across all channels**, and the results are **summed together**, along with a **single bias term**, to produce **one pixel** in the output feature map.
+**Note** that this diagram **simplifies the process for a single channel**. In practice, a filter’s **depth must match the input volume’s depth** (e.g., a $3 \times 3 \times 3$ filter for a $32 \times 32 \times 3$ RGB image). The convolution involves **element-wise multiplications across all channels**, and the results are **summed together**, along with a **single bias term**, to produce **one pixel** in the output feature map.
 
 **HYPERPARAMETERS**
 

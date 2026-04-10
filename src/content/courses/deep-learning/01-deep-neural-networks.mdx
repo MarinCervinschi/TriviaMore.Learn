@@ -82,7 +82,7 @@ However, these raw scores are often difficult to interpret directly. To obtain *
 
 **LOGISTIC REGRESSION**
 
-The **logistic regression model** is primarily used for **binary classification**, that is, when we have only **two possible classes** (**`e.g.`** *cat vs. not cat*).
+The **logistic regression model** is primarily used for **binary classification**, that is, when we have only **two possible classes** (e.g. *cat vs. not cat*).
 
 If we add a **sigmoid nonlinearity** to our linear mapping, we get a **logistic regression classifier**:
 
@@ -210,12 +210,12 @@ A **single neuron with a sigmoid activation** can naturally implement a **binary
     ![image.png](/images/deep-learning/01-deep-neural-networks/image%204.png)
     
     1.  **Saturates and kills the gradient**
-        - For large positive inputs **`e.g., x > 2.5`** the output approaches 1.
-        - For large negative inputs **`e.g., (x < -2.5)`** the output approaches 0.
+        - For large positive inputs (e.g., $x > 2.5$) the output approaches 1.
+        - For large negative inputs (e.g., $x < -2.5$) the output approaches 0.
         
         In these **saturated regions**, the derivative of the sigmoid is almost zero, so **gradient descent provides very small or no update**, slowing learning.
         
-        Practically, the model might output 1 for very different scores **`e.g., 5 or 600`**, because the gradient does not distinguish them, so the network cannot adjust efficiently.
+        Practically, the model might output 1 for very different scores (e.g., 5 or 600), because the gradient does not distinguish them, so the network cannot adjust efficiently.
         
     2. **Not zero-centered**
         
@@ -254,7 +254,7 @@ A **single neuron with a sigmoid activation** can naturally implement a **binary
     
 
 <Callout type="warning">
-ReLU is **non-linear** because the $\max$ operation
+ReLU is **non-linear** because the $\max$ operation is not a linear function — it introduces a "kink" at zero, breaking linearity.
 </Callout>
 
     
@@ -550,7 +550,7 @@ We have already introduced the concept of **explicit regularization**, which dir
 
 The first regularization technique which is really peculiar to neural networks is **dropout**. 
 
-The technique works by temporarily *"dropping out"* neurons with a specified probability $*p \in [0,1]*$ at each training step. This means that, at each training step, a neuron can be **randomly turned off**—its output is set to zero, and it is excluded from both the forward pass and backpropagation.
+The technique works by temporarily *"dropping out"* neurons with a specified probability $p \in [0,1]$ at each training step. This means that, at each training step, a neuron can be **randomly turned off**—its output is set to zero, and it is excluded from both the forward pass and backpropagation.
 
 
 <Callout type="example">

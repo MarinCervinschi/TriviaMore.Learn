@@ -373,7 +373,7 @@ $$
     
     - **Output gate $o$** regulates the amount of information to be exposed to successive layers.
     
-    So I will pass to the next cell two things, $h^{(t)}$ and $C^{(t)}$. Because I'm both needed. $h^{(t)}$ is used for computing I, F, O, and C tilde, and $C^{(t)}$ is needed for computing $C^{(t+1)}$.
+    Two things are passed to the next cell: $h^{(t)}$ and $C^{(t)}$. Both are needed — $h^{(t)}$ is used for computing I, F, O, and $\tilde{C}$, while $C^{(t)}$ is needed for computing $C^{(t+1)}$.
     
 
 Thus, each LSTM cell passes forward **two internal states:**
