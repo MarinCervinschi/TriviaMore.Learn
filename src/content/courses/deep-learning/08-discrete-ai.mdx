@@ -56,7 +56,7 @@ Neural networks learn through gradients: during the backward pass we use gradien
 <Callout type="note">
 **Case Study 2 — Hard Selection (Argmax)**
 
-A common discrete operation is selecting the "best" option from a set. This is often done using **`argmax`** which again is a non-differentiable operation. It selects an index, breaking the computational graph. 
+A common discrete operation is selecting the "best" option from a set. This is often done using `argmax` which again is a non-differentiable operation. It selects an index, breaking the computational graph. 
 
 When backpropagation reaches an argmax, gradients cannot flow through it. To train such systems, we need strategies that produce a **differentiable approximation of the maximum** (e.g., softmax relaxations, Gumbel-Softmax, etc.).
 </Callout>
@@ -178,11 +178,11 @@ The complete set of parameters are union of parameters of the encoder, decoder, 
 
 ![image.png](/images/deep-learning/08-discrete-ai/image 5.png)
 
-**`Figure 1:`** *Left:* A figure describing the VQ-VAE *Right:* Visualisation of the embedding space. The output of the encoder $z(x)$ is mapped to the nearest point $e_2$. The gradient $∇_zL$ (in red) will push the encoder to change its output, which could alter the configuration in the next forward pass.
+**Figure 1:** *Left:* A figure describing the VQ-VAE *Right:* Visualisation of the embedding space. The output of the encoder $z(x)$ is mapped to the nearest point $e_2$. The gradient $∇_zL$ (in red) will push the encoder to change its output, which could alter the configuration in the next forward pass.
 
 **VQ-VAE: LEARNING**
 
-The forward pass is like a standard autoencoder, but with a non-linearity that maps latents to a 1-of-K embedding vector. This operation is non-differentiable, as discrete functions like **`argmax`**, **`round`**, or **`quantize`** break gradient flow.
+The forward pass is like a standard autoencoder, but with a non-linearity that maps latents to a 1-of-K embedding vector. This operation is non-differentiable, as discrete functions like `argmax`, `round`, or `quantize` break gradient flow.
 
 **Solution: straight-through gradient estimation.** To address this, gradients are approximated by copying them from the decoder input $z_q(x)$ to the encoder output $z_e(x)$.
 
@@ -263,8 +263,8 @@ In PyTorch, the Straight-Through Estimator used in VQ-VAE can be implemented in 
 
 $z_q^{st} ← z_e + \text{detach} (z_q - z_e)$
 
-**`detach()`** breaks the computational graph, which means that during backpropagation 
-the term inside **`detach()`** is treated as a constant.
+`detach()` breaks the computational graph, which means that during backpropagation 
+the term inside `detach()` is treated as a constant.
 
 So:
 
@@ -421,9 +421,9 @@ where:
 
 Each conditional term $p(z_{i,j} | z_{<i,j})$ is modeled as a **categorical distribution** predicted by a convolutional neural network.
 
-**`Problem`**  The model must respect the autoregressive ordering: when predicting pixel $(i,j)$, it must only access **past** pixels, never **future** ones. However, a standard convolutional kernel naturally looks at both past and future pixels in its receptive field, which breaks causality.
+**Problem:** The model must respect the autoregressive ordering: when predicting pixel $(i,j)$, it must only access **past** pixels, never **future** ones. However, a standard convolutional kernel naturally looks at both past and future pixels in its receptive field, which breaks causality.
 
-**`Solution`** PixelCNN enforces autoregressive structure using **masked convolutional kernels**. As we will see later, a binary mask is applied to each convolutional filter so that all weights corresponding to **future** pixels are set to zero. This guarantees that the network is strictly causal during training and sampling.
+**Solution:** PixelCNN enforces autoregressive structure using **masked convolutional kernels**. As we will see later, a binary mask is applied to each convolutional filter so that all weights corresponding to **future** pixels are set to zero. This guarantees that the network is strictly causal during training and sampling.
 
 **INFERENCE**
 
@@ -464,9 +464,9 @@ The process is repeated **until the entire grid has been filled**, meaning that 
 </Callout>
 
 
-**`Note`** This sequential sampling procedure is inherently slow, since each pixel depends on all previously generated ones. As a consequence, sampling time scales linearly with the number of pixels, and pixel generation cannot be parallelized.
+**Note:** This sequential sampling procedure is inherently slow, since each pixel depends on all previously generated ones. As a consequence, sampling time scales linearly with the number of pixels, and pixel generation cannot be parallelized.
 
-**`Conclusion`** This method represents a clear trade-off: it provides a robust way to model discrete sequential distributions, but it is computationally expensive. It is a viable solution for short sequences or small grids, but it becomes impractical for high-resolution data due to the prohibitive inference time.
+**Conclusion:** This method represents a clear trade-off: it provides a robust way to model discrete sequential distributions, but it is computationally expensive. It is a viable solution for short sequences or small grids, but it becomes impractical for high-resolution data due to the prohibitive inference time.
 
 **CAUSAL CONVOLUTIONS**
 
@@ -495,9 +495,9 @@ Since the model predicts a **categorical distribution** for each position (e.g.,
 
 In practice, for each pixel $(i, j)$, the model outputs a probability vector of size $K$, whose entries sum to 1.  Cross-entropy is applied independently at each location, encouraging the network to assign high probability to the *correct* class. 
 
-**`Problem`** Sampling from PixelCNN is slow, as it requires a **sequential forward pass** for each pixel due to the autoregressive dependency. If we were to train the model in the same way—using its own generated samples to predict the next step—training would be computationally infeasible.
+**Problem:** Sampling from PixelCNN is slow, as it requires a **sequential forward pass** for each pixel due to the autoregressive dependency. If we were to train the model in the same way—using its own generated samples to predict the next step—training would be computationally infeasible.
 
-**`Solution` Teacher Forcing**
+**Solution: Teacher Forcing**
 
  During training, we already possess the ground-truth image. Instead of feeding the model its own sampled predictions from the previous step (as done in inference ), we feed the **actual ground-truth pixels** from the training data in the network. 
 
@@ -579,7 +579,7 @@ This works for VQ-VAE, but it is **not suitable for sampling problems** like tho
 
 The **Gumbel–Softmax** trick provides a differentiable way to sample from a categorical distribution **inside a neural network**, enabling backpropagation through the sampling operation.
 
-Instead of performing a non-differentiable **`argmax`** or standard categorical sampling, the encoder produces **logits** $\pi$ over the $K$ possible categories. These logits are transformed into a *soft* sample using the Gumbel–Softmax relaxation:
+Instead of performing a non-differentiable `argmax` or standard categorical sampling, the encoder produces **logits** $\pi$ over the $K$ possible categories. These logits are transformed into a *soft* sample using the Gumbel–Softmax relaxation:
 
 $y_k = \frac{\exp((\log \pi_k + g_k)/\lambda)}{\sum_j \exp((\log \pi_j + g_j)/\lambda)}$
 
@@ -614,7 +614,7 @@ We can distinguish three approaches to sampling from a categorical distribution:
     
     $y_k = \text{one-hot}(\arg \max_j \pi_j)$
     
-    **`Problem`**  It is **non-differentiable**.
+    **Problem:** It is **non-differentiable**.
     
 - **Softmax:**
     
@@ -622,7 +622,7 @@ We can distinguish three approaches to sampling from a categorical distribution:
     
     $y_k = \frac{\exp(\pi_k/\lambda)}{\sum_j \exp(\pi_j/\lambda)}$
     
-    **`Problem`** it's not **sampleable**, it only gives probabilities.
+    **Problem:** it's not **sampleable**, it only gives probabilities.
     
 - **Gumbel-Softmax (differentiable sampling):**
     

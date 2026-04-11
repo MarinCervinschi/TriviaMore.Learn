@@ -27,7 +27,7 @@ In practical terms, such as with image data, a successful model assigns **high p
 
 Standard autoencoders, including **denoising** and **contractive autoencoders**, are primarily **discriminative**, meaning they focus on learning a mapping that is useful for distinguishing between classes. Although these models can **implicitly capture the structure of the data distribution** $p(x)$ by learning the geometry of the data manifold, they do not explicitly model this distribution. As a result, **sampling new data points from them is difficult**.
 
-**`Solution`** modeling the true distribution $p(x)$ using simpler distribution that we can easily sample from.
+**Solution:** modeling the true distribution $p(x)$ using simpler distribution that we can easily sample from.
 
 ### Latent Variable Models
 
@@ -97,7 +97,7 @@ $$
 
 
 <Callout type="warning">
-**`Note`**  The expectation operator $\mathbb{E}$ corresponds to an integral when the variable $z$ is continuous:
+**Note:** The expectation operator $\mathbb{E}$ corresponds to an integral when the variable $z$ is continuous:
 
 $\mathbb{E}_{z \sim q(z|x)}[f(z)] = \int f(z)q(z|x)dz$
 </Callout>
@@ -216,7 +216,7 @@ The VAE architecture maintains the **encoder–decoder** structure of standard a
     
 
 <Callout type="note">
-**`In practice`** the encoder projects the data into the space of latent variables.
+**In practice**, the encoder projects the data into the space of latent variables.
 </Callout>
 
     
@@ -226,7 +226,7 @@ The VAE architecture maintains the **encoder–decoder** structure of standard a
     
 
 <Callout type="note">
-**`In practice`** the decoder network **learns the conditional distribution** $p_\theta(x \mid z)$ and tries to reconstruct the input as accurately as possible.
+**In practice**, the decoder network **learns the conditional distribution** $p_\theta(x \mid z)$ and tries to reconstruct the input as accurately as possible.
 </Callout>
 
     
@@ -383,7 +383,7 @@ Convergence is reached when the generator produces data indistinguishable from r
 
 **TRAINING GANs: VANISHING GRADIENTS PROBLEM**
 
-**`Problem`** If the discriminator is too good and the generator is not yet producing realistic samples, the generator will receive very small gradients, leading to **vanishing gradients**.
+**Problem:** If the discriminator is too good and the generator is not yet producing realistic samples, the generator will receive very small gradients, leading to **vanishing gradients**.
 
 In the original GAN formulation, the generator minimizes:
 
@@ -398,7 +398,7 @@ and the gradient of this term becomes **very small**. As a result the generator 
 
 ![image.png](/images/deep-learning/07-generative-models/image 5.png)
 
-**`Solution`** To address this, we modify the generator’s objective. Instead of minimizing the probability of the discriminator being correct, we **maximize the probability of the discriminator being wrong**.
+**Solution:** To address this, we modify the generator’s objective. Instead of minimizing the probability of the discriminator being correct, we **maximize the probability of the discriminator being wrong**.
 
 We switch the generator's objective to:
 

@@ -409,14 +409,14 @@ Because each stochastic pass yields slightly different predictions, their variab
 
 **CONFIDENCE FROM THE PREDICTED PROBABILITY**
 
-A common method for estimating model confidence is to use the **maximum predicted probability** (the highest value in the output vector). For instance, if a network outputs **`[0.05, 0.10, 0.80, 0.05]`**, the value 0.80 suggests the model is 80% confident in class 3. Under this logic:
+A common method for estimating model confidence is to use the **maximum predicted probability** (the highest value in the output vector). For instance, if a network outputs **[0.05, 0.10, 0.80, 0.05]**, the value 0.80 suggests the model is 80% confident in class 3. Under this logic:
 
 - A probability close to 1 indicates the model is **very confident**.
 - A lower value (e.g., 0.4) indicates **uncertainty**, as multiple classes compete.
 
 **The Problem: Overconfidence and Calibration**
 
-The primary issue is that Softmax outputs are **relative scores**, not calibrated likelihoods or true posterior probabilities. Because models are trained with one-hot encoded targets (e.g., **`[0,0,1,0]`**), they tend to assign very high probability to a single class even when the prediction is wrong.
+The primary issue is that Softmax outputs are **relative scores**, not calibrated likelihoods or true posterior probabilities. Because models are trained with one-hot encoded targets (e.g., **[0, 0, 1, 0]**), they tend to assign very high probability to a single class even when the prediction is wrong.
 
 This leads to **overconfidence**, making high predicted probabilities unreliable indicators of low uncertainty, which is especially problematic in safety-critical applications. Consequently, relying solely on the **maximum probability** can be misleading when the model is miscalibrated.
 
@@ -451,7 +451,7 @@ In miscalibrated models, this relationship breaks down.
 
 **RELIABILITY DIAGRAMS**
 
-Calibration is commonly visualized using **reliability diagrams**. These diagrams plots **group predictions** into **confidence intervals**  (e.g., **`0.0–0.1, 0.1–0.2, . . . , 0.9–1.0`**) then for each bin compare two metrics:
+Calibration is commonly visualized using **reliability diagrams**. These diagrams plots **group predictions** into **confidence intervals**  (e.g., 0.0–0.1, 0.1–0.2, ..., 0.9–1.0) then for each bin compare two metrics:
 
 1. **Average Predicted Confidence:** The mean of the highest predicted probabilities for samples in that bin.
 2. **Empirical Accuracy:** The actual fraction of correct predictions in that bin.
