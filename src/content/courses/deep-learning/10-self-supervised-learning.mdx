@@ -188,7 +188,7 @@ The core concept of masked generation is to **hide a random portion of data,** p
 
 **INPAINTING**
 
-**Inpainting** consists in ****generating the contents of an arbitrary image region conditioned on its surroundings. So, learning to inpaint by reconstruction means **learning to reconstruct the missing pixels**.
+**Inpainting** consists in generating the contents of an arbitrary image region conditioned on its surroundings. So, learning to inpaint by reconstruction means **learning to reconstruct the missing pixels**.
 
 ![image.png](/images/deep-learning/10-self-supervised-learning/image 11.png)
 
@@ -274,7 +274,7 @@ The encoder must yield a high similarity score for positive pairs $(x, x^+)$ and
 
 Constructing the set of positive pairs is a critical step in self-supervised learning. Common strategies include:
 
-- **Data Augmentation:** Pairing the original input with a distorted version of itself (e.g., through cropping, rotating ecc…).
+- **Data Augmentation:** Pairing the original input with a distorted version of itself (e.g., through cropping, rotating, etc.).
 - **Multi-view Learning:** Using data that captures the same target from different views
 
 ### Common Loss Functions
@@ -349,7 +349,7 @@ The loss applies a softmax-like normalization to transform similarity scores int
 
 Starting with a single image $x$, the framework follows these steps:
 
-1. **Data Augmentation**: Two different augmentation operators ($t$ and $t'$) are sampled from the same family $\mathcal{T}$ and aare applied to produce two correlated views, $x_i$ and $x_j$, forming a **positive pair**.
+1. **Data Augmentation**: Two different augmentation operators ($t$ and $t'$) are sampled from the same family $\mathcal{T}$ and are applied to produce two correlated views, $x_i$ and $x_j$, forming a **positive pair**.
 2. **Base Encoder $f(\cdot)$**: A neural network extracts feature representations ($h$) from the augmented inputs.
 3. **Projection Head $g(\cdot)$**: A small neural network (typically a MLP) maps the representations $h$ into a space $z$ where the contrastive loss is applied.
 
@@ -394,3 +394,23 @@ However, this choice has computational implications:
 
 - **Memory footprint:** Large batches substantially increase memory usage during backpropagation.
 - **Hardware requirements:** Training on datasets such as ImageNet often requires distributed setups on specialized hardware (e.g., TPUs) due to these memory and computational demands.
+
+These trade-offs motivate alternative contrastive methods (such as MoCo and BYOL) that decouple the number of negatives from the batch size, achieving comparable performance with significantly lower hardware requirements.
+
+---
+
+## Key Takeaways
+
+| Concept | Description |
+|---|---|
+| **Self-supervised learning (SSL)** | Generates supervision signals from the data itself; learns representations from unlabeled data for downstream tasks |
+| **Pretext task** | Synthetic prediction problem (rotation, jigsaw, colorization) that forces the model to learn useful features without labels |
+| **Two-stage pipeline** | Pretrain on unlabeled data with a pretext task, then fine-tune on a small labeled dataset for the target task |
+| **Jigsaw puzzles** | Predict spatial arrangement of shuffled image patches; learns patch-level semantics and spatial relationships |
+| **Colorization** | Predict colors from grayscale; forces the model to learn semantic recognition and object-color associations |
+| **Self-prediction** | Mask or hide part of the input, predict it from the rest; includes masked generation and autoregressive generation |
+| **Masked Auto-Encoder (MAE)** | Masks 80-90% of image patches; encoder processes only visible patches, decoder reconstructs masked ones |
+| **Contrastive learning** | Pull positive pairs (augmented views of same input) together, push negative pairs apart in embedding space |
+| **InfoNCE loss** | Cross-entropy over $N$-way softmax: identify the positive sample among $N-1$ negatives |
+| **SimCLR** | Contrastive framework: augment $\to$ encode $\to$ project $\to$ InfoNCE loss; uses large batches as implicit negatives |
+| **Projection head** | MLP $g(\cdot)$ maps representations to contrastive loss space; discarded after training to preserve richer features in $f(\cdot)$ |

@@ -25,7 +25,7 @@ In practical terms, such as with image data, a successful model assigns **high p
 
 **GENERATIVE MODELING AND AUTOENCODERS**
 
-Standard autoencoders, including **denoising** and **contractive autoencoders**, are primarily **discriminative**, ****meaning they focus on learning a mapping that is useful for distinguishing between classes. Although these models can **implicitly capture the structure of the data distribution** $p(x)$ by learning the geometry of the data manifold, they do not explicitly model this distribution. As a result, **sampling new data points from them is difficult**.
+Standard autoencoders, including **denoising** and **contractive autoencoders**, are primarily **discriminative**, meaning they focus on learning a mapping that is useful for distinguishing between classes. Although these models can **implicitly capture the structure of the data distribution** $p(x)$ by learning the geometry of the data manifold, they do not explicitly model this distribution. As a result, **sampling new data points from them is difficult**.
 
 **`Solution`** modeling the true distribution $p(x)$ using simpler distribution that we can easily sample from.
 
@@ -49,7 +49,9 @@ The latent variables $z$ are not manually specified; the model **learns them dir
 
 Rather than modeling $p(x)$ directly, generative models introduce latent variables $z$ and model the **joint distribution** $p(x, z)$. By applying the **law of total probability** and the **definition of conditional probability**, we can express the marginal distribution of the data as:
 
-$\underbrace{p(x)}_{\text{marginal}} = \underbrace{\int p(x, z) dz}_{\text{law of total probability}} = \underbrace{\int p(x|z) p(z) dz}_{\text{definition of conditional probability}}$
+$$
+\underbrace{p(x)}_{\text{marginal}} = \underbrace{\int p(x, z) \, dz}_{\text{law of total probability}} = \underbrace{\int p(x|z) \, p(z) \, dz}_{\text{definition of conditional probability}}
+$$
 
 **INTRACTABILITY PROBLEM**
 
@@ -57,7 +59,9 @@ While this provides the foundation for Variational Autoencoders (VAEs), calculat
 
 To approximate this integral, a common approach is **Monte Carlo estimation.** Instead of calculating the full integral, we approximate it by averaging over a finite set of $K$ samples drawn from a proposal distribution (the prior) $p(z)$:
 
-$p(x) \approx \frac{1}{K} \sum_{k=1}^{K} p(x|z^{(k)}), \quad z^{(k)} \sim p(z)$
+$$
+p(x) \approx \frac{1}{K} \sum_{k=1}^{K} p(x|z^{(k)}), \quad z^{(k)} \sim p(z)
+$$
 
 **SAMPLING PROCEDURE**
 
@@ -77,7 +81,9 @@ Using **Monte Carlo methods** provides some significant challenges because the q
 
 This is formulated as an **optimization problem** that minimizes the Kullback–Leibler (KL) divergence between the two distributions:
 
-$q^*(z|x) = \arg \min_q D_{KL}[q(z|x) \parallel p(z|x)]$
+$$
+q^*(z|x) = \arg \min_q D_{KL}[q(z|x) \parallel p(z|x)]
+$$
 
 Minimizing this divergence ensures that the learned distribution $q(z \mid x)$ can effectively replace the true posterior for inference. However, direct minimization is intractable because computing $D_{KL}$ requires knowing the evidence $\log p(x)$, which is generally impossible for complex generative models.
 
@@ -123,7 +129,9 @@ $$
 
 Importantly, the term $\log p(X)$ does not depend on $z$, and therefore can be moved **outside the expectation**:
 
-$= E_{z \sim q(z|x)} [\log q(z|x) - \log p(x|z) - \log p(z) ] + \log p(x)$
+$$
+= \mathbb{E}_{z \sim q(z|x)} [\log q(z|x) - \log p(x|z) - \log p(z)] + \log p(x)
+$$
 
 Rearranging the terms:
 
@@ -156,7 +164,9 @@ $$
 
 By rearranging the previous equation, we obtain:
 
-$\log p(x) - \underbrace{D_{KL} [q(z|x) \parallel p(z|x)]}_{\substack{\text{KL divergence between the proxy} \\ \text{and the real posterior distributions.}}} = \underbrace{E_{z \sim q(z|x)} [\log p(x|z)] - D_{KL} [q(z|x) \parallel p(z)]}_{\text{ELBO: Evidence Lower BOund}}.$
+$$
+\log p(x) - \underbrace{D_{KL} [q(z|x) \parallel p(z|x)]}_{\substack{\text{KL divergence between the proxy} \\ \text{and the real posterior distributions}}} = \underbrace{\mathbb{E}_{z \sim q(z|x)} [\log p(x|z)] - D_{KL} [q(z|x) \parallel p(z)]}_{\text{ELBO: Evidence Lower BOund}}
+$$
 
 This is important because It provides a relationship between $p(x)$ (first term of the left side) and the posterior distribution $q(z|x)$. 
 
@@ -202,11 +212,7 @@ The VAE architecture maintains the **encoder–decoder** structure of standard a
 
 **Components:**
 
-- **Encoder network** $q(z | x)$: Given an input $x$, the encoder estimates the posterior distribution $p(z|x)$ over latent variables.  In practice, this is usually modeled as a multivariate Gaussian:
-    
-    $*x \to f_{ENC}(x; \theta) = [\mu(x), \sigma^2(x)] \quad \text{s.t.} \quad \mathcal{N} (z|\mu(x), \sigma^2(x))*$
-    
-    The network outputs two vectors, $\mu(x)$ and $\sigma^2(x)$, representing the parameters of the approximate posterior.
+- **Encoder network** $q(z | x)$: Given an input $x$, the encoder estimates the posterior distribution $p(z|x)$ over latent variables.  In practice, this is usually modeled as a multivariate Gaussian: $x \to f_{\text{ENC}}(x; \theta) = [\mu(x), \sigma^2(x)]$ such that $z \sim \mathcal{N}(z \mid \mu(x), \sigma^2(x))$. The network outputs two vectors, $\mu(x)$ and $\sigma^2(x)$, representing the parameters of the approximate posterior.
     
 
 <Callout type="note">
@@ -233,7 +239,7 @@ The **Regularization term** in the ELBO objective is defined as:
 
 $D_{KL}[q(z|x) \parallel p(z)]$
 
-his term measures how much the approximate posterior $q(z|x)$ produced by the encoder diverges from the **prior distribution** $p(z)$. 
+This term measures how much the approximate posterior $q(z|x)$ produced by the encoder diverges from the **prior distribution** $p(z)$. 
 
 The prior represents our prior belief about the distribution of the latent variables $z$ before observing any data. It is typically "hand-crafted" as a **Standard Multivariate Gaussian**:
 
@@ -263,13 +269,15 @@ To address this problem, we use the **reparameterization trick**. Instead of sam
 ![image.png](/images/deep-learning/07-generative-models/image 3.png)
 
 1. **Sample Noise:** Draw $\epsilon$ from a standard normal distribution of the same dimension as $z$:
-    
+
 $$
-\epsilon \sim \mathcal{N} (z|0, I_n)$.
-    
-2. **Reparametrize**: We then compute $z$ using the parameters provided by the encoder:
-    
-$z = \mu(x) + \epsilon * \sigma(x)
+\epsilon \sim \mathcal{N}(0, I_n)
+$$
+
+2. **Reparametrize:** We then compute $z$ using the parameters provided by the encoder:
+
+$$
+z = \mu(x) + \epsilon \cdot \sigma(x)
 $$
     
 
@@ -346,8 +354,7 @@ $$
         Maximizing this term encourages the discriminator to assign low probability to generated (fake) samples.
         
     
-$$
-D$ is trained to maximize its classification accuracy across both real and synthetic datasets.
+$D$ is trained to maximize its classification accuracy across both real and synthetic datasets.
     
 - The **Generator** ($\theta_g$) aims to minimize the objective such that $D(G(z))$ is close to 1 as possible (effectively "fooling" the discriminator).
     
@@ -359,7 +366,8 @@ The two optimizers operate on separate sets of parameters, even though the overa
 
 1. **Gradient ascent on discriminator:**
     
-$\max_{\theta_d} \ E_{x \sim p_{data}} \log D_{\theta_d} (x) + E_{z \sim p(z)} \log(1 - D_{\theta_d} (G_{\theta_g} (z)))
+$$
+\max_{\theta_d} \ \mathbb{E}_{x \sim p_{\text{data}}} [\log D_{\theta_d}(x)] + \mathbb{E}_{z \sim p(z)} [\log(1 - D_{\theta_d}(G_{\theta_g}(z)))]
 $$
     
     **Updating the Discriminator** to improve its classification.
@@ -417,7 +425,7 @@ It is common to perform multiple discriminator updates per generator update (e.g
     - The loss function is learned instead of being hand selected
     - No MCMC needed
 - **Cons:**
-    - Hard to train Trickier / more unstable to train
+    - Trickier and more unstable to train
     - Need to manually babysit during training
     - No evaluation metric, so it’s hard to compare with other models
 
@@ -475,3 +483,22 @@ $\text{AdaIN}(x, y) = y_s \frac{x - \mu(x)}{\sigma(x)} + y_b$
 Uncorrelated Gaussian noise is added to each convolutional layer to generate fine details like pores, hair follicles, or freckles without affecting the global structure.
 
 ![image.png](/images/deep-learning/07-generative-models/image 11.png)
+
+---
+
+## Key Takeaways
+
+| Concept | Description |
+|---|---|
+| **Generative modeling** | Learn $p(x)$ to sample new data and assess likelihood; enables anomaly detection |
+| **Latent variable models** | Model $p(x) = \int p(x \mid z) \, p(z) \, dz$; latent variables $z$ capture high-level factors of variation |
+| **Variational inference** | Learn a proposal $q(z \mid x) \approx p(z \mid x)$ by minimizing KL divergence; avoids blind Monte Carlo sampling |
+| **ELBO** | $\mathbb{E}[\log p(x \mid z)] - D_{KL}[q(z \mid x) \| p(z)]$; tractable lower bound on $\log p(x)$ |
+| **VAE** | Encoder outputs $\mu, \sigma^2$ of a Gaussian posterior; decoder reconstructs from sampled $z$; trained via ELBO |
+| **Reparameterization trick** | $z = \mu + \epsilon \cdot \sigma$, $\epsilon \sim \mathcal{N}(0, I)$; makes sampling differentiable for backpropagation |
+| **GAN** | Generator $G(z)$ vs. discriminator $D(x)$; minimax game — no explicit density needed |
+| **GAN vanishing gradients** | When $D$ is too strong, $G$ gets near-zero gradients; fix: maximize $\log D(G(z))$ instead of minimizing $\log(1 - D(G(z)))$ |
+| **DCGAN** | CNNs in both $G$ and $D$; smooth latent interpolation and semantic arithmetic in latent space |
+| **CycleGAN** | Unpaired image-to-image translation via cycle consistency: $x \to G_{A \to B}(x) \to G_{B \to A}(\cdot) \approx x$ |
+| **Progressive GAN** | Trains from low-res to high-res by progressively adding layers; enables 1024x1024 generation |
+| **StyleGAN** | Maps $z \to w$ via MLP for disentangled control; AdaIN injects style; noise adds fine details |

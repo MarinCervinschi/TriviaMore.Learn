@@ -24,7 +24,7 @@ Many real-world domains are inherently discrete, and modeling them with continuo
 
 In the context of artificial learning systems, **discrete models** and **representations enable**:
 
-- **Efficient compression** The discrete latents are easier to encode compactly, so ****by utilizing a discrete domain, we can deploy highly efficient algorithms to compress complex data (such as images).
+- **Efficient compression** The discrete latents are easier to encode compactly, so by utilizing a discrete domain, we can deploy highly efficient algorithms to compress complex data (such as images).
 - **Symbolic reasoning** classic logical reasoning (such as Boolean algebra) operates on discrete states.
 
 - **Modular design** Instead of processing every input through every layer (as in continuous projection), the model can use discrete signals to "route" inputs to specific sub-modules or transformations. This allows the network to dynamically choose which parts of the model to activate based on the specific input.
@@ -56,7 +56,7 @@ Neural networks learn through gradients: during the backward pass we use gradien
 <Callout type="note">
 **Case Study 2 — Hard Selection (Argmax)**
 
-A common discrete operation is selecting the "best" option from a set. This is often done using **`argmax`** which again ****is a non-differentiable operation. It selects an index, breaking the computational graph. 
+A common discrete operation is selecting the "best" option from a set. This is often done using **`argmax`** which again is a non-differentiable operation. It selects an index, breaking the computational graph. 
 
 When backpropagation reaches an argmax, gradients cannot flow through it. To train such systems, we need strategies that produce a **differentiable approximation of the maximum** (e.g., softmax relaxations, Gumbel-Softmax, etc.).
 </Callout>
@@ -117,7 +117,7 @@ It resembles a standard autoencoder with an **encoder** and **decoder**, but unl
 
 ![image.png](/images/deep-learning/08-discrete-ai/image 3.png)
 
-**How does it works?**
+**How does it work?**
 
 1. **Encoding**
     
@@ -211,7 +211,9 @@ To learn the embedding space, VQ-VAE utilizes Vector Quantization (VQ), a dictio
 
 The overall training objective is defined as:
 
-$L = \underbrace{\log p(x|z_q(x))}_{\text{Reconstruction error}} + \underbrace{\| \text{stopgrad}[z_e(x)] - z_q(x) \|_2^2}_{\text{Vector Quantisation (VQ)}} + \beta \underbrace{\| z_e(x) - \text{stopgrad}[z_q(x)] \|_2^2}_{\text{Commitment term}}$
+$$
+L = \underbrace{\log p(x|z_q(x))}_{\text{Reconstruction error}} + \underbrace{\| \text{stopgrad}[z_e(x)] - z_q(x) \|_2^2}_{\text{Vector Quantisation (VQ)}} + \beta \underbrace{\| z_e(x) - \text{stopgrad}[z_q(x)] \|_2^2}_{\text{Commitment term}}
+$$
 
 
 <Callout type="note">
@@ -272,7 +274,7 @@ So:
     
 - During **backward pass**:
     
-    Gradients stop at **`detach$\mathbf{(z_q - z_e)}$`**, so only **$z_e$** is considered and ****receives gradients.
+    Gradients stop at `detach(z_q - z_e)`, so only $z_e$ is considered and receives gradients.
     
     Effectively the model pretends that:
     
@@ -331,7 +333,9 @@ Estimating the joint probability distribution of a set of random variables $p(z)
 
 To make this problem manageable, we apply the **chain rule of probability**, which allows us to rewrite the *joint distribution* as a *product of conditional distributions*. In this way, the prior  $p_{\theta_z}(z)$ over discrete latent codes can be learned using an **autoregressive factorization**:
 
-**$p_{\theta_z}(z) = \prod_{t=1}^T p_{\theta_z}(z_t | z_{<t})$**
+$$
+p_{\theta_z}(z) = \prod_{t=1}^T p_{\theta_z}(z_t | z_{<t})
+$$
 
 This means that each latent code $z_t$ is predicted conditioned on all previous ones in the sequence.
 
@@ -536,30 +540,24 @@ This means PixelCNN can serve as a method for **measuring how likely an input is
 - **Novelty detection:** Detect out-of-distribution (OOD) samples by thresholding likelihood scores.
 
 
-<Callout type="insight">
-**SUMMARY: VQ-VAE AND PIXELCNN**
+---
 
-**VQ-VAE: Vector Quantized Variational Autoencoder**
+## Key Takeaways
 
-- Learns a discrete latent space using vector quantization.
-- Encoder maps inputs to discrete latent codes (via a codebook).
-- Decoder reconstructs the input from latent codes.
-- Enables efficient and compressible representations.
-
-But VQ-VAE doesn’t have a mechanism for sampling new content. We cannot simply sample random codes from the codebook because we do not know their valid arrangement (the prior). To solve this, we combine VQ-VAE with an autoregressive model.
-
-**PixelCNN: Autoregressive Prior over Latents**
-
-- Models the joint distribution over latent codes.
-- Trained on the discrete latent space from the VQ-VAE encoder.
-- Allows generation of new latent code grids → decoded into images.
-
-**Combined Pipeline**
-
-1. Train VQ-VAE ⇒ Learn discrete latent space.
-2. Train PixelCNN on latent codes ⇒ Learn generative prior.
-3. Sample from PixelCNN and decode via VQ-VAE decoder.
-</Callout>
+| Concept | Description |
+|---|---|
+| **Discretization** | Mapping continuous representations to discrete symbols; aligns with how humans interpret language, images, music |
+| **Non-differentiability problem** | Discrete operations (argmax, quantize) have zero gradients, blocking backpropagation |
+| **VQ-VAE** | Autoencoder with discrete codebook: encoder $\to$ nearest-neighbor quantization $\to$ decoder; avoids posterior collapse |
+| **Codebook** | Learnable lookup table $e \in \mathbb{R}^{K \times D}$; each entry represents a discrete latent concept |
+| **Straight-Through Estimator** | Forward: use discrete output; backward: copy gradients as if identity. Implemented as $z_q^{st} = z_e + \text{detach}(z_q - z_e)$ |
+| **VQ-VAE loss** | Reconstruction + VQ term (moves codebook toward encoder) + commitment term (moves encoder toward codebook) |
+| **Autoregressive factorization** | $p(z) = \prod_t p(z_t \mid z_{<t})$; chain rule decomposes joint distribution into sequential conditionals |
+| **PixelCNN** | 2D autoregressive model using masked convolutions; learns a prior over discrete latent codes |
+| **Masked convolutions** | Type A (first layer): excludes current pixel; Type B (subsequent layers): includes current pixel features |
+| **Teacher forcing** | Train with ground-truth inputs instead of model predictions; enables parallel training via single forward pass |
+| **Gumbel-Softmax** | Differentiable sampling from categorical distributions: $y_k = \text{softmax}((\log \pi_k + g_k)/\lambda)$; temperature $\lambda$ controls discreteness |
+| **VQ-VAE + PixelCNN pipeline** | Train VQ-VAE (learn codebook) $\to$ train PixelCNN on latent codes (learn prior) $\to$ sample + decode |
 
 
 ## Gumbel Softmax

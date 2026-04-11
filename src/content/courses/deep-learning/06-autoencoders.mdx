@@ -168,13 +168,13 @@ When training autoencoders, we face a classic trade-off:
 
 A key principle in deep learning is to use a large model (high capacity) but constrain it with **regularization**.
 
-In autoencoders, our goal is to make the latent code $h$ compact and informative. Therefore, we typically apply regularization directly to the code. This is done by adding a **penalty term to the loss** function that encourages the code to have desirable properties, such as sparsity, smoothness, ecc…
+In autoencoders, our goal is to make the latent code $h$ compact and informative. Therefore, we typically apply regularization directly to the code. This is done by adding a **penalty term to the loss** function that encourages the code to have desirable properties, such as sparsity, smoothness, etc.
 
 This process creates an intelligent form of **lossy compression**. We accept that the reconstruction $g(f(x))$ will not be a *perfect* copy of $x$, because we *want* the network to discard irrelevant information and keep only the most salient features.
 
 **SPARSE AUTOENCODER**
 
-A **sparse autoencoder** is an autoencoder whose training criterion involves an additional **sparsity penalty** on the code layer $*h$,* encouraging most of its units to remain inactive. **The modified loss function is:
+A **sparse autoencoder** is an autoencoder whose training criterion involves an additional **sparsity penalty** on the code layer $h$, encouraging most of its units to remain inactive. The modified loss function is:
 
 $$
 L_{SAE} = D(x, g(f(x))) + \lambda |h|
@@ -210,7 +210,7 @@ If an image contains a man and a car (even if they are "messed up" in the image)
 
 **DENOISING AUTOENCODER**
 
-To force the hidden layer to discover **more robust features**, a **denoising autoencoder (DAE)** the idea is to **corrupt the input $x$** with noise (e.g., *Gaussian noise*), and train the network to **reconstruct the original, clean input** from this noisy version. Formally, the DAE minimizes the loss:
+To force the hidden layer to discover **more robust features**, a **denoising autoencoder (DAE)** corrupts the input $x$ with noise (e.g., *Gaussian noise*) and trains the network to **reconstruct the original, clean input** from this noisy version. Formally, the DAE minimizes the loss:
 
 $$
 L_{DAE} = D(x, g(f(\hat{x}))) \quad \text{e.g. } \hat{x} \sim \mathcal{N}(x, \sigma^2 l)
@@ -226,7 +226,7 @@ In other words, the model learns a **vector field** that points from noisy sampl
 
 ![image.png](/images/deep-learning/06-autoencoders/image 9.png)
 
-**DAEs is massivly used for Anomaly Detection:** 
+**DAEs are massively used for Anomaly Detection:** 
 
 - **Train** the DAE with noisy versions of *normal* data.
 - **At inference**, compute the **reconstruction error**
@@ -247,9 +247,9 @@ $$
 
 This regularization term forces the model to learn an encoding that:
 
-- **Does not change much** when $x$ changes slightly.
-- Reduce the **n**umber of **effective degrees of freedom** in the learned representation;
-- Capture only the **variations necessary** to reconstruct the training examples.
+- Does not change much when $x$ changes slightly.
+- Reduces the **number of effective degrees of freedom** in the learned representation;
+- Captures only the **variations necessary** to reconstruct the training examples.
 
 ![image.png](/images/deep-learning/06-autoencoders/image 10.png)
 
@@ -261,3 +261,20 @@ We wish to **extract features** that only reflect variations observed in the tra
 The name **"contractive"** comes from this behavior: the encoder is trained to resist perturbations, so it learns to map a neighborhood of input points (including those slightly off the manifold) to a *smaller*, "contracted" neighborhood in the code space.
 
 By learning to be sensitive only to the "tangent planes" (the red-line directions) at each location, the CAE effectively captures the underlying structure of the data manifold.
+
+---
+
+## Key Takeaways
+
+| Concept | Description |
+|---|---|
+| **Unsupervised learning** | Groups data by similarity without labels; learns $p(x)$ or useful properties of the distribution |
+| **Manifold assumption** | Real data lies on a low-dimensional manifold within the high-dimensional input space |
+| **PCA** | Linear dimensionality reduction: orthogonal axes that maximize variance; cannot capture nonlinear structure |
+| **Autoencoder** | Neural network trained to reconstruct its input through a bottleneck: encoder $h = f(x)$, decoder $r = g(h)$ |
+| **Identity function risk** | Overparameterized autoencoders can learn to simply copy input $\to$ output without extracting useful features |
+| **Undercomplete AE** | Bottleneck with $\dim(h) < \dim(x)$ forces compression; nonlinear generalization of PCA |
+| **Sparse AE** | Adds L1 penalty on activations: $L_{SAE} = D(x, g(f(x))) + \lambda \|h\|$; enables overcomplete dictionaries |
+| **Denoising AE (DAE)** | Corrupts input with noise, trains to reconstruct clean version: $L_{DAE} = D(x, g(f(\hat{x})))$; learns the data manifold |
+| **DAE for anomaly detection** | High reconstruction error $\|x - \hat{x}\|^2$ flags anomalies — the model only reconstructs "normal" patterns well |
+| **Contractive AE (CAE)** | Penalizes $\|\partial f(x)/\partial x\|^2$: code must be insensitive to small input perturbations |

@@ -148,14 +148,14 @@ Per ogni capitolo: revisione contenuto, fix formule LaTeX, verifica immagini, Me
 ### Fase 2 — Capitoli 6-10 (modelli generativi e apprendimento)
 > Modelli generativi, incertezza, apprendimento non supervisionato
 
-- [ ] 06 — Autoencoders
-- [ ] 07 — Generative Models
-- [ ] 08 — Discrete AI
-- [ ] 09 — Uncertainty
-- [ ] 10 — Self-Supervised Learning
-- [ ] Verifica: 10 capitoli totali completati e coerenti
+- [x] 06 — Autoencoders
+- [x] 07 — Generative Models
+- [x] 08 — Discrete AI
+- [x] 09 — Uncertainty
+- [x] 10 — Self-Supervised Learning
+- [x] Verifica: 10 capitoli totali completati e coerenti
 
-**Stato**: `DA FARE`
+**Stato**: `COMPLETATA`
 
 ---
 
