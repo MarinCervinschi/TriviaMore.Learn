@@ -16,7 +16,7 @@ import Callout from '../../../components/Callout.astro';
 
 In contrast, **Neural Networks** trained on a continuously changing stream of data tend to forget previously learned tasks as they focus on new examples.
 
-![image.png](/images/deep-learning/13-continual-learning/image 1.png)
+![image.png](/images/deep-learning/13-continual-learning/image%201.png)
 
 
 <Callout type="example">
@@ -35,7 +35,7 @@ Consider the following two tasks:
 
 As humans are exposed to more pairs from Task 2, it is natural that they forget part of what they learned in Task 1. 
 
-![image.png](/images/deep-learning/13-continual-learning/image 2.png)
+![image.png](/images/deep-learning/13-continual-learning/image%202.png)
 
 However, when the same experiment is performed with **Artificial Neural Networks**, the degradation is far more dramatic: just a few training steps on the new pairs are enough to drive the accuracy on Task 1 close to zero.
 
@@ -54,9 +54,9 @@ As a consequence:
 - Loss for Task B → **low** 🙂
 - Loss for Task A → **high** 🙁
 
-![image.png](/images/deep-learning/13-continual-learning/image 3.png)
+![image.png](/images/deep-learning/13-continual-learning/image%203.png)
 
-![image.png](/images/deep-learning/13-continual-learning/image 4.png)
+![image.png](/images/deep-learning/13-continual-learning/image%204.png)
 
 All guarantees obtained for Task A are effectively overwritten. This behavior leads directly to **catastrophic forgetting**.
 
@@ -64,7 +64,7 @@ Theoretically, NNs are **over-parametrized**. This means that, in theory, there 
 
 The goal of continual learning is therefore to guide optimization toward this shared region — where *both* losses are low — instead of greedily minimizing only the new task loss.
 
-![image.png](/images/deep-learning/13-continual-learning/image 5.png)
+![image.png](/images/deep-learning/13-continual-learning/image%205.png)
 
 To do this, we must **modify the behavior of gradient descent**, adding constraints or regularization terms that preserve important knowledge from previous tasks.
 
@@ -90,7 +90,7 @@ Since data from Task A is **unavailable** during Task B, the model must identify
 
 In a CL classification problem, training is split into $T$ sequential tasks. During each task $t \in \{1, \dots, T\}$, input samples $x$ and ground truth labels $y$ are drawn from an i.i.d. distribution $D_t$.
 
-![image.png](/images/deep-learning/13-continual-learning/image 6.png)
+![image.png](/images/deep-learning/13-continual-learning/image%206.png)
 
 The objective is to learn a model that performs well on **all tasks**, by optimizing a function $f$ with parameters $\theta$ sequentially. At the current task $t_c$, the model must correctly classify examples from **all tasks observed so far**. This is achieved by minimizing the **cumulative loss**:
 
@@ -172,7 +172,7 @@ The empirical Fisher Information Matrix (FIM) has a strong theoretical relations
     The loss landscape is relatively flat, indicating that weights can change significantly without strongly affecting the loss. These parameters are thus assigned **low importance** and receive a **low penalty**.
     
 
-![image.png](/images/deep-learning/13-continual-learning/image 7.png)
+![image.png](/images/deep-learning/13-continual-learning/image%207.png)
 
 In this sense, the curvature of the loss landscape indicates the **robustness** of the minimum. A sharp region implies a low tolerance for parameter changes, while a flat region indicates greater flexibility. By using the FIM as a practical approximation of this curvature, EWC effectively estimates which parameters are essential to maintain previous performance.
 
@@ -214,21 +214,21 @@ Three main evaluation scenarios:
     - **Testing:** the **task identity is provided** for every test example. The model knows exactly which task the input belongs to and only needs to choose the correct class within that specific task's output nodes.
     - **Difficulty:** This is generally the easiest scenario because the search space is limited to the current task.
     
-    ![image.png](/images/deep-learning/13-continual-learning/image 8.png)
+    ![image.png](/images/deep-learning/13-continual-learning/image%208.png)
     
 - **Class-Incremental Learning (Class-IL)**
     - **Training:** Tasks are learned sequentially, just like in Task-IL.
     - **Testing:** The **task identity is NOT provided**. The model must classify the input correctly among **all classes seen so far** across all previous tasks.
     - **Difficulty:** This is significantly more challenging than Task-IL. The model must not only distinguish between classes within a task but also avoid confusing classes from different tasks (inter-task confusion).
     
-    ![image.png](/images/deep-learning/13-continual-learning/image 9.png)
+    ![image.png](/images/deep-learning/13-continual-learning/image%209.png)
     
 - **Domain-Incremental Learning (Domain-IL)**
     - **Training:** The set of possible classes (labels) remains **fixed** across all tasks.
     - **Testing:** Each task introduces a **domain shift** (a change in the input distribution), but the target labels do not change.
     - **Examples:** This is often simulated using data transformations, such as changing the background, weather conditions, or applying rotations/permutations to the inputs while the object to be classified remains the same.
     
-    ![image.png](/images/deep-learning/13-continual-learning/image 10.png)
+    ![image.png](/images/deep-learning/13-continual-learning/image%2010.png)
     
 
 **A TAXONOMY OF CL APPROACHES**
@@ -262,7 +262,7 @@ The PNN architecture includes two main types of connections:
 
 When learning **Task B**, the parameters of the column for **Task A** are **frozen**. The lateral connections allow the new column to access and reuse features learned from previous tasks, enabling **knowledge transfer** without overwriting existing knowledge.
 
-![image.png](/images/deep-learning/13-continual-learning/image 11.png)
+![image.png](/images/deep-learning/13-continual-learning/image%2011.png)
 
 **ADVANTAGES AND LIMITATIONS**
 
@@ -298,7 +298,7 @@ Each task is associated with a **binary mask** that determines which weights are
 
 All weights are effectively **“packed”** into a single network, while the masks control task-specific activation. This approach reduces memory usage and allows new tasks to be learned **without overwriting previous ones**.
 
-![image.png](/images/deep-learning/13-continual-learning/image 12.png)
+![image.png](/images/deep-learning/13-continual-learning/image%2012.png)
 
 ## Regularization approaches
 
@@ -329,7 +329,7 @@ Depending on what part of the network is targeted, these methods are divided int
     Examples: Learning without Forgetting (LwF, next slides).
     
 
-![image.png](/images/deep-learning/13-continual-learning/image 13.png)
+![image.png](/images/deep-learning/13-continual-learning/image%2013.png)
 
 ### Learning without Forgetting (LwF)
 
@@ -347,7 +347,7 @@ LwF applies **Knowledge Distillation (KD)** between a "teacher" (the frozen netw
     - **True Labels:** Standard supervision for the new classes.
     - **Distillation Supervision:** the student is encouraged to match the teacher’s output probabilities for previously learned classes.
 
-![image.png](/images/deep-learning/13-continual-learning/image 14.png)
+![image.png](/images/deep-learning/13-continual-learning/image%2014.png)
 
 This approach assumes that the **distribution of new data is not drastically different from past data**, since the current data is used to approximate previous knowledge.
 
@@ -382,9 +382,9 @@ Rehearsal approaches mitigate catastrophic forgetting by storing a small subset 
 
 The buffer typically contains only a small fraction of the original data (e.g., 5-10% per class), making it significantly more **memory-efficient** than storing entire datasets. However, the model's ability to retain past knowledge depends on the **size of this buffer**; larger buffers generally lead to better performance.
 
-![image.png](/images/deep-learning/13-continual-learning/image 15.png)
+![image.png](/images/deep-learning/13-continual-learning/image%2015.png)
 
-![image.png](/images/deep-learning/13-continual-learning/image 16.png)
+![image.png](/images/deep-learning/13-continual-learning/image%2016.png)
 
 **THE ER LOSS FUNCTION**
 
@@ -396,7 +396,7 @@ This process acts as a form of **rehearsal**, where the model periodically revis
 
 **PSEUDOCODE**
 
-![image.png](/images/deep-learning/13-continual-learning/image 17.png)
+![image.png](/images/deep-learning/13-continual-learning/image%2017.png)
 
 **MEMORY ALLOCATION**
 
@@ -431,7 +431,7 @@ Sampling strategies determine **which samples should be stored in the buffer and
     - **If the buffer is not full:** New examples are added directly.
     - **Once the buffer is full:** A random decision determines if a new sample replaces an existing one.
 
-![image.png](/images/deep-learning/13-continual-learning/image 18.png)
+![image.png](/images/deep-learning/13-continual-learning/image%2018.png)
 
 **Other sampling strategies**
 
@@ -468,11 +468,11 @@ where:
 - **Function Regularization:** penalizes the **Mean Squared Error** (MSE) between current responses $h_\theta(x)$ and stored responses $z$, ensuring the model maintains its behavior on previous tasks.
 - **$\alpha$:** A weighting factor that balances the preservation of past knowledge against the learning of the new task.
 
-![image.png](/images/deep-learning/13-continual-learning/image 19.png)
+![image.png](/images/deep-learning/13-continual-learning/image%2019.png)
 
 - **$\mathbb{E}_{(x,z) \sim \mathcal{B}}$:** Indicates that the penalty is averaged across all samples stored in the memory buffer
 
-![image.png](/images/deep-learning/13-continual-learning/image 20.png)
+![image.png](/images/deep-learning/13-continual-learning/image%2020.png)
 
 The logits stored in the buffer represent more than proxies for ground-truth labels: they capture the model’s knowledge at the time the sample was processed. Specifically, logits encode similarities and relationships between classes, providing a richer signal than discrete labels.
 
@@ -597,7 +597,7 @@ L2P utilizes a **frozen ViT backbone** and introduces the following components:
 - **Key-Query Matching:** For every input, a query embedding is computed and compared with the learned keys associated with each prompt. The system then selects the **top-$k$** prompts based on highest similarity.
 - **Classifier Head:** A lightweight head updated for each specific task.
 
-![image.png](/images/deep-learning/13-continual-learning/image 21.png)
+![image.png](/images/deep-learning/13-continual-learning/image%2021.png)
 
 **TRAINING AND INFERENCE**
 
@@ -613,7 +613,7 @@ L2P utilizes a **frozen ViT backbone** and introduces the following components:
 
 Because prompt retrieval depends on input similarity, the model **does not require task IDs at inference**, making it **task-agnostic**.
 
-![image.png](/images/deep-learning/13-continual-learning/image 22.png)
+![image.png](/images/deep-learning/13-continual-learning/image%2022.png)
 
 **Intuition:** different inputs retrieve different prompts, enabling flexible task adaptation without modifying the backbone.
 

@@ -50,7 +50,7 @@ Even without labels, a model can learn to represent these shared features.
     - **Optimization:** to initialize parameters in a better than any position given by random initialization.
     - **Regularization:** Unsupervised learning acts as a good regularizer for supervised learning.
 
-![image.png](/images/deep-learning/06-autoencoders/image 1.png)
+![image.png](/images/deep-learning/06-autoencoders/image%201.png)
 
 ## Learning Representations
 
@@ -68,7 +68,7 @@ The **manifold assumption** states that data lies approximately on a **low-dimen
 
 When this is true, it becomes more effective for machine learning algorithms to **represent** data using **coordinates on the manifold**, rather than raw coordinates in the full high-dimensional space $(\mathbb{R}^N)$.
 
-![image.png](/images/deep-learning/06-autoencoders/image 2.png)
+![image.png](/images/deep-learning/06-autoencoders/image%202.png)
 
 **FINDING A GOOD REPRESENTATION**
 
@@ -99,7 +99,7 @@ However, this linear-only approach is a significant limitation. In many real-wor
 
 One **inefficient way** to approximate PCA with a neural network is to use a **linear autoencoder**, which is a neural network with: an **input layer**, a **"bottleneck" hidden layer** (with fewer neurons, $M$), and an **output layer** with the same number of neurons as the input. 
 
-![image.png](/images/deep-learning/06-autoencoders/image 3.png)
+![image.png](/images/deep-learning/06-autoencoders/image%203.png)
 
 A **linear autoencoder** with an $M$-neuron bottleneck, when trained to minimize squared reconstruction error, will successfully identify and span the **exact same $M$-dimensional subspace** as the first $M$ principal components (PCs) from PCA. 
 
@@ -112,7 +112,7 @@ However, the solution is **not identical to PCA**:
 
 An **autoencoder** is a feed-forward neural network trained to **copy its input to its output** after performing **dimensionality reduction**.
 
-![image.png](/images/deep-learning/06-autoencoders/image 4.png)
+![image.png](/images/deep-learning/06-autoencoders/image%204.png)
 
 The network can be conceptually divided into two parts:
 
@@ -121,7 +121,7 @@ The network can be conceptually divided into two parts:
 
 The goal is to induce in $h$ **useful properties** that capture the **most salient features** of the training data. This representation, often called the **code**, has fewer dimensions than the original input.
 
-![image.png](/images/deep-learning/06-autoencoders/image 5.png)
+![image.png](/images/deep-learning/06-autoencoders/image%205.png)
 
 By including **nonlinear layers** in both the encoder and decoder, the autoencoder can learn to represent data lying on or near a **nonlinear manifold**, capturing more complex structures than linear methods like PCA.
 
@@ -155,7 +155,7 @@ which penalizes the reconstruction $g(f(x))$ for being dissimilar from the input
 
 However, simply introducing a bottleneck is **not sufficient** to ensure meaningful feature learning. If the **encoder and decoder** have excessive capacity (e.g., very deep or with many parameters), the network can still **learn to perform the copying task without extracting useful information**.
 
-![image.png](/images/deep-learning/06-autoencoders/image 6.png)
+![image.png](/images/deep-learning/06-autoencoders/image%206.png)
 
 In this case, the decoder effectively acts as a **memory bank**, while the encoder learns an **index** to retrieve stored examples — producing perfect reconstructions for the training set but failing to generalize to new data.
 
@@ -180,7 +180,7 @@ $$
 L_{SAE} = D(x, g(f(x))) + \lambda |h|
 $$
 
-![image.png](/images/deep-learning/06-autoencoders/image 7.png)
+![image.png](/images/deep-learning/06-autoencoders/image%207.png)
 
 where:
 
@@ -218,13 +218,13 @@ $$
 
 Denoising autoencoders must therefore **undo this corruption** rather than simply copying their input.
 
-![image.png](/images/deep-learning/06-autoencoders/image 8.png)
+![image.png](/images/deep-learning/06-autoencoders/image%208.png)
 
 A DAE learns to project corrupted samples $\hat{x}$ **back onto the manifold** where real, valid data lies.
 
 In other words, the model learns a **vector field** that points from noisy samples toward regions of **higher data probability.** By knowing where each point near the curve should be projected, a DAE has **implicitly learned the structure of the underlying manifold** responsible for the data-generating process.
 
-![image.png](/images/deep-learning/06-autoencoders/image 9.png)
+![image.png](/images/deep-learning/06-autoencoders/image%209.png)
 
 **DAEs are massively used for Anomaly Detection:** 
 
@@ -251,7 +251,7 @@ This regularization term forces the model to learn an encoding that:
 - Reduces the **number of effective degrees of freedom** in the learned representation;
 - Captures only the **variations necessary** to reconstruct the training examples.
 
-![image.png](/images/deep-learning/06-autoencoders/image 10.png)
+![image.png](/images/deep-learning/06-autoencoders/image%2010.png)
 
 We wish to **extract features** that only reflect variations observed in the training set:
 

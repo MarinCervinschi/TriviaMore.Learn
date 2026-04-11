@@ -187,7 +187,7 @@ Maximizing the ELBO is equivalent to minimizing the KL divergence between the ap
 
 This is because the $\log p(x)$ depends only on the data and the model parameters — it is **constant** with respect to the variational distribution $q$. Therefore, as we push the ELBO "up" toward $\log p(x)$, the "gap" (the KL divergence) must necessarily shrink. 
 
-![image.png](/images/deep-learning/07-generative-models/image 1.png)
+![image.png](/images/deep-learning/07-generative-models/image%201.png)
 
 ### Variational Autoencoder (VAE)
 
@@ -208,7 +208,7 @@ where:
 
 The VAE architecture maintains the **encoder–decoder** structure of standard autoencoders. However, instead of mapping the input to a single deterministic latent vector, the encoder outputs the parameters — typically the **mean and variance** — of a **latent distribution**.
 
-![image.png](/images/deep-learning/07-generative-models/image 2.png)
+![image.png](/images/deep-learning/07-generative-models/image%202.png)
 
 **Components:**
 
@@ -266,7 +266,7 @@ Sampling is stochastic and therefore **non-differentiable**, which prevents grad
 
 To address this problem, we use the **reparameterization trick**. Instead of sampling directly from the approximate posterior:
 
-![image.png](/images/deep-learning/07-generative-models/image 3.png)
+![image.png](/images/deep-learning/07-generative-models/image%203.png)
 
 1. **Sample Noise:** Draw $\epsilon$ from a standard normal distribution of the same dimension as $z$:
 
@@ -325,7 +325,7 @@ Generative Adversarial Networks (GANs) are another generative approach, based on
     The discriminator acts as a binary classifier that evaluates the **authenticity of the data**. It receives samples from both the **training set** and the **generator**, then it emits a probability value $D(x) \in [0, 1]$ indicating whether the input image is "real" (from the data distribution) or "fake" (from the generator).
     
 
-![image.png](/images/deep-learning/07-generative-models/image 4.png)
+![image.png](/images/deep-learning/07-generative-models/image%204.png)
 
 **LOSS**
 
@@ -396,7 +396,7 @@ If the discriminator correctly classifies fake samples, then:
 
 and the gradient of this term becomes **very small**. As a result the generator fails to learn because it receives almost no useful feedback to update its parameters.
 
-![image.png](/images/deep-learning/07-generative-models/image 5.png)
+![image.png](/images/deep-learning/07-generative-models/image%205.png)
 
 **Solution:** To address this, we modify the generator’s objective. Instead of minimizing the probability of the discriminator being correct, we **maximize the probability of the discriminator being wrong**.
 
@@ -408,13 +408,13 @@ This alternative formulation provides **stronger gradients** even when the discr
 
 By receiving stronger feedback in the early stages of training, the generator can more quickly learn to produce samples that resemble the real data distribution.
 
-![image.png](/images/deep-learning/07-generative-models/image 6.png)
+![image.png](/images/deep-learning/07-generative-models/image%206.png)
 
 **TRAINING ALGORITHM**
 
 ***Algorithm 1*** Minibatch stochastic gradient descent training of generative adversarial nets. The number of steps to apply to the discriminator, $k$, is a **hyperparameter**. 
 
-![image.png](/images/deep-learning/07-generative-models/image 7.png)
+![image.png](/images/deep-learning/07-generative-models/image%207.png)
 
 It is common to perform multiple discriminator updates per generator update (e.g., $k$ discriminator steps and 1 generator step). 
 
@@ -441,7 +441,7 @@ A key property of DCGANs is the **smooth interpolation** in the latent space: mo
 
 Latent vectors in DCGANs exhibit **semantic properties**. Moving along specific directions in the latent space corresponds to meaningful transformations, such as changing a subject's gender, adding glasses, or modifying facial attributes (e.g., "Man with glasses" - "Man" + "Woman" = "Woman with glasses").
 
-![image.png](/images/deep-learning/07-generative-models/image 8.png)
+![image.png](/images/deep-learning/07-generative-models/image%208.png)
 
 **IMPROVING STABILITY: LSGAN AND WGAN**
 
@@ -462,13 +462,13 @@ $x \to G_{A \to B}(x) \to G_{B \to A}(G_{A \to B}(x)) \approx x$
 
 This ensures that an image translated from domain A to B and back to A reconstructs the original input, preventing the model from losing the structural content of the image.
 
-![image.png](/images/deep-learning/07-generative-models/image 9.png)
+![image.png](/images/deep-learning/07-generative-models/image%209.png)
 
 **Progressive GAN**
 
 This architecture starts by training on very low-resolution images (e.g., 4x4) and **progressively adds layers** to both the generator and discriminator to handle higher resolutions. This approach is essential for generating very high-resolution outputs (e.g. 1024x1024).
 
-![image.png](/images/deep-learning/07-generative-models/image 10.png)
+![image.png](/images/deep-learning/07-generative-models/image%2010.png)
 
 **StyleGANs** 
 
@@ -482,7 +482,7 @@ $\text{AdaIN}(x, y) = y_s \frac{x - \mu(x)}{\sigma(x)} + y_b$
 
 Uncorrelated Gaussian noise is added to each convolutional layer to generate fine details like pores, hair follicles, or freckles without affecting the global structure.
 
-![image.png](/images/deep-learning/07-generative-models/image 11.png)
+![image.png](/images/deep-learning/07-generative-models/image%2011.png)
 
 ---
 

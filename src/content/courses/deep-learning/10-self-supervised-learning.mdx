@@ -32,7 +32,7 @@ A key distinction between these two approaches lies in the **level of detail req
 
 The ultimate goal of SSL is to capture the **general context** and the **most important features** of the data to develop robust representations, rather than reconstructing every pixel.
 
-![**Left:** Drawing of a dollar bill from memory. **Right:** Drawing subsequently made with a dollar bill present](/images/deep-learning/10-self-supervised-learning/image 1.png)
+![**Left:** Drawing of a dollar bill from memory. **Right:** Drawing subsequently made with a dollar bill present](/images/deep-learning/10-self-supervised-learning/image%201.png)
 
 **Left:** Drawing of a dollar bill from memory. **Right:** Drawing subsequently made with a dollar bill present
 
@@ -49,7 +49,7 @@ A classic pretext task is **rotation prediction**, where the model is trained to
 
 It turns out to be a simple **4-way classification task**.
 
-![image.png](/images/deep-learning/10-self-supervised-learning/image 2.png)
+![image.png](/images/deep-learning/10-self-supervised-learning/image%202.png)
 
 Solving it requires the model to understand the structure of objects in the image. The model is not learning how to rotate the image; instead, it learns general concepts, such as the typical location of a bird’s head, wings, and body, and how objects usually appear in a canonical orientation. This forces the network to capture meaningful visual features and spatial relationships.
 
@@ -57,7 +57,7 @@ The pretext task is used only to extract useful features, which can then be tran
 
 **EVALUATION OF A SSL METHOD**
 
-![image.png](/images/deep-learning/10-self-supervised-learning/image 3.png)
+![image.png](/images/deep-learning/10-self-supervised-learning/image%203.png)
 
 Self-supervised learning is typically used in a two-stage pipeline:
 
@@ -76,13 +76,13 @@ This approach leverages the strengths of both large-scale unlabeled data and sup
 <Callout type="tip">
 **Why predicting rotations?**
 
-![image.png](/images/deep-learning/10-self-supervised-learning/image 4.png)
+![image.png](/images/deep-learning/10-self-supervised-learning/image%204.png)
 
 A model that can correctly predict the rotation of an input image also learns strong visual features, as it develops a form of “visual commonsense” about how objects should appear in their normal, unrotated orientation.
 </Callout>
 
 
-![image.png](/images/deep-learning/10-self-supervised-learning/image 5.png)
+![image.png](/images/deep-learning/10-self-supervised-learning/image%205.png)
 
 As we can see models pretrained with self-supervised tasks require **fewer labeled examples** to achieve high accuracy on downstream tasks.
 
@@ -108,7 +108,7 @@ The training procedure is the following:
 4. **Joint Observation**: The resulting embeddings are concatenated, allowing the model to consider all tiles simultaneously and learn the relationships between them. This joint observation removes ambiguity because patch placements are mutually exclusive.
 5. **Predict:** The model outputs a probability vector to classify which specific permutation was used.
 
-![image.png](/images/deep-learning/10-self-supervised-learning/image 6.png)
+![image.png](/images/deep-learning/10-self-supervised-learning/image%206.png)
 
  To succeed, the model must acquire two levels of understanding:
 
@@ -141,7 +141,7 @@ The primary goal is not the color reconstruction itself, but the robust represen
 - **Color Coherence**: Maintaining consistent color across neighboring pixel
 - **Regularities and Constraints**: understanding that certain objects tend to have typical colors, while others are implausible (e.g., sky is usually blue, vegetation green, roads gray). In this way, color becomes a proxy for object recognition.
 
-![image.png](/images/deep-learning/10-self-supervised-learning/image 7.png)
+![image.png](/images/deep-learning/10-self-supervised-learning/image%207.png)
 
 **TECHNICAL VARIATIONS**
 
@@ -156,7 +156,7 @@ Since these models are trained on artificially generated grayscale images, they 
 
 Self-prediction is a family of self-supervised methods based on **reconstruction tasks**. The core concept is to **hide a specific portion** of an individual data sample and train the model to **reconstruct it** using the remaining visible parts. This approach can be applied to various data types, including images, sequences, and time series.
 
-![image.png](/images/deep-learning/10-self-supervised-learning/image 8.png)
+![image.png](/images/deep-learning/10-self-supervised-learning/image%208.png)
 
 In these tasks, the part to be predicted is treated as if it were missing. By pretending the model does not have access to that information, the model is forced to learn the underlying structure and relationships within the data.
 
@@ -167,7 +167,7 @@ Common self-prediction tasks include:
 - **Temporal Prediction:** Predicting the future from the past or the recent past, or even predicting the past from the present.
 - **Spatial Prediction:** Predicting the top half of an image from the bottom half, or reconstructing occluded regions from visible ones.
 
-![image.png](/images/deep-learning/10-self-supervised-learning/image 9.png)
+![image.png](/images/deep-learning/10-self-supervised-learning/image%209.png)
 
 Self-prediction generally falls into three main categories based on the generation strategy:
 
@@ -179,7 +179,7 @@ Self-prediction generally falls into three main categories based on the generati
 
 The core concept of masked generation is to **hide a random portion of data,** pretend it is missing and train the model to predict the missing information given other unmasked information.
 
-![image.png](/images/deep-learning/10-self-supervised-learning/image 10.png)
+![image.png](/images/deep-learning/10-self-supervised-learning/image%2010.png)
 
 **Key Examples:**
 
@@ -190,7 +190,7 @@ The core concept of masked generation is to **hide a random portion of data,** p
 
 **Inpainting** consists in generating the contents of an arbitrary image region conditioned on its surroundings. So, learning to inpaint by reconstruction means **learning to reconstruct the missing pixels**.
 
-![image.png](/images/deep-learning/10-self-supervised-learning/image 11.png)
+![image.png](/images/deep-learning/10-self-supervised-learning/image%2011.png)
 
 To succeed at image reconstruction (inpainting), the model must understand the global content of the image and produce a plausible hypothesis for the missing parts. This process forces the network to learn:
 
@@ -201,7 +201,7 @@ To succeed at image reconstruction (inpainting), the model must understand the g
 
 **Masked Auto-Encoders (MAEs)** mask random patches from the input image and reconstructs the missing patches in the pixel space.
 
-![image.png](/images/deep-learning/10-self-supervised-learning/image 12.png)
+![image.png](/images/deep-learning/10-self-supervised-learning/image%2012.png)
 
 **Design and Training**
 
@@ -225,7 +225,7 @@ A common example is **next-token prediction**, where the model predicts the next
 - **Autoregressive language modeling** (GPT, XLNet)
 - **Images in raster scan** (PixelCNN, PixelRNN, iGPT)
 
-![image.png](/images/deep-learning/10-self-supervised-learning/image 13.png)
+![image.png](/images/deep-learning/10-self-supervised-learning/image%2013.png)
 
 ## Contrastive Learning
 
@@ -254,11 +254,11 @@ The goal of **contrastive representation learning** is to map data into a space 
 - **Positive pairs are pulled together:** different augmented versions of the same input (e.g., cropped or color-shifted views of the same image) are mapped close to one another
 - **Negative pairs are pushed apart:** representations of different inputs are placed far from each other
 
-![image.png](/images/deep-learning/10-self-supervised-learning/image 14.png)
+![image.png](/images/deep-learning/10-self-supervised-learning/image%2014.png)
 
-![image.png](/images/deep-learning/10-self-supervised-learning/image 15.png)
+![image.png](/images/deep-learning/10-self-supervised-learning/image%2015.png)
 
-![image.png](/images/deep-learning/10-self-supervised-learning/image 16.png)
+![image.png](/images/deep-learning/10-self-supervised-learning/image%2016.png)
 
 The mathematical objective of contrastive learning is to **optimize an encoder function** $f(\cdot; \theta_f)$ such that:
 
@@ -321,7 +321,7 @@ So given a triplet input $(x, x^+, x^-)$, the model minimizes the following loss
 
  $L(x, x^+, x^-; \theta_f) = \max(0, \|f(x) - f(x^+)\|_2^2 - \|f(x) - f(x^-)\|_2^2 + \alpha)$
 
-![image.png](/images/deep-learning/10-self-supervised-learning/image 17.png)
+![image.png](/images/deep-learning/10-self-supervised-learning/image%2017.png)
 
 **InfoNCE**
 
@@ -333,7 +333,7 @@ Given an anchor $x$, one positive sample $x^+$, $N-1$ negative samples $x^-_j$ a
 
 This loss is essentially a **standard cross-entropy loss** for an $N$-way softmax classifier. The model is trained to correctly classify the positive sample out of $N$ total candidates.
 
-![image.png](/images/deep-learning/10-self-supervised-learning/image 18.png)
+![image.png](/images/deep-learning/10-self-supervised-learning/image%2018.png)
 
 The loss applies a softmax-like normalization to transform similarity scores into a probability distribution.
 
@@ -343,7 +343,7 @@ The loss applies a softmax-like normalization to transform similarity scores int
 
 ![image.png](/images/deep-learning/10-self-supervised-learning/21e24e3b-3481-4191-aaeb-a120610afe4e.png)
 
-![image.png](/images/deep-learning/10-self-supervised-learning/image 19.png)
+![image.png](/images/deep-learning/10-self-supervised-learning/image%2019.png)
 
 **The pipeline**
 
@@ -377,14 +377,14 @@ where:
 
 **SimCLR’s Pseudocode**
 
-![image.png](/images/deep-learning/10-self-supervised-learning/image 20.png)
+![image.png](/images/deep-learning/10-self-supervised-learning/image%2020.png)
 
 **TRAINING LINEAR CLASSIFIER ON SIMCLR FEATURES**
 
 - **Encoder Pretraining:** The feature encoder is trained on a large-scale unlabeled dataset, such as the entire ImageNet training set, using the SimCLR framework.
 - **Linear Evaluation:** The feature encoder is then frozen, and a linear classifier is trained on top of it using labeled data.
 
-![image.png](/images/deep-learning/10-self-supervised-learning/image 21.png)
+![image.png](/images/deep-learning/10-self-supervised-learning/image%2021.png)
 
 **DESIGN CHOICES: LARGE BATCH SIZE**
 

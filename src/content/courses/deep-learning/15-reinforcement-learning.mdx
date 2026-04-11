@@ -374,7 +374,7 @@ The main drawback of Monte Carlo methods is **slow convergence**. Since the agen
 
 - **Example:** In Blackjack, after **10,000 episodes** the value function remains noisy; after **500,000 episodes**, the estimates become smooth and reliable.
 
-![image.png](/images/deep-learning/15-reinforcement-learning/image 1.png)
+![image.png](/images/deep-learning/15-reinforcement-learning/image%201.png)
 
 
 <Callout type="example">
@@ -528,7 +528,7 @@ In Monte Carlo (MC) control, the agent seeks the **optimal policy** by alternati
 - **Policy evaluation**: The agent estimates the action-value function ($Q = q_\pi$) for the current policy $\pi$. This is typically initialized to zero, representing a lack of prior knowledge.
 - **Policy improvement**: The agent refines its behavior using an **$\epsilon$-greedy policy** based on the current $Q$ estimates.
 
-![image.png](/images/deep-learning/15-reinforcement-learning/image 2.png)
+![image.png](/images/deep-learning/15-reinforcement-learning/image%202.png)
 
 By repeatedly cycling through evaluation and improvement, the agent's behavior and value estimates gradually converge toward the optimal action-value function ($q^*$) and the optimal policy ($\pi^*$).
 
@@ -538,7 +538,7 @@ A practical and efficient implementation of this cycle is **On-Policy MC Control
 
 Instead of waiting for full convergence, we perform **incomplete evaluation**. The agent updates the value function and improves the policy simultaneously after every single episode.
 
-![image.png](/images/deep-learning/15-reinforcement-learning/image 3.png)
+![image.png](/images/deep-learning/15-reinforcement-learning/image%203.png)
 
 The term "On-Policy" specifically means the agent is evaluating and improving the same policy it uses to make decisions.
 
@@ -558,7 +558,7 @@ The agent updates its action-value estimate using the following TD update rule:
 
 $Q(S, A) \leftarrow Q(S, A) + \alpha(R + \gamma Q(S', A') - Q(S, A))$
 
-![image.png](/images/deep-learning/15-reinforcement-learning/image 4.png)
+![image.png](/images/deep-learning/15-reinforcement-learning/image%204.png)
 
 **ON-POLICY CONTROL WITH SARSA**
 
@@ -569,11 +569,11 @@ SARSA is an **on-policy** algorithm. This means the action $A'$ used to calculat
 - **Policy evaluation** with Sarsa, the agent updates $Q$ to better approximate $q_\pi$→ $Q \approx q_\pi$
 - **Policy improvement** with $\epsilon$-greedy policy improvement.
 
-![image.png](/images/deep-learning/15-reinforcement-learning/image 5.png)
+![image.png](/images/deep-learning/15-reinforcement-learning/image%205.png)
 
 **Algorithm**
 
-![image.png](/images/deep-learning/15-reinforcement-learning/image 6.png)
+![image.png](/images/deep-learning/15-reinforcement-learning/image%206.png)
 
 1. **Initialization**
     
@@ -637,7 +637,7 @@ $= R_{t+1} + \gamma \max_{a'} Q(S_{t+1}, a')$
 
 **ALGORITHM**
 
-![image.png](/images/deep-learning/15-reinforcement-learning/image 7.png)
+![image.png](/images/deep-learning/15-reinforcement-learning/image%207.png)
 
 1. **Initialization**
     
@@ -651,7 +651,7 @@ $= R_{t+1} + \gamma \max_{a'} Q(S_{t+1}, a')$
         - The **immediate reward** $R$
         - The **next state** $S'$
     
-    ![image.png](/images/deep-learning/15-reinforcement-learning/image 8.png)
+    ![image.png](/images/deep-learning/15-reinforcement-learning/image%208.png)
     
     - At each step, the $Q$-value is updated as:
         
@@ -685,7 +685,7 @@ Rather than updating a single table entry, we update the parameter vector $w$ us
 
 **TYPES OF VALUE FUNCTION APPROXIMATION**
 
-![image.png](/images/deep-learning/15-reinforcement-learning/image 9.png)
+![image.png](/images/deep-learning/15-reinforcement-learning/image%209.png)
 
 There are many possible **function approximators**, for example:
 
@@ -712,7 +712,7 @@ $\Delta w = - \frac{1}{2} \alpha \nabla_w J(w)$
 
 where $\alpha$ is a step-size (learning rate) parameter.
 
-![image.png](/images/deep-learning/15-reinforcement-learning/image 10.png)
+![image.png](/images/deep-learning/15-reinforcement-learning/image%2010.png)
 
 **VALUE FUNCTION APPROXIMATION BY SGD**
 
@@ -891,7 +891,7 @@ These updates adjust the parameter vector $w$ incrementally to reduce the differ
 
 Convergence guarantees vary significantly depending on the representation (Tabular, Linear, or Non-Linear) and the learning approach (On-Policy vs. Off-Policy).
 
-![image.png](/images/deep-learning/15-reinforcement-learning/image 11.png)
+![image.png](/images/deep-learning/15-reinforcement-learning/image%2011.png)
 
 
 <Callout type="pin">
@@ -910,7 +910,7 @@ Monte Carlo methods, although theoretically sound, can be **extremely slow**, ma
 
 Control algorithms—where the policy is updated alongside the value function—face even stricter challenges, particularly with function approximation.
 
-![image.png](/images/deep-learning/15-reinforcement-learning/image 12.png)
+![image.png](/images/deep-learning/15-reinforcement-learning/image%2012.png)
 
 **Note on "Chattering":** In linear cases, the value function may not settle on a single point but will "chatter" (oscillate) around a near-optimal solution.
 
@@ -994,4 +994,4 @@ It was used in **Atari games**:
     - **Q-values:** Each output represents the estimated $Q(s, a)$ for that action, allowing the agent to select the one with the highest expected return.
 - **Reward**: defined as the **change in game score** at each step.
 
-![image.png](/images/deep-learning/15-reinforcement-learning/image 13.png)
+![image.png](/images/deep-learning/15-reinforcement-learning/image%2013.png)

@@ -76,7 +76,7 @@ Another challenge is that **we do not always know which loss function is appropr
 
 **VARIATIONAL AUTOENCODER: OVERALL ARCHITECTURE**
 
-![image.png](/images/deep-learning/08-discrete-ai/image 1.png)
+![image.png](/images/deep-learning/08-discrete-ai/image%201.png)
 
 **VAE: KNOWN ISSUES**
 
@@ -89,7 +89,7 @@ Another challenge is that **we do not always know which loss function is appropr
     The model may generate only a **small subset of the possible outputs**  (i.e., a few “modes” of the data distribution), failing to capture the full diversity present in the training set.
     
 
-![image.png](/images/deep-learning/08-discrete-ai/image 2.png)
+![image.png](/images/deep-learning/08-discrete-ai/image%202.png)
 
 **VAE: PROBLEMS**
 
@@ -115,7 +115,7 @@ VQ-VAE was the **first successful generative model** to use **discrete latent va
 
 It resembles a standard autoencoder with an **encoder** and **decoder**, but unlike VAEs, the latent embedding space is **not Gaussian**. Instead, it is composed of **discrete learnable embeddings**.
 
-![image.png](/images/deep-learning/08-discrete-ai/image 3.png)
+![image.png](/images/deep-learning/08-discrete-ai/image%203.png)
 
 **How does it work?**
 
@@ -127,7 +127,7 @@ It resembles a standard autoencoder with an **encoder** and **decoder**, but unl
     - $H$ height
     - $D$ channels
 
-![image.png](/images/deep-learning/08-discrete-ai/image 4.png)
+![image.png](/images/deep-learning/08-discrete-ai/image%204.png)
 
 - **Codebook**
     
@@ -176,7 +176,7 @@ VQ-VAE uses the **straight-through estimator** to allow gradients to flow.
 
 The complete set of parameters are union of parameters of the encoder, decoder, and the embedding space $e$.
 
-![image.png](/images/deep-learning/08-discrete-ai/image 5.png)
+![image.png](/images/deep-learning/08-discrete-ai/image%205.png)
 
 **Figure 1:** *Left:* A figure describing the VQ-VAE *Right:* Visualisation of the embedding space. The output of the encoder $z(x)$ is mapped to the nearest point $e_2$. The gradient $∇_zL$ (in red) will push the encoder to change its output, which could alter the configuration in the next forward pass.
 
@@ -257,7 +257,7 @@ The VQ-VAE differs significantly from the standard Variational Autoencoder (VAE)
 
 **VQ-VAE: TRAINING STEP**
 
-![image.png](/images/deep-learning/08-discrete-ai/image 6.png)
+![image.png](/images/deep-learning/08-discrete-ai/image%206.png)
 
 In PyTorch, the Straight-Through Estimator used in VQ-VAE can be implemented in a single line:
 
@@ -316,7 +316,7 @@ where:
 
 - $z_t^{(i)} \in \{1, \ldots, K\}$
 
-![image.png](/images/deep-learning/08-discrete-ai/image 7.png)
+![image.png](/images/deep-learning/08-discrete-ai/image%207.png)
 
 In order to do so, we parameterize a generative model (a **learned prior**) using parameters $\theta$. This defines a parametric distribution over sequences of discrete latent variables:
 
@@ -387,7 +387,7 @@ where:
 - $z_t \in \{1, \ldots, K\}$ is the index of the selected codebook entry.
 - $\pi_{\theta_z}(z_{<t}) \in \Delta^{K-1}$ is the predicted probability vector over each entry of the codebook, which can be parameterized by a neural network.
 
-![image.png](/images/deep-learning/08-discrete-ai/image 8.png)
+![image.png](/images/deep-learning/08-discrete-ai/image%208.png)
 
 We can visualize this distribution as a **histogram** with $K$ bins. By sampling from this histogram, we determine the specific index for the next latent code $z_t$.
 
@@ -415,7 +415,7 @@ where:
 
 - $z_{i,j}$ is the pixel at row $i$ and column $j$.
 
-![image.png](/images/deep-learning/08-discrete-ai/image 9.png)
+![image.png](/images/deep-learning/08-discrete-ai/image%209.png)
 
 - $z_{<i,j}$ denotes all pixels that come **before** position $(i,j)$ in raster-scan order (row by row, left to right).
 
@@ -478,7 +478,7 @@ This is implemented by **element-wise multiplying** the convolutional kernel wit
 
 In practice, PixelCNN does not rely on a single mask, for 2D data (images), we have two masking strategies:
 
-![image.png](/images/deep-learning/08-discrete-ai/image 10.png)
+![image.png](/images/deep-learning/08-discrete-ai/image%2010.png)
 
 - **Mask type A:** is applied **only in the first convolutional layer**. It strictly excludes the **current pixel** $(i, j)$ from the calculation. This is necessary because $(i, j)$ is the target value we are trying to predict; if the model were allowed to see it in the first layer, the task would become trivial (identity mapping) rather than predictive.
 - **Mask type B:** is used in **all subsequent layers**. Using the center pixel here is safe because the input to these layers is not the raw image, but a feature map. Therefore, allowing connection to $(i,j)$ allows the network to process and propagate this contextual information without violating the autoregressive constraint.
@@ -519,7 +519,7 @@ As the convolutional filters slide across the image, the masks zero out all entr
 
 **Sampling (autoregressive)**
 
-![image.png](/images/deep-learning/08-discrete-ai/image 11.png)
+![image.png](/images/deep-learning/08-discrete-ai/image%2011.png)
 
 **LIKELIHOOD AND ANOMALY DETECTION**
 

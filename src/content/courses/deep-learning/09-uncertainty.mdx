@@ -216,7 +216,7 @@ Deep Ensembles are **simple**, effective, and empirically strong, but they also 
 
 The graph illustrates the entropy—or uncertainty—measured on unknown (out-of-distribution) classes. In this context, higher entropy is desirable as it indicates the system correctly identifies the input as unknown.
 
-![image.png](/images/deep-learning/09-uncertainty/image 1.png)
+![image.png](/images/deep-learning/09-uncertainty/image%201.png)
 
 The **brighter plot** represents a single-model ensemble ($M=1$), while the **darker plot** represents an ensemble composed of five elements ($M=5$).
 
@@ -228,7 +228,7 @@ While a finite ensemble already provides benefits, we can theoretically improve 
 
 The resulting **posterior predictive distribution** $p(y \mid x, D)$ can be interpreted as an **average over infinite models,** each corresponding to a different parameter configuration. Each model’s contribution is weighted by its posterior probability, so parameter settings that better explain the data have greater influence on the final prediction. 
 
-![image.png](/images/deep-learning/09-uncertainty/image 2.png)
+![image.png](/images/deep-learning/09-uncertainty/image%202.png)
 
 Mathematically this is defined as:
 
@@ -364,7 +364,7 @@ $h^{(l)}_{\text{dropped}} = m^{(l)} \odot h^{(l)}, \quad m^{(l)}_i \sim \text{Be
 
 By masking these units, the network is forced to learn redundant, robust features that do not rely on the presence of specific neurons.
 
-![image.png](/images/deep-learning/09-uncertainty/image 3.png)
+![image.png](/images/deep-learning/09-uncertainty/image%203.png)
 
 At inference time, dropout is typically disabled to produce deterministic predictions using the full network. To maintain consistency with the training phase, activations are scaled by a factor of $1 - p$, ensuring the expected output remains balanced.
 
@@ -372,7 +372,7 @@ At inference time, dropout is typically disabled to produce deterministic predic
 
 **Monte Carlo Dropout** extends standard dropout by keeping dropout enabled at test time to approximate Bayesian uncertainty without modifying the underlying architecture or training procedure.
 
-![image.png](/images/deep-learning/09-uncertainty/image 4.png)
+![image.png](/images/deep-learning/09-uncertainty/image%204.png)
 
 **Methodology**
 
@@ -388,7 +388,7 @@ where:
 
 Because each stochastic pass yields slightly different predictions, their variability provides a direct measure of model **epistemic uncertainty**: consistent outputs indicate high confidence, while large dispersion suggests uncertainty. This uncertainty can be quantified using metrics such as **predictive entropy** or **variation ratios**.
 
-![image.png](/images/deep-learning/09-uncertainty/image 5.png)
+![image.png](/images/deep-learning/09-uncertainty/image%205.png)
 
 **Key Advantages:**
 
@@ -432,7 +432,7 @@ $\frac{1}{N} \sum_{i=1}^N \max_{k \in \{1,...,K\}} p_\theta(y=k|x_i)$
 
 are often heavily concentrated near 1.0.
 
-![image.png](/images/deep-learning/09-uncertainty/image 6.png)
+![image.png](/images/deep-learning/09-uncertainty/image%206.png)
 
 This indicates that high predictive performance does not imply well-calibrated uncertainty.
 
@@ -456,7 +456,7 @@ Calibration is commonly visualized using **reliability diagrams**. These diagram
 1. **Average Predicted Confidence:** The mean of the highest predicted probabilities for samples in that bin.
 2. **Empirical Accuracy:** The actual fraction of correct predictions in that bin.
 
-![**LeNet (left) vs ResNet (right)**](/images/deep-learning/09-uncertainty/image 7.png)
+![**LeNet (left) vs ResNet (right)**](/images/deep-learning/09-uncertainty/image%207.png)
 
 **LeNet (left) vs ResNet (right)**
 
@@ -493,7 +493,7 @@ Experimental results suggest that increased model capacity and certain training 
 - **Batch normalization** The use of normalization techniques can sometimes worsen calibration.
 - **Weight decay** Applying weight decay often improves calibration by constraining parameter magnitudes.
 
-![image.png](/images/deep-learning/09-uncertainty/image 8.png)
+![image.png](/images/deep-learning/09-uncertainty/image%208.png)
 
 **TEMPERATURE SCALING**
 
@@ -510,7 +510,7 @@ The parameter $T$ is tuned on a **held-out validation set** to minimize the nega
 
 The **advantage** is that this method does not require retraining the network or changing the model’s internal parameters.
 
-![image.png](/images/deep-learning/09-uncertainty/image 9.png)
+![image.png](/images/deep-learning/09-uncertainty/image%209.png)
 
 Because $T$ scales all logits equally, the **model's accuracy remains the same**, while only the confidence values are rescaled, reducing the gap.
 

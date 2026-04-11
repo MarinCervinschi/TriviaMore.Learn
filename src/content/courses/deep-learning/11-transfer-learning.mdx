@@ -63,7 +63,7 @@ Transfer learning serves as a powerful form of **inductive bias**. It operates o
 
 The pretrained model acts as a strong prior, significantly reducing **epistemic uncertainty** in scenarios where data is scarce.
 
-![image.png](/images/deep-learning/11-transfer-learning/image 1.png)
+![image.png](/images/deep-learning/11-transfer-learning/image%201.png)
 
 ## Fine-Tuning
 
@@ -110,7 +110,7 @@ Fine-tuning has become the standard approach because it offers several advantage
 
 **EFFECTIVENESS OF FINE-TUNING**
 
-![image.png](/images/deep-learning/11-transfer-learning/image 2.png)
+![image.png](/images/deep-learning/11-transfer-learning/image%202.png)
 
 The comparison illustrates performance across three approaches:
 
@@ -151,9 +151,9 @@ When adapting a pretrained model to a new task, deciding which layers to update 
     - **Full Fine-Tuning (All layers):** The entire network is updated. This offers maximum flexibility and performance but requires more data and higher computational costs to avoid overfitting.
 - **Training from Scratch:** All weights are initialized randomly, requiring the model to learn every feature representation from zero.
 
-![image.png](/images/deep-learning/11-transfer-learning/image 3.png)
+![image.png](/images/deep-learning/11-transfer-learning/image%203.png)
 
-![image.png](/images/deep-learning/11-transfer-learning/image 4.png)
+![image.png](/images/deep-learning/11-transfer-learning/image%204.png)
 
 
 <Callout type="tip">
@@ -184,7 +184,7 @@ In contrast, **Linear Probing (LP)** keeps the pretrained backbone frozen, prese
 1. **Stage 1 (Linear Probing):** The pretrained backbone is frozen, and only the linear classifier is trained to convergence.
 2. **Stage 2 (Fine-Tuning):** The entire network is unfrozen and fine-tuned, starting from the weights obtained in the probing stage.
 
-![image.png](/images/deep-learning/11-transfer-learning/image 5.png)
+![image.png](/images/deep-learning/11-transfer-learning/image%205.png)
 
 
 <Callout type="insight">
@@ -215,7 +215,7 @@ Despite its effectiveness, fine-tuning presents several practical and methodolog
 - **Architectural rigidity**: Fine-tuning constrains the target task to the architecture of the pretrained model, which may not be optimal. For example, a model with too many layers creates unnecessary **computational overhead** for simpler tasks.
 - **Inherited biases**: Pretrained models inherit biases from their source datasets. A well-known example is the **texture bias** observed in many CNNs:
     
-    ![image.png](/images/deep-learning/11-transfer-learning/image 6.png)
+    ![image.png](/images/deep-learning/11-transfer-learning/image%206.png)
     
     Models tend to rely more on **local texture patterns** rather than on **global shape information**. In cue-conflict scenarios — for instance, an object with the shape of a cat but the texture of elephant skin — the model may classify the object based on texture rather than shape, revealing a limitation in learned representations.
     
@@ -267,7 +267,7 @@ Their disagreement reflects **epistemic uncertainty:**
 - If all models agree $\to$ high confidence.
 - If models disagree $\to$ high uncertainty.
 
-![image.png](/images/deep-learning/11-transfer-learning/image 7.png)
+![image.png](/images/deep-learning/11-transfer-learning/image%207.png)
 
 Both **deep models** and **ensembles** improve robustness and performance through redundancy. However, their large size leads to **high computational and memory costs**, making deployment difficult on resource-constrained platforms.
 
@@ -284,7 +284,7 @@ The core objective of **knowledge distillation** is to train a smaller **student
 - **The Teacher:** A *large, complex model* or an *ensemble of models* (whose prediction are averaged) trained on the target task without architectural constraints. It serves as the high-performing reference.
 - **The Student:** A smaller, more efficient model designed to meet specific deployment constraints while approximating the teacher's input-output mapping.
 
-![image.png](/images/deep-learning/11-transfer-learning/image 8.png)
+![image.png](/images/deep-learning/11-transfer-learning/image%208.png)
 
 **SOFTNED PROBABILITY**
 
@@ -299,7 +299,7 @@ Increasing $T$ produces a softer probability distribution:
 - **Lower confidence** in the top class.
 - **Higher probabilities** for classes the teacher considers similar.
 
-![image.png](/images/deep-learning/11-transfer-learning/image 9.png)
+![image.png](/images/deep-learning/11-transfer-learning/image%209.png)
 
 As $T$ increases, the probability spreads across more classes, revealing information about inter-class relationships (dark knowledge) learned by the teacher.
 
@@ -388,7 +388,7 @@ Advantages:
     $L_{SP} = \|S_T - S_S\|_F^2$
     
 
-![image.png](/images/deep-learning/11-transfer-learning/image 10.png)
+![image.png](/images/deep-learning/11-transfer-learning/image%2010.png)
 
 This enforces that the student preserves the relational structure between samples learned by the teacher.
 
@@ -406,7 +406,7 @@ This enforces that the student preserves the relational structure between sample
     - $F_c$ is the $c$-th feature channel
     - $p \in \{1, 2\}$ (typically $p=2$ for $L_2$ norm).
 
-![image.png](/images/deep-learning/11-transfer-learning/image 11.png)
+![image.png](/images/deep-learning/11-transfer-learning/image%2011.png)
 
 1. **Normalize** each attention map to unit norm.
 2. **Minimize:** Use the $L_2$ distance between the normalized maps:
@@ -458,7 +458,7 @@ Training a very deep but thin student network from scratch can be challenging du
     $L_{hint} = \|r(f_S) - f_T\|^2_2$
     
 
-![image.png](/images/deep-learning/11-transfer-learning/image 12.png)
+![image.png](/images/deep-learning/11-transfer-learning/image%2012.png)
 
 **Choosing Layers and Architecture**
 
@@ -493,7 +493,7 @@ FitNets is particularly effective because it is not restricted to teacher-studen
 
 In this Self-Knowledge Distillation application, a **teacher model** is trained on full video sequences to **recognize individuals**, while a student model receives only a subset of frames. Through distillation, the student learns to interpolate missing frames and approximate the teacher’s outputs, extracting rich temporal and spatial cues from limited data. 
 
-![image.png](/images/deep-learning/11-transfer-learning/image 13.png)
+![image.png](/images/deep-learning/11-transfer-learning/image%2013.png)
 
 ## Conclusions
 

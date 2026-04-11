@@ -133,7 +133,7 @@ The process follows these steps:
 
 FedAvg performs well when client data is **Independently and Identically Distributed (IID).** However this assumption is frequently violated in real-world federated settings. When data is **non-IID**, local models can diverge significantly, a phenomenon known as **client drift**. This divergence can degrade both the **convergence speed** and the **final accuracy** of the global model.
 
-![image.png](/images/deep-learning/14-federated-learning/image 1.png)
+![image.png](/images/deep-learning/14-federated-learning/image%201.png)
 
 
 <Callout type="example">
@@ -166,7 +166,7 @@ There is a theoretical relationship between the empirical FIM and the second der
 - **High Fisher Value (High Importance):** A high value indicates a steep curvature. If parameter $i$ is pivotal, even minor modifications are likely to significantly increase the loss. Therefore, its value should be preserved more strictly in the global model to maintain client performance.
 - **Low Fisher Value (Low Importance):** A low value indicates the parameter lies in a "flat" region of the loss landscape. If parameter $j$ is less vital, the server can modify or average it more freely, as changes will not drastically impact the loss.
 
-![image.png](/images/deep-learning/14-federated-learning/image 2.png)
+![image.png](/images/deep-learning/14-federated-learning/image%202.png)
 
 By capturing the curvature of local objective functions, this approach allows **more precise global updates**, protecting parameters that are vital for local accuracy while permitting flexibility in less sensitive areas of the model.
 
@@ -318,7 +318,7 @@ In non-IID settings, **FedAvg’s** local updates often move in inconsistent dir
 - **Data Heterogeneity:** the more dissimilar the clients’ data are, the more divergent the updates.
 - **Partial Participation:** When only a subset of clients updates the model in each round, the global model's trajectory becomes even more unstable, worsening the drift effect.
 
-![image.png](/images/deep-learning/14-federated-learning/image 3.png)
+![image.png](/images/deep-learning/14-federated-learning/image%203.png)
 
 The primary result of client drift is either **slower convergence** or a **suboptimal global model** that fails to generalize effectively across all clients. This highlights a critical need: finding mechanisms to **align local updates with the global objective**.
 
@@ -371,7 +371,7 @@ This formula works by:
 
 By using the signal $(c - c_i)$, each client biases its optimization trajectory toward areas where there is stronger agreement among all participants.
 
-![image.png](/images/deep-learning/14-federated-learning/image 4.png)
+![image.png](/images/deep-learning/14-federated-learning/image%204.png)
 
 **Strengths and Benefits**
 
