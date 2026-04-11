@@ -51,6 +51,20 @@
   background: #f9fafb;
 }
 
+/* Inline code styling — remove Tailwind Typography backtick pseudo-elements */
+.prose :not(pre) > code {
+  background-color: #f1f5f9;
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+  font-weight: 500;
+}
+
+.prose :not(pre) > code::before,
+.prose :not(pre) > code::after {
+  content: none;
+}
+
 /* KaTeX display math overflow */
 .katex-display {
   overflow-x: auto;

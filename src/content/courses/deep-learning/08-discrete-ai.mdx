@@ -263,7 +263,7 @@ In PyTorch, the Straight-Through Estimator used in VQ-VAE can be implemented in 
 
 $z_q^{st} ← z_e + \text{detach} (z_q - z_e)$
 
-`detach()` breaks the computational graph, which means that during backpropagation 
+`detach()` breaks the computational graph, which means that during backpropagation
 the term inside `detach()` is treated as a constant.
 
 So:
@@ -274,7 +274,7 @@ So:
     
 - During **backward pass**:
     
-    Gradients stop at `detach(z_q - z_e)`, so only $z_e$ is considered and receives gradients.
+    Gradients stop at detach($z_q - z_e$), so only $z_e$ is considered and receives gradients.
     
     Effectively the model pretends that:
     
