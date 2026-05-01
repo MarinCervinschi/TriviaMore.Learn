@@ -41,11 +41,11 @@ However, when the same experiment is performed with **Artificial Neural Networks
 
 This phenomenon is an **intrinsic property of standard neural networks**, and it is known as **Catastrophic Forgetting**.
 
-**CATASTROFIC FORGETTING: WHY?**
+**CATASTROPHIC FORGETTING: WHY?**
 
 Neural Networks forget mainly because of the **optimization algorithm**, typically based on gradient descent or one of its stochastic variants (e.g., SGD).
 
-A neural network is defined by a set of parameters $W$(weights and biases). Training on the first task starts from some initial point $W_0$ in parameter space and converges to a **local minimum $W_A$**, located in a region where the loss for Task A is low.
+A neural network is defined by a set of parameters $W$ (weights and biases). Training on the first task starts from some initial point $W_0$ in parameter space and converges to a **local minimum $W_A$**, located in a region where the loss for Task A is low.
 
 Now consider a **second task (Task B),** which has its own loss landscape, completely independent of the loss for Task A. To learn Task B, the network must update its parameters. Since SGD optimizes **only the current objective**, it freely moves through the parameter space toward a new local minimum $W_B$, without taking into account the performance on Task A.
 
@@ -94,7 +94,9 @@ In a CL classification problem, training is split into $T$ sequential tasks. Dur
 
 The objective is to learn a model that performs well on **all tasks**, by optimizing a function $f$ with parameters $\theta$ sequentially. At the current task $t_c$, the model must correctly classify examples from **all tasks observed so far**. This is achieved by minimizing the **cumulative loss**:
 
-$\operatorname{argmin}_{\theta} \sum_{t=1}^{t_c} L_t, \quad \text{ where} \quad L_t \triangleq E_{(x,y)\sim D_t}[\ell(y, f_\theta(x))]$
+$$
+\operatorname{argmin}_{\theta} \sum_{t=1}^{t_c} L_t, \quad \text{where} \quad L_t \triangleq \mathbb{E}_{(x,y)\sim D_t}[\ell(y, f_\theta(x))]
+$$
 
 where:
 
@@ -123,7 +125,9 @@ EWC implements synaptic consolidation by using a **quadratic regularization term
 
 To learn **Task B** while staying in a parameter region where **Task A** still performs well, the total loss function is defined as:
 
-$\underbrace{L(\theta)}_{\text{Total loss} \atop \text{to be optimized}} = \underbrace{L_B(\theta)}_{\text{Loss for Task B only} \atop \text{e.g. the Cross-Entropy}} + \underbrace{\sum_i \frac{\lambda}{2} F_i(\theta_i - \theta^*_{A,i})^2}_{\text{EWC regularization} \atop \text{objective}}$
+$$
+\underbrace{L(\theta)}_{\substack{\text{Total loss} \\ \text{to be optimized}}} = \underbrace{L_B(\theta)}_{\substack{\text{Loss for Task B only} \\ \text{e.g. the Cross-Entropy}}} + \underbrace{\sum_i \frac{\lambda}{2} F_i(\theta_i - \theta^*_{A,i})^2}_{\substack{\text{EWC regularization} \\ \text{objective}}}
+$$
 
 Where:
 
@@ -140,7 +144,9 @@ The regularizer acts like an **elastic spring**, anchoring important parameters 
 
 EWC determines parameter importance using the diagonal of the **empirical Fisher Information Matrix**, calculated at the optimum of the first task ($\theta^*_A$). For Task A, the Fisher Information is computed as:
 
-$I_{\theta^*_A} = F_i = \frac{1}{N} \sum_{i=1}^N \underbrace{\nabla_\theta \log p(x^{(i)}_A |\theta^*_A)}_{\text{gradients of the loss function}} \nabla_\theta \log p(x^{(i)}_A |\theta^*_A)^T$
+$$
+I_{\theta^*_A} = \frac{1}{N} \sum_{i=1}^N \underbrace{\nabla_\theta \log p(x^{(i)}_A \mid \theta^*_A)}_{\text{gradients of the log-likelihood}} \nabla_\theta \log p(x^{(i)}_A \mid \theta^*_A)^T
+$$
 
 By multiplying the gradient by its transpose, we obtain a matrix that captures the **influence of every pair of parameters**. EWC focuses specifically on the **diagonal**, which contains the importance indicators for individual weights. This simplifies the calculation to a per-parameter estimate:
 
@@ -193,9 +199,11 @@ To evaluate the model's performance across the entire sequence of tasks, we util
 
 Given a test set for each of the $T$ tasks, and indicating with $R_{i,j}$ the test classification accuracy on task $t_j$ after observing the last sample from task $t_i$, we have:
 
-$\text{Average Accuracy: } ACC = \frac{1}{T} \sum_{i=1}^T R_{T,i}$
+$$
+\text{Average Accuracy: } ACC = \frac{1}{T} \sum_{i=1}^T R_{T,i}
+$$
 
-In other words, it measures how well the model remembers each task **after learning all TTT tasks.** It is commonly used to evaluate **catastrophic forgetting**: if the accuracy on a task drops significantly compared to when that task was first learned, it indicates that the model has forgotten previously acquired knowledge.
+In other words, it measures how well the model remembers each task **after learning all $T$ tasks.** It is commonly used to evaluate **catastrophic forgetting**: if the accuracy on a task drops significantly compared to when that task was first learned, it indicates that the model has forgotten previously acquired knowledge.
 
 
 <Callout type="warning">
@@ -253,7 +261,7 @@ These approaches can guarantee **maximal stability** (zero forgetting) by freezi
 
 ### Progressive Neural Networks
 
-**Progressive Neural Networks (PNNs)** are a foundational example of the architectural strategy. Instead of modifying a shared set of weights, PNNs prevent catastrophic forgetting by instantiating a entirely new neural network, referred to as a **column,** for each task.
+**Progressive Neural Networks (PNNs)** are a foundational example of the architectural strategy. Instead of modifying a shared set of weights, PNNs prevent catastrophic forgetting by instantiating an entirely new neural network, referred to as a **column,** for each task.
 
 The PNN architecture includes two main types of connections:
 
@@ -281,7 +289,7 @@ While Progressive Neural Networks offer a robust solution to forgetting, they in
 
 **SOLUTION**
 
-To address the scalability issues of Progressive Neural Networks (PNNs), researchers observed that adding full columns often often results in most of the new capacity being underutilized. Instead of increasing the network size, methods like **PackNet**, **PathNet**, and **Piggyback** manage existing capacity through techniques such as **adding fewer layers**, **pruning**, or performing **online compression**. 
+To address the scalability issues of Progressive Neural Networks (PNNs), researchers observed that adding full columns often results in most of the new capacity being underutilized. Instead of increasing the network size, methods like **PackNet**, **PathNet**, and **Piggyback** manage existing capacity through techniques such as **adding fewer layers**, **pruning**, or performing **online compression**. 
 
 **PACKNET**
 
@@ -390,7 +398,9 @@ The buffer typically contains only a small fraction of the original data (e.g., 
 
 The total loss $L_{ER}$ is the sum of the **cross-entropy loss** $\ell$ calculated over both the current task distribution and the stored past data distribution:
 
-$L_{ER} = \underbrace{\mathbb{E}_{(x,y) \sim D_t} [\ell(y, f_\theta(x))]}_{\text{Current task loss}} + \underbrace{\mathbb{E}_{(x,y) \sim \mathcal{B}} [\ell(y, f_\theta(x))]}_{\text{Memory buffer loss}}$
+$$
+L_{ER} = \underbrace{\mathbb{E}_{(x,y) \sim D_t} [\ell(y, f_\theta(x))]}_{\text{Current task loss}} + \underbrace{\mathbb{E}_{(x,y) \sim \mathcal{B}} [\ell(y, f_\theta(x))]}_{\text{Memory buffer loss}}
+$$
 
 This process acts as a form of **rehearsal**, where the model periodically revisits previously learned concepts while learning new ones, preventing the model from forgetting past tasks.
 
@@ -460,7 +470,7 @@ To address this, many state-of-the-art methods combine **Rehearsal** with **Func
 In addition to the current task loss $\mathcal{L}_{tc}$ (typically cross-entropy), DER introduces a regularization term to minimize the $L2$ distance between current outputs and the stored past outputs:
 
 $$
-\mathcal{L}_{tc} +  \alpha \underbrace{E_{(x,z) \sim B} [ \|z - h_\theta(x)\|_2^2 ]}_{\text{Function Regularization}}]
+\mathcal{L}_{tc} + \alpha \underbrace{\mathbb{E}_{(x,z) \sim \mathcal{B}} \left[ \|z - h_\theta(x)\|_2^2 \right]}_{\text{Function Regularization}}
 $$
 
 where:
@@ -495,7 +505,7 @@ Both approaches aim to **match the outputs of past and current models**, but the
 
 DER++ is a variant of DER that also asks the learner to predict the ground truth labels for past examples.
 
-**OTHER REHARSAL APPROACHES**
+**OTHER REHEARSAL APPROACHES**
 
 Other common rehearsal approaches:
 
@@ -532,7 +542,7 @@ Other common rehearsal approaches:
     As a result even large buffers, cannot fully replicate the effect of having full past data.
     
 
-**MOTIVATION FOR REHARSAL-FREE CL**
+**MOTIVATION FOR REHEARSAL-FREE CL**
 
 The limitations of replay-based methods have motivated the development of **rehearsal-free** approaches. These methods remove the need for explicit data storage, making them easier to deploy in privacy-sensitive settings and reducing the overall resource footprint.
 
@@ -558,18 +568,28 @@ Prompting involves adding a **small number of learnable tokens** to the input pr
 
 Each prompt token is a learnable $d$-dimensional vector. A collection of $p$ prompts is denoted as:
 
- $P = \{p_k \in \mathbb{R}^d \mid k \in \mathbb{N}, 1 \le k \le p\}$ 
+$$
+P = \{p_k \in \mathbb{R}^d \mid k \in \mathbb{N}, \; 1 \le k \le p\}
+$$
 
 When optimizing prompts with **Shallow Prompt Tuning**, the prompts $P$ are only applied to the first Transformer layer $L_1$:
 
- $[x_1, Z_1, E_1] = L_1([x_0, \underbrace{P}_{\text{trainable}}, E_0])$ 
-* $[x_i, Z_i, E_i] = L_i([x_{i-1}, Z_{i-1}, E_{i-1}]), i = 2, \ldots, N,$* 
- $y = \underbrace{\text{Head}}_{\text{trainable}}([x_N]),$ 
+$$
+[x_1, Z_1, E_1] = L_1([x_0, \underbrace{P}_{\text{trainable}}, E_0])
+$$
+
+$$
+[x_i, Z_i, E_i] = L_i([x_{i-1}, Z_{i-1}, E_{i-1}]), \quad i = 2, \ldots, N
+$$
+
+$$
+y = \underbrace{\text{Head}}_{\text{trainable}}([x_N])
+$$
 
 where:
 
 - $E_i$ is the patch embeddings,
-- $Z_i$ represents the features computed by the $i$-th Transformer layer
+- $Z_i$ represents the features computed by the $i$-th Transformer layer,
 - $x_i$ is the CLS token.
 
 This approach is useful because it keeps the backbone frozen, reducing forgetting, while introducing only a small number of **task-specific parameters** that guide the model’s behavior. 
@@ -631,3 +651,28 @@ Because prompt retrieval depends on input similarity, the model **does not requi
 - **Capacity Tuning:** The size and diversity of the prompt pool require tuning.
 - **Task Similarity:** Performance may degrade if tasks are highly dissimilar.
 - **Pretraining Dependency:** The effectiveness of the approach relies heavily on the quality and breadth of the pretrained foundation model.
+
+---
+
+## Key Takeaways
+
+| Concept | Description |
+|---|---|
+| **Catastrophic forgetting** | Standard SGD updates a shared weight set toward each new task's loss, overwriting solutions for previous tasks |
+| **Continual learning (CL)** | Train sequentially on a stream of tasks while preserving past knowledge — without retraining on the union of all data |
+| **Cumulative loss objective** | $\operatorname{argmin}_\theta \sum_{t=1}^{t_c} L_t$ — minimize loss across all tasks seen so far, without access to old data |
+| **Task-IL / Class-IL / Domain-IL** | Three scenarios: task ID at test, no task ID with class space growing, fixed labels with shifting input distribution |
+| **Average Accuracy (ACC)** | $\frac{1}{T} \sum_{i=1}^T R_{T,i}$ — accuracy across all tasks after the full sequence; primary CL metric |
+| **EWC** | Quadratic penalty $\frac{\lambda}{2} F_i (\theta_i - \theta^*_{A,i})^2$ anchors important parameters; importance $F_i$ from the diagonal Fisher Information Matrix |
+| **Fisher Information** | Approximates loss curvature; high $F_i$ = sharp minimum, weight matters → high penalty; low $F_i$ → free to move |
+| **Architectural methods** | Allocate new parameters per task — zero forgetting by design (e.g., PNN, PackNet) |
+| **Progressive NN (PNN)** | One frozen *column* per task with lateral connections for forward transfer; parameters grow linearly, Task-IL only |
+| **PackNet** | Train → prune small-magnitude weights → retrain → freeze; pack many tasks into one fixed-size network via per-task binary masks |
+| **Regularization methods** | Add a loss term that compares current model to a frozen reference — weight (EWC, SI, MAS) or function (LwF) |
+| **Learning without Forgetting (LwF)** | Distill the previous model's outputs on *new* data — no need to store old samples |
+| **Rehearsal / Experience Replay (ER)** | Keep a small buffer of past samples; loss = current task + buffer cross-entropy |
+| **Buffer sampling** | Reservoir sampling (uniform online), ring buffer (per-class balance), GSS (gradient diversity), mean-of-feature, etc. |
+| **DER / DER++** | Store inputs *plus* logits; regularize with MSE on logits (DER) and add CE on stored labels (DER++) |
+| **Rehearsal-free CL** | No buffer — instead use a frozen pretrained backbone and learn small task-specific modules (privacy, scalability) |
+| **L2P** | Frozen ViT + learnable **prompt pool**; key–query matching retrieves prompts per input → task-agnostic, rehearsal-free |
+| **Stability–plasticity trade-off** | Core CL tension: keep old knowledge (stability) while adapting to new tasks (plasticity) |

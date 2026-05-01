@@ -69,13 +69,17 @@ An **episode** represents a complete sequence of these interactions, from the in
 
 The history, $H_t$, is the complete record of all interactions from the start of an episode up to the current time step $t$. It includes the entire sequence of observations, actions, and rewards:
 
-$H_t = O_1, R_1, A_1, \ldots, A_{t-1}, O_t, R_t$
+$$
+H_t = O_1, R_1, A_1, \ldots, A_{t-1}, O_t, R_t
+$$
 
 **STATE**
 
 The state, $S_t$, represents the specific information required for the agent to determine its next action. Formally, the state is a **function of the history**:
 
-$S_t = f(H_t)$
+$$
+S_t = f(H_t)
+$$
 
 Although the current state depends on the entire sequence of previous interactions, using the full history is usually impractical. In practice, the state is a simplified representation that captures only the essential information needed for decision-making.
 
@@ -83,15 +87,15 @@ Although the current state depends on the entire sequence of previous interactio
 
 In reinforcement learning, it is critical to distinguish between the internal state of the agent and the external state of the world:
 
-- **Agent state** $S^a_t$ This is the internal representation of information that the agent uses to select its next action. In most RL contexts, the term "state" refers specifically to this agent-side information.
-- **Environment state** $S^e_t$ this represents the full configuration of the environment, the actual data the world uses to determine the next observation or reward. This state is typically invisible to the agent.
+- **Agent state** $S^a_t$: the internal representation of information that the agent uses to select its next action. In most RL contexts, the term "state" refers specifically to this agent-side information.
+- **Environment state** $S^e_t$: the full configuration of the environment, the actual data the world uses to determine the next observation or reward. This state is typically invisible to the agent.
 
 **OBSERVABILITY**
 
 The relationship between these two states defines the nature of the learning task:
 
 - **Full observability**: agent directly observes environment state, meaning $S^a_t=S^e_t$
-- **Partial observability**: agent only indirectly or partially observes the environment state ***(**e.g. ****A poker agent sees only public cards, not opponents’ private cards)*.
+- **Partial observability**: agent only indirectly or partially observes the environment state (e.g., a poker agent sees only public cards, not opponents' private cards).
 
 
 <Callout type="warning">
@@ -118,29 +122,35 @@ An RL agent may include one or more of the following components:
 The **policy** defines an agent’s behavior. It acts as a mapping from state to action, essentially It determines **which action the agent chooses in each state**. Policies generally fall into two categories:
 
 - **Deterministic policy**
-    
+
     A deterministic policy maps each state directly to a single, specific action:
-    
-    $a = \pi(s)$
-    
-    *Example: In a specific state, the agent is programmed to always move left.*
-    
-    A purely deterministic policies can be impractical in complex environments, as they may require the agent to have pre-memorized the optimal action for every possible state it might encounter.
-    
+
+$$
+a = \pi(s)
+$$
+
+    *Example: in a specific state, the agent is programmed to always move left.*
+
+    A purely deterministic policy can be impractical in complex environments, as it may require the agent to have pre-memorized the optimal action for every possible state it might encounter.
+
 - **Stochastic policy**
-    
+
     A stochastic policy defines a probability distribution over the available actions given a specific state:
-    
-     ****$\pi(a|s) = P[A_t = a|S_t = s]$ 
-    
-    Rather than choosing one fixed action, the agent assigns probabilities to all possible moves. 
+
+$$
+\pi(a \mid s) = \mathbb{P}[A_t = a \mid S_t = s]
+$$
+
+    Rather than choosing one fixed action, the agent assigns probabilities to all possible moves.
     
 
 ### Return
 
 The **Return** ($G_t$) is the **total discounted reward** starting from time-step $t$:
 
-$G_t = R_{t+1} + \gamma R_{t+2} + \ldots = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1}$
+$$
+G_t = R_{t+1} + \gamma R_{t+2} + \ldots = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1}
+$$
 
 The discount factor $\gamma \in [0, 1]$ determines the present value of future rewards. Specifically, the value of receiving a reward $R$ after $k + 1$ time-steps is $\gamma^k R$. This mechanism prioritizes immediate rewards over delayed ones.
 
@@ -153,16 +163,20 @@ In reinforcement learning, future rewards are usually **discounted**, meaning re
 
 The **value function** tells us **how good it is to be in a certain state under a given policy.** There are two primary types of value functions:
 
-- **State-Value function $v_\pi(s)$** is the expected return starting from state $s$ and then following policy $\pi$:
-    
-    $v_\pi(s) = E_\pi[G_t|S_t = s]$
-    
+- **State-value function** $v_\pi(s)$: the expected return starting from state $s$ and then following policy $\pi$:
+
+$$
+v_\pi(s) = \mathbb{E}_\pi[G_t \mid S_t = s]
+$$
+
     The agent evaluates the quality of its current state.
-    
-- The **action-value function** $q_\pi(s, a)$ is the expected return starting from state $s$, taking action $a$, and then following policy $\pi$:
-    
-    $q_\pi(s, a) = E_\pi[G_t|S_t = s, A_t = a]$
-    
+
+- **Action-value function** $q_\pi(s, a)$: the expected return starting from state $s$, taking action $a$, and then following policy $\pi$:
+
+$$
+q_\pi(s, a) = \mathbb{E}_\pi[G_t \mid S_t = s, A_t = a]
+$$
+
     Evaluates the quality of taking a specific action in a state.
     
 
@@ -177,37 +191,53 @@ The **state-value function** $v_\pi(s)$ can be decomposed into two parts:
 
 Formally, the equation is expressed as:
 
-$v_{\pi}(s)=\mathbb{E}_{\pi}[R_{t+1}+\gamma v_{\pi}(S_{t+1})\mid S_t=s]$
+$$
+v_{\pi}(s) = \mathbb{E}_{\pi}[R_{t+1} + \gamma v_{\pi}(S_{t+1}) \mid S_t = s]
+$$
 
-***Derivation***
+**Derivation**
 
 We begin with the definition of the state-value function:
 
-$v_\pi(s) = E_\pi[G_t|S_t = s]$
+$$
+v_\pi(s) = \mathbb{E}_\pi[G_t \mid S_t = s]
+$$
 
 Substituting the definition of the return $G_t$ as the sum of discounted rewards:
 
-$v_\pi(s) = \mathbb{E}_\pi[R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \ldots \mid S_t = s]$
+$$
+v_\pi(s) = \mathbb{E}_\pi[R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \ldots \mid S_t = s]
+$$
 
 Factoring out the discount factor $\gamma$:
 
-$v_\pi(s) = \mathbb{E}_\pi[R_{t+1} + \gamma (R_{t+2} + \gamma R_{t+3} + \ldots) \mid S_t = s]$
+$$
+v_\pi(s) = \mathbb{E}_\pi[R_{t+1} + \gamma (R_{t+2} + \gamma R_{t+3} + \ldots) \mid S_t = s]
+$$
 
 The term inside the parentheses is the definition of the return at the next time step, $G_{t+1}$:
 
-$v_\pi(s) = \mathbb{E}_\pi[R_{t+1} + \gamma G_{t+1} \mid S_t = s]$
+$$
+v_\pi(s) = \mathbb{E}_\pi[R_{t+1} + \gamma G_{t+1} \mid S_t = s]
+$$
 
 Using the **linearity of expectation**:
 
-$v_\pi(s) =\mathbb{E}_\pi[R_{t+1} \mid S_t=s] +\gamma \, \mathbb{E}_\pi[G_{t+1} \mid S_t=s]$
+$$
+v_\pi(s) = \mathbb{E}_\pi[R_{t+1} \mid S_t = s] + \gamma \, \mathbb{E}_\pi[G_{t+1} \mid S_t = s]
+$$
 
 Applying the **law of iterated expectations**:
 
-$v_\pi(s) =\mathbb{E}_\pi[R_{t+1} \mid S_t=s]+\gamma\mathbb{E}_\pi\big[\mathbb{E}_\pi[G_{t+1} \mid S_{t+1}=s'] \mid S_t=s\big]$
+$$
+v_\pi(s) = \mathbb{E}_\pi[R_{t+1} \mid S_t = s] + \gamma \, \mathbb{E}_\pi\big[\mathbb{E}_\pi[G_{t+1} \mid S_{t+1} = s'] \mid S_t = s\big]
+$$
 
-Since $\mathbb{E}_\pi[G_{t+1} \mid S_{t+1}] = v_\pi(S_{t+1})$ we obtain:
+Since $\mathbb{E}_\pi[G_{t+1} \mid S_{t+1}] = v_\pi(S_{t+1})$, we obtain:
 
-$v_{\pi}(s)=\mathbb{E}_{\pi}[R_{t+1}+\gamma v_{\pi}(S_{t+1}) \mid S_t=s]$
+$$
+v_{\pi}(s) = \mathbb{E}_{\pi}[R_{t+1} + \gamma v_{\pi}(S_{t+1}) \mid S_t = s]
+$$
 
 This is the **Bellman expectation equation** for the state-value function.
 
@@ -215,65 +245,71 @@ This is the **Bellman expectation equation** for the state-value function.
 
 The action-value function can similarly be decomposed:
 
-$q_\pi(s, a) = E_\pi[R_{t+1} + \gamma q_\pi(S_{t+1}, A_{t+1})|S_t = s, A_t = a]$
+$$
+q_\pi(s, a) = \mathbb{E}_\pi[R_{t+1} + \gamma q_\pi(S_{t+1}, A_{t+1}) \mid S_t = s, A_t = a]
+$$
 
-***Derivation***
+**Derivation**
 
 We begin with the definition of the **action-value function**:
 
-$q_\pi(s,a) = \mathbb{E}_\pi[G_t \mid S_t = s, A_t = a]$
+$$
+q_\pi(s,a) = \mathbb{E}_\pi[G_t \mid S_t = s, A_t = a]
+$$
 
-Substituting the definition of the return $G_t$ as the sum of discounted rewards:
+Substituting the definition of the return $G_t$:
 
-$q_\pi(s,a) = \mathbb{E}_\pi[R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \ldots \mid S_t=s, A_t=a]$
+$$
+q_\pi(s,a) = \mathbb{E}_\pi[R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \ldots \mid S_t=s, A_t=a]
+$$
 
 Factoring out the discount factor $\gamma$:
 
-$q_\pi(s,a) =\mathbb{E}_\pi[R_{t+1} + \gamma (R_{t+2} + \gamma R_{t+3} + \ldots) \mid S_t=s, A_t=a]$
+$$
+q_\pi(s,a) = \mathbb{E}_\pi[R_{t+1} + \gamma (R_{t+2} + \gamma R_{t+3} + \ldots) \mid S_t=s, A_t=a]
+$$
 
 The term inside the parentheses corresponds to the **return at the next time step**, $G_{t+1}$:
 
-$q_\pi(s,a) = \mathbb{E}_\pi[R_{t+1} + \gamma G_{t+1} \mid S_t=s, A_t=a]$
+$$
+q_\pi(s,a) = \mathbb{E}_\pi[R_{t+1} + \gamma G_{t+1} \mid S_t=s, A_t=a]
+$$
 
 Using the **linearity of expectation**:
 
-$q_\pi(s,a) = \mathbb{E}_\pi[R_{t+1} \mid S_t=s, A_t=a] + \gamma \mathbb{E}_\pi[G_{t+1} \mid S_t=s, A_t=a]$
+$$
+q_\pi(s,a) = \mathbb{E}_\pi[R_{t+1} \mid S_t=s, A_t=a] + \gamma \, \mathbb{E}_\pi[G_{t+1} \mid S_t=s, A_t=a]
+$$
 
 Applying the **law of iterated expectations**:
 
 $$
-q_\pi(s,a) =
-\mathbb{E}_\pi[R_{t+1} \mid S_t=s, A_t=a]
-+
-\gamma \,
-\mathbb{E}_\pi
-\big[
-\mathbb{E}_\pi[G_{t+1} \mid S_{t+1}=s', A_{t+1}=a']
-\mid S_t=s, A_t=a
-\big]
+q_\pi(s,a) = \mathbb{E}_\pi[R_{t+1} \mid S_t=s, A_t=a] + \gamma \, \mathbb{E}_\pi \big[ \mathbb{E}_\pi[G_{t+1} \mid S_{t+1}=s', A_{t+1}=a'] \mid S_t=s, A_t=a \big]
 $$
 
-Since:
+Since $\mathbb{E}_\pi[G_{t+1} \mid S_{t+1}=s', A_{t+1}=a'] = q_\pi(S_{t+1}, A_{t+1})$, we obtain:
 
-$\mathbb{E}_\pi[G_{t+1} \mid S_{t+1}=s', A_{t+1}=a'] = q_\pi(S_{t+1},A_{t+1})$
+$$
+q_\pi(s,a) = \mathbb{E}_\pi\big[R_{t+1} + \gamma q_\pi(S_{t+1}, A_{t+1}) \mid S_t=s, A_t=a\big]
+$$
 
-we obtain:
-
-$q_\pi(s,a)=\mathbb{E}_\pi\big[R_{t+1}+\gamma q_\pi(S_{t+1},A_{t+1})\mid S_t=s, A_t=a\big]$
-
-This expresses the **Bellman expectation equation for the action-value function** in terms of the **state-value of the next state**.
+This expresses the **Bellman expectation equation for the action-value function**.
 
 ### Model
 
 A **model** is the agent's internal representation of the environment. It is used to predict how the environment will respond to specific actions, allowing the agent to plan ahead. 
 
-- **State Transition Probability** ($P$) predicts the next state
-    
-    $P^a_{ss'} = P[S_{t+1} = s'|S_t = s, A_t = a]$
-    
-- **Reward Function** ($R$) predicts the next (immediate) reward.
-    
-    $R^a_s = E[R_{t+1}|S_t = s, A_t = a]$
+- **State transition probability** ($P$) predicts the next state:
+
+$$
+P^a_{ss'} = \mathbb{P}[S_{t+1} = s' \mid S_t = s, A_t = a]
+$$
+
+- **Reward function** ($R$) predicts the next (immediate) reward:
+
+$$
+R^a_s = \mathbb{E}[R_{t+1} \mid S_t = s, A_t = a]
+$$
     
 
 
@@ -308,56 +344,66 @@ The agent estimates the value of a state by **averaging the actual returns** ($G
 
 The goal of policy evaluation is to learn the state-value function $v_\pi$ from episodes of experience generated by a specific policy $\pi$:
 
-$S_1, A_1, R_2, \ldots, S_k \sim \pi$
+$$
+S_1, A_1, R_2, \ldots, S_k \sim \pi
+$$
 
 While the true value function relies on an expected return, **Monte-Carlo Policy Evaluation** uses the **empirical mean return** observed during actual play.
 
 **EVERY-VISIT MONTE-CARLO POLICY EVALUATION**
 
-The goal si to estimate the value of a state under a policy $\pi$. To achieve this, the agent tracks all visits to a state across multiple episodes and averages the returns observed after each visit. 
+The goal is to estimate the value of a state under a policy $\pi$. To achieve this, the agent tracks all visits to a state across multiple episodes and averages the returns observed after each visit.
 According to the **Law of Large Numbers**, this empirical average converges to the true state value as the number of visits approaches infinity:
 
 $$
-V(s) \rightarrow v_\pi(s)$ as $N(s) \rightarrow \infty$.
+V(s) \rightarrow v_\pi(s) \quad \text{as} \quad N(s) \rightarrow \infty
+$$
 
 **The Algorithm:**
 
 1. **Initialization**
-    
+
     For every state $s$ in the state space:
-    
-- Set the visit counter to zero: $N(s) = 0
-$$
+
+    - Set the visit counter to zero: $N(s) = 0$
     - Set the cumulative return sum to zero: $S(s) = 0$
+
 2. **Data Collection**
-    
-    Run multiple episodes following the fixed policy $\pi$
-    
-3. **State Evaluation (After each episode)**
-    
+
+    Run multiple episodes following the fixed policy $\pi$.
+
+3. **State Evaluation (after each episode)**
+
     For every time-step $t$ where state $s$ is visited:
-    
-    - **Increment Counter:** $N(s) \leftarrow N(s) + 1$
-    - **Update Total Return:** $S(s) \leftarrow S(s) + G_t$ (where $G_t$ is the total discounted reward from time $t$ until the end of the episode).
+
+    - **Increment counter:** $N(s) \leftarrow N(s) + 1$
+    - **Update total return:** $S(s) \leftarrow S(s) + G_t$, where $G_t$ is the total discounted reward from time $t$ until the end of the episode.
+
 4. **Value Estimation**
-After a sufficient number of episodes, calculate the state value as the mean return:
-    
-    $V(s) = \frac{S(s)}{N(s)}$
+
+    After a sufficient number of episodes, calculate the state value as the mean return:
+
+$$
+V(s) = \frac{S(s)}{N(s)}
+$$
     
 
 **INCREMENTAL MONTE-CARLO UPDATES**
 
 Rather than storing a massive sum of returns, we can **update the value function** $V(s)$ **incrementally** after each episode ($S_1, A_1, R_2, \ldots, S_T$). For each state $S_t$ visited with a corresponding return $G_t$, the update is performed as follows:
 
-1. **Update Visit Count:** $N(S_t) \leftarrow N(S_t) + 1$
-2. **Update Value Estimate:**
-    
-    $V(S_t) \leftarrow V(S_t) + \frac{1}{N(S_t)} (G_t - V(S_t))$
-    
+1. **Update visit count:** $N(S_t) \leftarrow N(S_t) + 1$
+2. **Update value estimate:**
+
+$$
+V(S_t) \leftarrow V(S_t) + \frac{1}{N(S_t)} (G_t - V(S_t))
+$$
 
 In many practical reinforcement learning problems, especially non-stationary ones where the environment may change over time, it is useful to "forget" older episodes. By replacing the $1/N(S_t)$ term with a constant learning rate $\alpha$, we create a **running mean**:
 
-$V(S_t) \leftarrow V(S_t) + \alpha(G_t - V(S_t))$
+$$
+V(S_t) \leftarrow V(S_t) + \alpha (G_t - V(S_t))
+$$
 
 where:
 
@@ -393,9 +439,11 @@ The goal of TD learning is to learn the state-value function $v_\pi$ online and 
 
 TD(0) is the simplest form of **temporal-difference learning**. It updates the value $V(S_t)$ toward a **TD Target**, which consists of the immediate reward $R_{t+1}$ plus the discounted value of the next state $\gamma V(S_{t+1})$.
 
-Therefore the Update Rule:
+Therefore the update rule is:
 
-$V(S_t) \leftarrow V(S_t) + \alpha(R_{t+1} + \gamma V(S_{t+1}) - V(S_t))$
+$$
+V(S_t) \leftarrow V(S_t) + \alpha (R_{t+1} + \gamma V(S_{t+1}) - V(S_t))
+$$
 
 where:
 
@@ -420,7 +468,7 @@ The fundamental difference between **Monte-Carlo** (MC) and **Temporal-Differenc
 Another key difference concerns **sequence requirements**:
 
 - **TD handles incomplete sequences:** it can learn from partial interactions without knowing the final outcome. This is useful in tasks with long horizons where reaching the end is rare or time-consuming.
-- **MC requires complete sequences:** ecause it relies on the actual total return, learning can occur only after the episode terminates.
+- **MC requires complete sequences:** because it relies on the actual total return, learning can occur only after the episode terminates.
 
 As a result, **TD can operate in continuing (non-terminating) environments**, while **MC is limited to episodic (terminating) environments**.
 
@@ -429,7 +477,7 @@ As a result, **TD can operate in continuing (non-terminating) environments**, wh
 In reinforcement learning, the choice between **Monte Carlo** (MC) and **Temporal Difference** (TD) methods reflects a trade-off between **bias** and **variance**.
 
 - The **Return** $G_t = R_{t+1} + R_{t+2} + \ldots + \gamma^{T-1} R_T$ is an **unbiased estimate** of the true value $v_\pi(S_t)$ because it reflects the actual rewards observed until the end of the episode.
-- The **TD Target $R_{t+1} + \gamma V(S_{t+1})$** is a **biased** estimate of $v_\pi(S_t)$ bbecause it relies on the agent’s current estimate of the next state value rather than the true value.
+- The **TD Target** $R_{t+1} + \gamma V(S_{t+1})$ is a **biased** estimate of $v_\pi(S_t)$ because it relies on the agent's current estimate of the next state value rather than the true value.
 - The **True TD target** $R_{t+1} + v_\pi(S_{t+1})$ would be an **unbiased estimate** of $v_\pi(S_t)$, but the true value function is unknown.
 
 **Comparison of Performance:**
@@ -458,10 +506,10 @@ Common approaches to model-free control include:
 
 Given a policy $\pi$ the general approach is:
 
-- **Policy Evaluaton** The agent evaluates the current policy $\pi$ by estimating its value functions:
-    - $v_\pi(s) = E[R_{t+1} + \gamma R_{t+2} + \ldots |S_t = s]$
-    - $q_\pi(s, a) = E[R_{t+1} + \gamma R_{t+2} + \ldots |S_t = s, A_t = a]$
-- **Policy Improvement** The agent uses these value estimates to build a **better policy**. 
+- **Policy Evaluation**: the agent evaluates the current policy $\pi$ by estimating its value functions:
+    - $v_\pi(s) = \mathbb{E}[R_{t+1} + \gamma R_{t+2} + \ldots \mid S_t = s]$
+    - $q_\pi(s, a) = \mathbb{E}[R_{t+1} + \gamma R_{t+2} + \ldots \mid S_t = s, A_t = a]$
+- **Policy Improvement**: the agent uses these value estimates to build a **better policy**.
 A common method is to act **greedily** with respect to the current estimates:
     - $\pi' = \text{greedy}(v_\pi)$
     - $\pi' = \text{greedy}(q_\pi)$
@@ -491,10 +539,12 @@ The **$\epsilon$-greedy policy** is a standard solution to the exploration-explo
 
 At each decision point the agent:
 
-- With **probability** $1 - \epsilon$  chooses the **"greedy" action**, the one with the highest current value estimate.
-- With **probability** $\epsilon$ selects an action at random from all $m$ possible options (including the greedy one).
+- With **probability** $1 - \epsilon$ choose the **"greedy" action**, the one with the highest current value estimate.
+- With **probability** $\epsilon$ select an action at random from all $m$ possible options (including the greedy one).
 
-$\pi(a|s) = \begin{cases} \epsilon/m + 1 - \epsilon, & \text{if } a^* = \arg \max_{a \in \mathcal{A}} Q(s, a) \\ \epsilon/m, & \text{otherwise} \end{cases}$
+$$
+\pi(a \mid s) = \begin{cases} \epsilon/m + 1 - \epsilon, & \text{if } a = \arg \max_{a' \in \mathcal{A}} Q(s, a') \\ \epsilon/m, & \text{otherwise} \end{cases}
+$$
 
 **ON AND OFF POLICY LEARNING**
 
@@ -552,11 +602,15 @@ By applying these **TD** principles to the control loop, we can estimate the **a
 
 **SARSA** is a primary TD control algorithm named after the sequence of variables it processes:
 
-$(S_t, A_t, R_{t+1}, S_{t+1}, A_{t+1})$
+$$
+(S_t, A_t, R_{t+1}, S_{t+1}, A_{t+1})
+$$
 
 The agent updates its action-value estimate using the following TD update rule:
 
-$Q(S, A) \leftarrow Q(S, A) + \alpha(R + \gamma Q(S', A') - Q(S, A))$
+$$
+Q(S, A) \leftarrow Q(S, A) + \alpha (R + \gamma Q(S', A') - Q(S, A))
+$$
 
 ![image.png](/images/deep-learning/15-reinforcement-learning/image%204.png)
 
@@ -612,28 +666,32 @@ The fundamental difference between SARSA and Q-learning lies in how the next act
 - In **SARSA**, the update uses the action $A_{t+1}$ actually chosen by the behavior policy.
 - In **Q-learning**, the update assumes the agent will take the **best possible action** in the next state, regardless of what the behavior policy actually chooses.
 
-During training, the agent selects the next action using the behavior policy $A_{t+1} \sim \mu(\cdot|S_t)$, 
-but the update is performed **as if the agent followed the target policy** $\pi$. 
-he Q-value of the current state–action pair is therefore updated toward the value of a **successor action** chosen according to the target policy $A' \sim \pi(\cdot|S_{t+1})$:
+During training, the agent selects the next action using the behavior policy $A_{t+1} \sim \mu(\cdot \mid S_t)$, but the update is performed **as if the agent followed the target policy** $\pi$. The Q-value of the current state–action pair is therefore updated toward the value of a **successor action** chosen according to the target policy $A' \sim \pi(\cdot \mid S_{t+1})$:
 
-$Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[ R_{t+1} + \gamma Q(S_{t+1}, A') - Q(S_t, A_t) \right]$
+$$
+Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[ R_{t+1} + \gamma Q(S_{t+1}, A') - Q(S_t, A_t) \right]
+$$
 
 **OFF-POLICY CONTROL WITH Q-LEARNING**
 
 In **off-policy Q-learning**, both the **behavior policy** $\mu$ and the **target policy** $\pi$ are allowed to improve over time:
 
 - The target policy $\pi$ is defined as **greedy with respect to the current Q-values:**
-    
-    $\pi(S_{t+1}) = \arg\max_{a'} Q(S_{t+1}, a')$
-    
-- The behavior policy $\mu$ remains **exploratory (e.g., ε-greedy)**, to ensure sufficient exploration.
+
+$$
+\pi(S_{t+1}) = \arg\max_{a'} Q(S_{t+1}, a')
+$$
+
+- The behavior policy $\mu$ remains **exploratory** (e.g., $\epsilon$-greedy), to ensure sufficient exploration.
 
 Because the target policy is greedy, the Q-learning target simplifies:
-$R_{t+1} + \gamma Q(S_{t+1}, A')$
 
-$= R_{t+1} + \gamma Q(S_{t+1}, \arg \max_{a'} Q(S_{t+1}, a'))$
-
-$= R_{t+1} + \gamma \max_{a'} Q(S_{t+1}, a')$
+$$
+\begin{aligned}
+R_{t+1} + \gamma Q(S_{t+1}, A') &= R_{t+1} + \gamma Q(S_{t+1}, \arg \max_{a'} Q(S_{t+1}, a')) \\
+&= R_{t+1} + \gamma \max_{a'} Q(S_{t+1}, a')
+\end{aligned}
+$$
 
 **ALGORITHM**
 
@@ -654,14 +712,18 @@ $= R_{t+1} + \gamma \max_{a'} Q(S_{t+1}, a')$
     ![image.png](/images/deep-learning/15-reinforcement-learning/image%208.png)
     
     - At each step, the $Q$-value is updated as:
-        
-        $Q(S, A) \leftarrow Q(S, A) + \alpha \Big[ R + \gamma \max_{a'} Q(S', a') - Q(S, A) \Big]$
-        
+
+$$
+Q(S, A) \leftarrow Q(S, A) + \alpha \Big[ R + \gamma \max_{a'} Q(S', a') - Q(S, A) \Big]
+$$
+
     - The agent moves to the new state $S'$ and repeats the process until the end of the episode.
 
 **Theoretical guarantee:** if every state–action pair is visited infinitely often and the learning rate decays appropriately, Q-learning **converges to the optimal action-value function**:
 
-$Q(s, a) \rightarrow q_*(s, a)$
+$$
+Q(s, a) \rightarrow q_*(s, a)
+$$
 
 ## Value Function Approximation
 
@@ -704,11 +766,15 @@ In reinforcement learning, the training method must be suitable for **non-statio
 
 If $J(w)$ is a differentiable function of a parameter vector $w$, its gradient $\nabla_w J(w)$ represents the direction of the steepest increase:
 
- $\nabla_w J(w) = \begin{pmatrix} \frac{\delta J(w)}{\delta w_1} \\ \vdots \\ \frac{\delta J(w)}{\delta w_n} \end{pmatrix}$ 
+$$
+\nabla_w J(w) = \begin{pmatrix} \frac{\partial J(w)}{\partial w_1} \\ \vdots \\ \frac{\partial J(w)}{\partial w_n} \end{pmatrix}
+$$
 
 To find a local minimum of $J(w)$, we adjust $w$ in the direction of the negative gradient. The update rule is defined as:
 
-$\Delta w = - \frac{1}{2} \alpha \nabla_w J(w)$
+$$
+\Delta w = -\frac{1}{2} \alpha \nabla_w J(w)
+$$
 
 where $\alpha$ is a step-size (learning rate) parameter.
 
@@ -718,23 +784,29 @@ where $\alpha$ is a step-size (learning rate) parameter.
 
 In Reinforcement Learning, the goal is to find a parameter vector $w$ that minimizes the **Mean-Squared Error (MSE)** between the approximate value function $\hat{v}(S, w)$ and the true value function $v_{\pi}(S)$:
 
- $J(w) = E_{\pi}[(v_{\pi}(S) - \hat{v}(S, w))^2]$ 
+$$
+J(w) = \mathbb{E}_{\pi}\big[(v_{\pi}(S) - \hat{v}(S, w))^2\big]
+$$
 
 Using gradient descent to find a local minimum results in the following update:
 
- $\Delta w = - \frac{1}{2} \alpha \nabla_w J(w)$ 
-
- $= \alpha E_{\pi}[(v_{\pi}(S) - \hat{v}(S, w))\nabla_w \hat{v}(S, w)]$ 
+$$
+\Delta w = -\frac{1}{2} \alpha \nabla_w J(w) = \alpha \, \mathbb{E}_{\pi}\big[(v_{\pi}(S) - \hat{v}(S, w)) \nabla_w \hat{v}(S, w)\big]
+$$
 
 **Stochastic Gradient Descent (SGD)** simplifies this by sampling the gradient at each step rather than calculating the full expectation. The expected update remains equal to the full gradient update:
 
- $\Delta w = \alpha(v_{\pi}(S) - \hat{v}(S, w))\nabla_w \hat{v}(S, w)$ 
+$$
+\Delta w = \alpha (v_{\pi}(S) - \hat{v}(S, w)) \nabla_w \hat{v}(S, w)
+$$
 
 **FEATURE VECTORS**
 
 To apply function approximation effectively, we represent a state $S$ as a **feature vector** $x(S)$:
 
- $x(S) = \begin{pmatrix} x_1(S) \\ \vdots \\ x_n(S) \end{pmatrix}$ 
+$$
+x(S) = \begin{pmatrix} x_1(S) \\ \vdots \\ x_n(S) \end{pmatrix}
+$$
 
 
 <Callout type="example">
@@ -756,17 +828,23 @@ Feature representations allow the model to **capture relevant structure in the e
 
 ### Linear value function approximation
 
-In linear function approximation, the value function is represented as a linear combination of features. Given a feature vector $x(S)$  and a weight vector $w$, the approximate value is defined as:
+In linear function approximation, the value function is represented as a linear combination of features. Given a feature vector $x(S)$ and a weight vector $w$, the approximate value is defined as:
 
-$\hat{v}(S, w) = x(S)^T w = \sum_{j=1}^{n} x_j(S)w_j$
+$$
+\hat{v}(S, w) = x(S)^T w = \sum_{j=1}^{n} x_j(S) w_j
+$$
 
 The objective function $J(w)$ is quadratic in terms of the parameters $w$:
 
- $J(w) = E_{\pi}[(v_{\pi}(S) - x(S)^T w)^2]$ 
+$$
+J(w) = \mathbb{E}_{\pi}\big[(v_{\pi}(S) - x(S)^T w)^2\big]
+$$
 
 Because the objective is quadratic, **Stochastic Gradient Descent (SGD)** is guaranteed to converge to the global optimum. The gradient is simply the feature vector itself, $\nabla_w \hat{v}(S, w) = x(S)$, leading to a highly efficient update rule:
 
- $\Delta w = \alpha(v_{\pi}(S) - \hat{v}(S, w))x(S)$ 
+$$
+\Delta w = \alpha (v_{\pi}(S) - \hat{v}(S, w)) x(S)
+$$
 
 This formula states that the update is the product of:
 
@@ -778,31 +856,42 @@ Structurally, this model can be viewed as a single-layer neural network without 
 
 Interestingly, traditional tabular reinforcement learning (like Q-learning and SARSA) is a special case of linear approximation. This occurs when we use **Table Lookup Features**, where the state space is represented by a "one-hot" encoded vector.
 
-For a state space with $n$ states, the feature vector $x_{table}(S)$ contains a $1$ at the index corresponding to the current state and $0$ elsewhere:
+For a state space with $n$ states, the feature vector $x_{\text{table}}(S)$ contains a $1$ at the index corresponding to the current state and $0$ elsewhere:
 
- $x_{table}(S) = \begin{pmatrix} 1(S = s_1) \\ \vdots \\ 1(S = s_n) \end{pmatrix}$ 
-In this specific case, the parameter vector $w$ directly provide the value of each individual state:
+$$
+x_{\text{table}}(S) = \begin{pmatrix} \mathbf{1}(S = s_1) \\ \vdots \\ \mathbf{1}(S = s_n) \end{pmatrix}
+$$
 
- $\hat{v}(S, w) = \begin{pmatrix} 1(S = s_1) \\ \vdots \\ 1(S = s_n) \end{pmatrix} \cdot \begin{pmatrix} w_1 \\ \vdots \\ w_n \end{pmatrix}$ 
+In this specific case, the parameter vector $w$ directly provides the value of each individual state:
+
+$$
+\hat{v}(S, w) = \begin{pmatrix} \mathbf{1}(S = s_1) \\ \vdots \\ \mathbf{1}(S = s_n) \end{pmatrix} \cdot \begin{pmatrix} w_1 \\ \vdots \\ w_n \end{pmatrix}
+$$
 
 ### Incremental prediction algorithms
 
 In supervised learning, we assume a supervisor provides the true value $v_{\pi}(s)$. In reinforcement learning, we must substitute this missing supervisor with a **target** derived from experience:
 
-- **For Monte Carlo (MC):** The target is the actual return $G_t$:
-    
-     $\Delta w = \alpha(G_t - \hat{v}(S_t, w))\nabla_w \hat{v}(S_t, w)$ 
-    
-- **For TD(0):** The target is the TD target $R_{t+1} + \gamma \hat{v}(S_{t+1}, w)$
-    
-     $\Delta w = \alpha(R_{t+1} + \gamma \hat{v}(S_{t+1}, w) - \hat{v}(S_t, w))\nabla_w \hat{v}(S_t, w)$ 
+- **For Monte Carlo (MC):** the target is the actual return $G_t$:
+
+$$
+\Delta w = \alpha (G_t - \hat{v}(S_t, w)) \nabla_w \hat{v}(S_t, w)
+$$
+
+- **For TD(0):** the target is the TD target $R_{t+1} + \gamma \hat{v}(S_{t+1}, w)$:
+
+$$
+\Delta w = \alpha (R_{t+1} + \gamma \hat{v}(S_{t+1}, w) - \hat{v}(S_t, w)) \nabla_w \hat{v}(S_t, w)
+$$
     
 
 **MONTE-CARLO WITH VALUE FUNCTION APPROXIMATION**
 
 The return $G_t$ is an unbiased but noisy sample of the true value $v_{\pi}(S_t)$. This allows us to treat the episode data as a supervised training set:
 
- $\langle S_1, G_1 \rangle, \langle S_2, G_2 \rangle, \dots, \langle S_T, G_T \rangle$ 
+$$
+\langle S_1, G_1 \rangle, \langle S_2, G_2 \rangle, \dots, \langle S_T, G_T \rangle
+$$
 
 **Linear MC Policy Evaluation:**
 
@@ -826,7 +915,9 @@ MC evaluation converges to a **local optimum**, even with non-linear function ap
 
 The TD target $R_{t+1} + \gamma \hat{v}(S_{t+1}, w)$ serves as a **biased** sample of the true value $v_{\pi}(S_t)$. We generate training data by pairing the **current state** with a **target** composed of the immediate reward and the estimated value of the successor state:
 
- $\langle S_1, R_2 + \gamma \hat{v}(S_2, w) \rangle, \langle S_2, R_3 + \gamma \hat{v}(S_3, w) \rangle, \dots, \langle S_{T-1}, R_T \rangle$ 
+$$
+\langle S_1, R_2 + \gamma \hat{v}(S_2, w) \rangle, \langle S_2, R_3 + \gamma \hat{v}(S_3, w) \rangle, \dots, \langle S_{T-1}, R_T \rangle
+$$
 
 The update uses the TD error ($\delta$) and the feature vector $x(S)$:
 
@@ -844,17 +935,23 @@ $$
 
 The principles used for state-value approximation extend directly to the action-value function. The goal is to approximate $q_{\pi}(S, A)$ using a parameterized function $\hat{q}(S, A, w)$ that accounts for both the **current state** and the **action taken**.
 
-**objective Function**
+**Objective Function**
 
-We aim to minimize the **Mean-Squared Error (MSE)** between the approximate action-value function $\hat{q}(S, A, w)$ and true action-value function $q_{\pi}(S, A)$:
+We aim to minimize the **Mean-Squared Error (MSE)** between the approximate action-value function $\hat{q}(S, A, w)$ and the true action-value function $q_{\pi}(S, A)$:
 
- $J(w) = E_{\pi}[(q_{\pi}(S, A) - \hat{q}(S, A, w))^2]$ 
+$$
+J(w) = \mathbb{E}_{\pi}\big[(q_{\pi}(S, A) - \hat{q}(S, A, w))^2\big]
+$$
 
 To find a local minimum, we apply SGD. The weight update is proportional to the prediction error and the gradient of the approximation function:
 
- $- \frac{1}{2} \nabla_w J(w) = (q_{\pi}(S, A) - \hat{q}(S, A, w))\nabla_w \hat{q}(S, A, w)$ 
+$$
+-\frac{1}{2} \nabla_w J(w) = (q_{\pi}(S, A) - \hat{q}(S, A, w)) \nabla_w \hat{q}(S, A, w)
+$$
 
- $\Delta w = \alpha(q_{\pi}(S, A) - \hat{q}(S, A, w))\nabla_w \hat{q}(S, A, w)$ 
+$$
+\Delta w = \alpha (q_{\pi}(S, A) - \hat{q}(S, A, w)) \nabla_w \hat{q}(S, A, w)
+$$
 
 The learning procedure is identical to the state-value approach, with the input space extended to incorporate the action.
 
@@ -862,27 +959,37 @@ The learning procedure is identical to the state-value approach, with the input 
 
 In the linear case, the relationship between features and values is straightforward. The state-action pair is represented by a **feature vector**:
 
- $x(S, A) = \begin{pmatrix} x_1(S, A) \\ \vdots \\ x_n(S, A) \end{pmatrix}$ 
+$$
+x(S, A) = \begin{pmatrix} x_1(S, A) \\ \vdots \\ x_n(S, A) \end{pmatrix}
+$$
 
 The action-value function is the dot product of the feature vector and the parameter vector:
 
- $\hat{q}(S, A, w) = x(S, A)^T w = \sum_{j=1}^{n} x_j(S, A)w_j$ 
+$$
+\hat{q}(S, A, w) = x(S, A)^T w = \sum_{j=1}^{n} x_j(S, A) w_j
+$$
 
-Since the gradient of a linear function is simply the feature vector itself $\nabla_w \hat{q}(S, A, w) = x(S, A)$, the update rule becomes:
+Since the gradient of a linear function is simply the feature vector itself, $\nabla_w \hat{q}(S, A, w) = x(S, A)$, the update rule becomes:
 
- $\Delta w = \alpha(q_{\pi}(S, A) - \hat{q}(S, A, w))x(S, A)$ 
+$$
+\Delta w = \alpha (q_{\pi}(S, A) - \hat{q}(S, A, w)) x(S, A)
+$$
 
 ### Incremental control algorithms
 
 As in prediction methods, we replace the unknown value $q_{\pi}(S, A)$ with a **target**:
 
-- For **Monte Carlo (MC)**, the target is the **return** $G_t$
-    
-     $\Delta w = \alpha(G_t - \hat{q}(S_t, A_t, w))\nabla_w \hat{q}(S_t, A_t, w)$ 
-    
-- For **TD(0)** (**SARSA**), the target is the **TD target** $R_{t+1} + \gamma \hat{q}(S_{t+1}, A_{t+1}, w)$
-    
-     $\Delta w = \alpha(R_{t+1} + \gamma \hat{q}(S_{t+1}, A_{t+1}, w) - \hat{q}(S_t, A_t, w))\nabla_w \hat{q}(S_t, A_t, w)$ 
+- For **Monte Carlo (MC)**, the target is the **return** $G_t$:
+
+$$
+\Delta w = \alpha (G_t - \hat{q}(S_t, A_t, w)) \nabla_w \hat{q}(S_t, A_t, w)
+$$
+
+- For **TD(0)** (**SARSA**), the target is the **TD target** $R_{t+1} + \gamma \hat{q}(S_{t+1}, A_{t+1}, w)$:
+
+$$
+\Delta w = \alpha (R_{t+1} + \gamma \hat{q}(S_{t+1}, A_{t+1}, w) - \hat{q}(S_t, A_t, w)) \nabla_w \hat{q}(S_t, A_t, w)
+$$
     
 
 These updates adjust the parameter vector $w$ incrementally to reduce the difference between the predicted value and the chosen target.
@@ -922,13 +1029,15 @@ While standard Gradient Descent is simple, it is often **sample inefficient** be
 
 Given a value function approximation $\hat{v}(s, w)$ and a dataset of experience $D$ containing $\langle \text{state, value} \rangle$ pairs:
 
- $D = \{ \langle s_1, v^{\pi}_1 \rangle, \langle s_2, v^{\pi}_2 \rangle, \dots, \langle s_T, v^{\pi}_T \rangle \}$ 
+$$
+D = \{ \langle s_1, v^{\pi}_1 \rangle, \langle s_2, v^{\pi}_2 \rangle, \dots, \langle s_T, v^{\pi}_T \rangle \}
+$$
 
-The goal is to find the parameter vector $w$ that minimizes the **Sum-Squared Error (LS)** between the approximate values  $\hat{v}(s_t, w)$ and the target values $v^{\pi}_t$ across the entire dataset:
+The goal is to find the parameter vector $w$ that minimizes the **Sum-Squared Error (LS)** between the approximate values $\hat{v}(s_t, w)$ and the target values $v^{\pi}_t$ across the entire dataset:
 
- $*LS(w) = \sum_{t=1}^{T} (v^{\pi}_t - \hat{v}(s_t, w))^2*$ 
-
- $= E_D[(v^{\pi} - \hat{v}(s, w))^2]$ 
+$$
+LS(w) = \sum_{t=1}^{T} (v^{\pi}_t - \hat{v}(s_t, w))^2 = \mathbb{E}_D\big[(v^{\pi} - \hat{v}(s, w))^2\big]
+$$
 
 **STOCHASTIC GRADIENT DESCENT WITH EXPERIENCE REPLAY**
 
@@ -938,17 +1047,23 @@ Experience Replay is a practical implementation of batch reinforcement learning.
 
 Given the experience dataset $D$:
 
-1. **Sample:** Randomly select a $\langle \text{state, value} \rangle$ pair from the history: 
-    
-    $\langle s, v^{\pi} \rangle \sim D$
-    
-2. **Update:** Apply the stochastic gradient descent (SGD) update:
-    
-    $\Delta w = \alpha(v^{\pi} - \hat{v}(s, w))\nabla_w \hat{v}(s, w)$
-    
-3. **Repeat:** Iterate this process multiple times until it converges to least squares solution:
-    
-    $\mathbf{w} = \argmin_\mathbf{w} LS(\mathbf{w})$
+1. **Sample:** randomly select a $\langle \text{state, value} \rangle$ pair from the history:
+
+$$
+\langle s, v^{\pi} \rangle \sim D
+$$
+
+2. **Update:** apply the stochastic gradient descent (SGD) update:
+
+$$
+\Delta w = \alpha (v^{\pi} - \hat{v}(s, w)) \nabla_w \hat{v}(s, w)
+$$
+
+3. **Repeat:** iterate this process multiple times until it converges to the least-squares solution:
+
+$$
+\mathbf{w} = \arg\min_\mathbf{w} LS(\mathbf{w})
+$$
     
 
 ### Experience replay in deep Q-networks (DQN)
@@ -969,9 +1084,11 @@ Two neural networks are used:
 2. **Storage:** The resulting transition $(s_t, a_t, r_{t+1}, s_{t+1})$ is stored in a **Replay Memory ($D$)**.
 3. **Sampling:** Instead of learning only from the most recent step, the agent samples a **random mini-batch** of transitions from $D$. This breaks the temporal correlation between consecutive samples.
 4. **Target Calculation:** The agent computes the Q-learning targets using a separate set of **old, fixed parameters ($w^-$)**. This "Target Network" prevents the target from moving too quickly, which stabilizes the update.
-5. **Optimization:** The agent minimizes the Mean-Squared Error (MSE) Loss function using a variant of Stochastic Gradient Descent:
-    
-     $L_i(w_i) = E_{s,a,r,s' \sim D_i} \left[ \left( r + \gamma \max_{a'} Q(s', a'; w^-_i) - Q(s, a, w_i) \right)^2 \right]$ 
+5. **Optimization:** the agent minimizes the Mean-Squared Error (MSE) loss function using a variant of Stochastic Gradient Descent:
+
+$$
+L_i(w_i) = \mathbb{E}_{s,a,r,s' \sim D_i} \left[ \left( r + \gamma \max_{a'} Q(s', a'; w^-_i) - Q(s, a; w_i) \right)^2 \right]
+$$
     
 
 After each parameter update, a new loss is computed using the latest mini-batch, and the agent may select new actions accordingly. Convergence occurs when Q-values stabilize.
@@ -995,3 +1112,33 @@ It was used in **Atari games**:
 - **Reward**: defined as the **change in game score** at each step.
 
 ![image.png](/images/deep-learning/15-reinforcement-learning/image%2013.png)
+
+---
+
+## Key Takeaways
+
+| Concept | Description |
+|---|---|
+| **Reinforcement Learning** | Agent learns by interacting with an environment to maximize cumulative reward — no labels, delayed feedback, sequential non-IID data |
+| **Agent–environment loop** | At each step $t$: observe $O_t$, receive reward $R_t$, take action $A_t$ → environment transitions and emits $O_{t+1}, R_{t+1}$ |
+| **Policy** | Deterministic $a = \pi(s)$ or stochastic $\pi(a \mid s) = \mathbb{P}[A_t = a \mid S_t = s]$ — defines agent behavior |
+| **Return $G_t$** | Discounted cumulative reward $\sum_{k=0}^\infty \gamma^k R_{t+k+1}$; $\gamma$ trades off myopic vs far-sighted |
+| **State / action value** | $v_\pi(s) = \mathbb{E}_\pi[G_t \mid S_t=s]$; $q_\pi(s, a) = \mathbb{E}_\pi[G_t \mid S_t=s, A_t=a]$ |
+| **Bellman expectation** | $v_\pi(s) = \mathbb{E}_\pi[R_{t+1} + \gamma v_\pi(S_{t+1}) \mid S_t=s]$; analogous form for $q_\pi$ — recursive decomposition |
+| **Model** | Internal representation: $P^a_{ss'}$ for transitions, $R^a_s$ for rewards. Enables planning |
+| **Model-free prediction** | Estimate $v_\pi$ directly from experience without knowing the environment dynamics |
+| **Monte Carlo (MC)** | Average actual returns $G_t$ over episodes; unbiased, high variance, requires terminating episodes |
+| **TD(0)** | $V(S_t) \leftarrow V(S_t) + \alpha(R_{t+1} + \gamma V(S_{t+1}) - V(S_t))$. Online, biased, low variance |
+| **MC vs TD** | MC: unbiased, slow, episodic only. TD: biased (bootstraps), fast, works with incomplete sequences |
+| **Bias–variance trade-off** | MC return = unbiased high-variance; TD target = biased low-variance — TD usually wins in practice |
+| **Generalized Policy Iteration** | Alternate **policy evaluation** ($v_\pi$ or $q_\pi$) with **policy improvement** (greedy w.r.t. estimates) |
+| **$\epsilon$-greedy** | With prob. $1-\epsilon$ pick the greedy action; with prob. $\epsilon$ pick uniformly — guarantees exploration |
+| **On-policy vs off-policy** | On-policy: learn the policy you use to act. Off-policy: learn target policy $\pi$ while behaving with $\mu$ |
+| **SARSA** | On-policy TD control: $Q(S,A) \leftarrow Q(S,A) + \alpha(R + \gamma Q(S', A') - Q(S, A))$ with $A'$ from the same policy |
+| **Q-learning** | Off-policy TD control: target uses $\max_{a'} Q(S', a')$ regardless of behavior policy → converges to $q_*$ |
+| **Function approximation** | Replace tabular $V/Q$ with parameterized $\hat{v}(s, w), \hat{q}(s, a, w)$ — needed for large/continuous state spaces |
+| **Linear approximation** | $\hat{v}(s, w) = x(s)^T w$. Quadratic objective → SGD reaches global optimum; gradient = feature vector |
+| **Convergence** | Tabular: always converges. Linear on-policy: usually OK. Non-linear / off-policy: no guarantees |
+| **Experience replay** | Store transitions in a buffer, sample mini-batches → breaks temporal correlation, reuses experience |
+| **DQN** | Q-learning + deep CNN + replay buffer + **fixed target network** ($w^-$ updated periodically). Plays Atari from raw pixels |
+| **Why DQN is off-policy** | Behavior policy is $\epsilon$-greedy, target policy is greedy ($\max Q$), and stale buffer data is replayed |

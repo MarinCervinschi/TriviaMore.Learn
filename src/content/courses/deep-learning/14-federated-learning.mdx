@@ -51,13 +51,17 @@ By shifting computation to the **edge of the network**, Federated Learning impro
 
 **FORMULATION**
 
-- **Client-side** Each client $i$ holds a private dataset $D_i$. The objective is to obtain the set of weights $\theta_i$ to minimize the loss using only its own dataset:
-    
-     $\min_{\theta_i} E_{(x,y) \sim D_i} L(f_{\theta_i}(x), y)$ 
-    
-- **Server-side** The server does not have access to the data; it only receives **model parameters** from the clients. Its objective is to obtain a global model that minimizes the average loss across the datasets of all $N$ clients:
-    
-     $\min_{\theta} \frac{1}{N} \sum_{i=1}^N E_{(x,y) \sim D_i} L(f_{\theta}(x), y)$ 
+- **Client-side**: Each client $i$ holds a private dataset $D_i$. The objective is to obtain the set of weights $\theta_i$ to minimize the loss using only its own dataset:
+
+$$
+\min_{\theta_i} \mathbb{E}_{(x,y) \sim D_i} L(f_{\theta_i}(x), y)
+$$
+
+- **Server-side**: The server does not have access to the data; it only receives **model parameters** from the clients. Its objective is to obtain a global model that minimizes the average loss across the datasets of all $N$ clients:
+
+$$
+\min_{\theta} \frac{1}{N} \sum_{i=1}^N \mathbb{E}_{(x,y) \sim D_i} L(f_{\theta}(x), y)
+$$
     
 
 **APPLICATION SCENARIOS**
@@ -117,12 +121,14 @@ The process follows these steps:
     - Each client $i \in C_t$ initializes the model $w_{t-1}$ and performs local training (e.g., $E$ epochs of SGD on its local dataset) to obtain an updated model $w_i^t$.
     - Clients send its model’s weights $w_i^t$ (or the model difference) back to the server.
     - Server aggregates the weights to form the new global model:
-        
-         $w^t \leftarrow \sum_{i \in C_t} \frac{n_i}{\sum_{j \in C_t} n_j} w_i^t$ 
-        
-        - $w_i^t$ Model parameters from client $i$ at round $t$.
-        - $n_i$: Number of training samples on client $i$.
-        - $\sum_{j \in C_t} n_j$ Total number of samples across all participating clients in the current round.
+
+$$
+w^t \leftarrow \sum_{i \in C_t} \frac{n_i}{\sum_{j \in C_t} n_j} w_i^t
+$$
+
+        - $w_i^t$: model parameters from client $i$ at round $t$.
+        - $n_i$: number of training samples on client $i$.
+        - $\sum_{j \in C_t} n_j$: total number of samples across all participating clients in the current round.
         
         This aggregation corresponds to a **weighted average**, where clients with **larger datasets contribute more** to the global model.
         
@@ -172,9 +178,11 @@ By capturing the curvature of local objective functions, this approach allows **
 
 **FISHER-WEIGHTED AVERAGING**
 
-To aggregate models intelligently, we can treat each client’s weights as a probability distribution. Given $M$ client models $\{\theta_i\}_{i=1}^M$ with identical initialization, we approximate each model’s posterior as a Gaussian-distributed posterior:
+To aggregate models intelligently, we can treat each client's weights as a probability distribution. Given $M$ client models $\{\theta_i\}_{i=1}^M$ with identical initialization, we approximate each model's posterior as a Gaussian-distributed posterior:
 
-$p(\theta|\theta_i, F_i)$
+$$
+p(\theta \mid \theta_i, F_i)
+$$
 
 where:
 
@@ -182,13 +190,17 @@ where:
 
 **The Optimization Objective**
 
-The objective is to find the set of weights $\theta^*$that maximizes the joint posterior across all clients:
+The objective is to find the set of weights $\theta^*$ that maximizes the joint posterior across all clients:
 
- $*\theta^* = \arg \max_\theta \prod_{i=1}^M \lambda_i p(\theta | \theta_i, F_i)*$ 
+$$
+\theta^* = \arg \max_\theta \prod_{i=1}^M \lambda_i \, p(\theta \mid \theta_i, F_i)
+$$
 
 To simplify the computation, we apply a log transformation, converting the product into a summation:
 
- $\theta^* = \arg \max_\theta \sum_{i=1}^M \lambda_i \log p(\theta | \theta_i, F_i)$ 
+$$
+\theta^* = \arg \max_\theta \sum_{i=1}^M \lambda_i \log p(\theta \mid \theta_i, F_i)
+$$
 
 In this context, $\lambda_i$ are scalars (where $\sum \lambda_i = 1$) that represent additional importance weighting, such as $\lambda_i = 1/C$ or proportional to dataset size.
 
@@ -196,7 +208,9 @@ In this context, $\lambda_i$ are scalars (where $\sum \lambda_i = 1$) that repre
 
 Solving this optimization problem leads to a specific closed-form solution for the global model parameters:
 
- $\theta^* = \left(\sum_i \lambda_i F_i\right)^{-1}\left(\sum_i \lambda_i F_i \theta_i\right)$ 
+$$
+\theta^* = \left(\sum_i \lambda_i F_i\right)^{-1}\left(\sum_i \lambda_i F_i \theta_i\right)
+$$
 
 This approach mirrors the logic of **Bayesian Neural Networks (BNNs)**. By modeling weights and their importance, the FIM effectively dictates the "certainty" of a parameter. 
 
@@ -208,7 +222,9 @@ This approach mirrors the logic of **Bayesian Neural Networks (BNNs)**. By model
 
 For each individual parameter $j$, the solution simplifies to:
 
-$\theta^*_j = \frac{\sum_{i=1}^M \lambda_i F_{i,j} \theta_{i,j}}{\sum_{i=1}^M \lambda_i F_{i,j}}$
+$$
+\theta^*_j = \frac{\sum_{i=1}^M \lambda_i F_{i,j} \theta_{i,j}}{\sum_{i=1}^M \lambda_i F_{i,j}}
+$$
 
 
 <Callout type="warning">
@@ -228,7 +244,7 @@ Since both components have the same size as the model, the total payload per com
 
 From a privacy perspective, the Fisher values reveal only the **sensitivity of the model parameters**, not the raw data. However, they may still leak some information, so they are often combined with **secure aggregation** or **differential privacy (DP)** mechanisms.
 
-**STRENGHTS AND LIMITATIONS**
+**STRENGTHS AND LIMITATIONS**
 
 **Strengths**
 
@@ -252,60 +268,79 @@ After local training, each client $i = 1, \ldots, M$ provides:
 - $\theta_i \in \mathbb{R}^{n_p}$ the vector of model parameters, where $n_p$ is the number of parameters.
 - $F_i \in \mathbb{R}^{n_p \times n_p}$ the **Fisher Information Matrix**, which is symmetric and positive semi-definite.
 
-Assume a Gaussian posterior $N(\theta_i, F_i^{-1})$ around each $\theta_i$. The goal is to find the parameter vector $\theta$ that maximizes the product of these $M$ independent posteriors:
+Assume a Gaussian posterior $\mathcal{N}(\theta_i, F_i^{-1})$ around each $\theta_i$. The goal is to find the parameter vector $\theta$ that maximizes the product of these $M$ independent posteriors:
 
-$\theta^* = \arg \max_\theta \prod_{i=1}^{M} \lambda_i  p(\theta \mid \theta_i, F_i)$
+$$
+\theta^* = \arg \max_\theta \prod_{i=1}^{M} \lambda_i \, p(\theta \mid \theta_i, F_i)
+$$
 
 This is equivalent to maximizing the sum of the logarithms of the posteriors:
 
-$\theta^* = \arg \max_\theta \sum_{i=1}^{M} \lambda_i \log p(\theta \mid \theta_i, F_i)$
+$$
+\theta^* = \arg \max_\theta \sum_{i=1}^{M} \lambda_i \log p(\theta \mid \theta_i, F_i)
+$$
 
-***dim***
+**Derivation**
 
 Assuming a Gaussian posterior with precision matrix $F_i$:
 
-$p(\theta \mid \theta_i, F_i) =\frac{|F_i|^{1/2}}{(2\pi)^{n_p/2}}\exp\left\{-\frac{1}{2}(\theta-\theta_i)^\top F_i(\theta-\theta_i)\right\}$
-
-The normalization constant does not depend on 
 $$
-\theta$, so it can be ignored in the optimization:
+p(\theta \mid \theta_i, F_i) = \frac{|F_i|^{1/2}}{(2\pi)^{n_p/2}} \exp\left\{-\frac{1}{2}(\theta-\theta_i)^\top F_i (\theta-\theta_i)\right\}
+$$
 
-$p(\theta \mid \theta_i, F_i) \approx\exp\left\{-\frac{1}{2}(\theta-\theta_i)^\top F_i(\theta-\theta_i)\right\}
+The normalization constant does not depend on $\theta$, so it can be ignored in the optimization:
+
+$$
+p(\theta \mid \theta_i, F_i) \propto \exp\left\{-\frac{1}{2}(\theta-\theta_i)^\top F_i (\theta-\theta_i)\right\}
 $$
 
 Taking the logarithm and substituting into the objective:
 
-$\theta^\star =\arg \max_\theta-\frac{1}{2}\sum_{i=1}^{M}\lambda_i(\theta-\theta_i)^\top F_i (\theta-\theta_i)$
+$$
+\theta^\star = \arg \max_\theta -\frac{1}{2}\sum_{i=1}^{M} \lambda_i (\theta-\theta_i)^\top F_i (\theta-\theta_i)
+$$
 
 Multiplying by $-2$ yields an equivalent minimization problem:
 
-$\theta^\star =\arg \min_\theta\sum_{i=1}^{M}\lambda_i(\theta-\theta_i)^\top F_i (\theta-\theta_i)$
+$$
+\theta^\star = \arg \min_\theta \sum_{i=1}^{M} \lambda_i (\theta-\theta_i)^\top F_i (\theta-\theta_i)
+$$
 
 **Expand the quadratic forms:**
 
- $\theta^\star = \arg \min_\theta \sum_{i=1}^M \lambda_i \left( \theta^\top F_i \theta - 2 \theta^\top F_i \theta_i + \theta_i^\top F_i \theta_i \right)$ 
+$$
+\theta^\star = \arg \min_\theta \sum_{i=1}^M \lambda_i \left( \theta^\top F_i \theta - 2 \theta^\top F_i \theta_i + \theta_i^\top F_i \theta_i \right)
+$$
 
 The last term is independent of $\theta$, so it can be removed from the optimization problem.
 
 **Collect terms**
 
-Collect $\theta$ as it does not depend on the summation over clients models:
+Collect $\theta$ as it does not depend on the summation over client models:
 
-$\theta^\star =\arg \min_\theta\theta^\top\left(\sum_{i=1}^{M}\lambda_i F_i\right)\theta-2\theta^\top\left(\sum_{i=1}^{M}\lambda_i F_i \theta_i\right)$
+$$
+\theta^\star = \arg \min_\theta \theta^\top \left(\sum_{i=1}^{M} \lambda_i F_i\right) \theta - 2 \theta^\top \left(\sum_{i=1}^{M} \lambda_i F_i \theta_i\right)
+$$
 
 **Take the gradient and set to zero**
 
 Since all $F_i$ are symmetric, we can write it as:
 
- $2 \left( \sum_{i=1}^M \lambda_i F_i \right) \theta - 2 \left( \sum_{i=1}^M \lambda_i F_i \theta_i \right) = 0$ 
+$$
+2 \left( \sum_{i=1}^M \lambda_i F_i \right) \theta - 2 \left( \sum_{i=1}^M \lambda_i F_i \theta_i \right) = 0
+$$
 
 **Solve for $\theta^\star$**
 
-$\theta^\star =\left(\sum_{i=1}^{M}\lambda_i F_i\right)^{-1}\left(\sum_{i=1}^{M}\lambda_i F_i \theta_i\right)$
+$$
+\theta^\star = \left(\sum_{i=1}^{M} \lambda_i F_i\right)^{-1} \left(\sum_{i=1}^{M} \lambda_i F_i \theta_i\right)
+$$
 
 If $F_i$ is the diagonal of the Fisher Information Matrix, we can treat it as a vector, that is $F_i \in \mathbb{R}^{n_p}$. So the matrix inversion becomes a simple fraction (element-wise for each component $j$):
 
-$\theta^* = \frac{\sum_{i=1}^M \lambda_i F_{i}^{(j)} \theta_{i}^{(j)}}{\sum_{i=1}^M \lambda_i F_{i}^{(j)}}$
+$$
+\theta^* = \frac{\sum_{i=1}^M \lambda_i F_{i}^{(j)} \theta_{i}^{(j)}}{\sum_{i=1}^M \lambda_i F_{i}^{(j)}}
+$$
 
 If all importance scores are equal (i.e., $F_i$ is the identity matrix for all clients) and $\lambda_i$ represents the sample fraction per client, the solution reduces exactly to **Federated Averaging (FedAvg)**.
 
@@ -352,15 +387,18 @@ The algorithm introduces two auxiliary variables to track training directions:
 1. **Initial Training:** In the first round, no correction is applied; clients train normally on the initial global model $w$.
 2. **Local Estimation:** At the end of the round, each client computes its initial $c_i$ (the average gradient experienced during local training) and sends it to the server.
 3. **Global Aggregation:** The server aggregates these values to form the global control variate:
-    
-     $c = \frac{1}{N}\sum_{i=1}^N c_i$ 
-    
+
+$$
+c = \frac{1}{N}\sum_{i=1}^N c_i
+$$
 
 **Round 2 and Beyond: Corrected Training**
 
-When client $i$ receives the current global model $w$, it no longer uses the raw local gradient  $\nabla L_i(w)$. Instead, it applies an **adjusted gradient**:
+When client $i$ receives the current global model $w$, it no longer uses the raw local gradient $\nabla L_i(w)$. Instead, it applies an **adjusted gradient**:
 
- $g_i(w) = \nabla L_i(w) - c_i + c$ 
+$$
+g_i(w) = \nabla L_i(w) - c_i + c
+$$
 
 ![image.png](/images/deep-learning/14-federated-learning/1111c486-f43e-4ce7-9e5e-a7478284a0b1.png)
 
@@ -420,19 +458,23 @@ For each client $i$, the model is composed of a feature extractor $f_i$ and a cl
 
 1. **Local Prototype Computation**
 At the end of each local training round, client $i$ calculates a prototype $p_{i,c}$ for every class $c$ present in its local dataset $D_i$. The prototype is the **mean feature embedding** for each class in its local data:
-    
-     $p_{i,c} = E_{(x,y) \sim D_i} [f_i(x) : y = c]$ 
-    
-2.  **Communication and Aggregation**
-    
+
+$$
+p_{i,c} = \mathbb{E}_{(x,y) \sim D_i} [f_i(x) \mid y = c]
+$$
+
+2. **Communication and Aggregation**
+
     Instead of full model weights, clients send these local prototypes to the central server. The server then averages them to form **global prototypes** ($\bar{p}_c$) for each class.
-    
+
 3. **Prototype Regularization**
-    
+
     The server sends the global prototypes back to the clients. To ensure that **local feature** representations **align with the global one,** each client adds a regularization term to its local loss function:
-    
-     $L^{\text{FedProto}}_i = L^{\text{local}}_i + \lambda \|p_{i,c} - \bar{p}c\|^2$ 
-    
+
+$$
+L^{\text{FedProto}}_i = L^{\text{local}}_i + \lambda \|p_{i,c} - \bar{p}_c\|^2
+$$
+
     effectively addressing the challenges of heterogeneous label distributions.
     
 
@@ -440,7 +482,9 @@ At the end of each local training round, client $i$ calculates a prototype $p_{i
 
 FedProto supports standard classifiers (e.g., softmax or linear heads trained with the local loss + regularization). Alternatively, a **nearest-mean classifier** can be used:
 
- $\hat{y} = \arg \min_c \|f(x) - \bar{p}_c\|^2$ 
+$$
+\hat{y} = \arg \min_c \|f(x) - \bar{p}_c\|^2
+$$
 
 The input is assigned to the class whose prototype is **closest in feature space**, implementing a **nearest-prototype classification** strategy.
 
@@ -487,3 +531,23 @@ As Federated Learning continues to evolve, research is shifting toward making th
 - **Scalability**: Future FL systems must scale to millions of devices; this entails reducing communication (e.g., model compression) and handling unreliable devices and network conditions.
 
 Overall, FL is key to enabling collaborative AI on distributed data. Ongoing research aims to make it more robust, fair, and applicable to a wider range of real-world scenarios.
+
+---
+
+## Key Takeaways
+
+| Concept | Description |
+|---|---|
+| **Federated Learning (FL)** | Train a shared model across clients without centralizing raw data; only parameters/updates are exchanged |
+| **Cross-device vs cross-silo** | Many small/intermittent devices vs few organizations with rich datasets — different scale, reliability, and privacy regimes |
+| **Global objective** | $\min_\theta \frac{1}{N} \sum_i \mathbb{E}_{(x,y)\sim D_i} L(f_\theta(x), y)$ — average loss across all client distributions |
+| **Key challenges** | Non-IID data, partial participation, communication overhead, residual privacy leakage from updates |
+| **FedAvg** | Each round: server broadcasts $w_{t-1}$ → clients run $E$ epochs of SGD → server returns weighted average $w^t = \sum_i \frac{n_i}{\sum n_j} w_i^t$ |
+| **Client drift** | Under non-IID data each client moves toward its own optimum; averaging produces a model far from the joint optimum |
+| **Fisher-weighted averaging** | Weight each parameter by client confidence (diagonal FIM): $\theta^*_j = \frac{\sum_i \lambda_i F_{i,j} \theta_{i,j}}{\sum_i \lambda_i F_{i,j}}$. Reduces to FedAvg when $F_i$ are equal |
+| **Diagonal FIM trick** | Estimating the full FIM is infeasible; the diagonal — squared gradients of the log-likelihood — is a tractable proxy for parameter importance |
+| **SCAFFOLD** | Client-side correction via control variates: replace $\nabla L_i(w)$ with $\nabla L_i(w) - c_i + c$ to align local updates with the global direction |
+| **FedProto** | Communicate **class prototypes** (mean feature embeddings) instead of weights; regularize local features toward global prototypes |
+| **Prototype-based inference** | Nearest-mean classification: $\hat{y} = \arg\min_c \|f(x) - \bar{p}_c\|^2$. Architecture-agnostic, low communication cost |
+| **Three families of FL** | Server-side (e.g., Fisher merging), client-side (FedProx, SCAFFOLD), knowledge-sharing (FedProto, distillation) |
+| **Privacy add-ons** | Updates can leak; combine FL with **secure aggregation** and **differential privacy** for stronger guarantees |

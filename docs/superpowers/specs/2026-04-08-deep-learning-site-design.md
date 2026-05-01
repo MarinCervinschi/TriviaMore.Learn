@@ -162,16 +162,16 @@ Per ogni capitolo: revisione contenuto, fix formule LaTeX, verifica immagini, Me
 ### Fase 3 — Capitoli 11-15 e rifinitura
 > Tecniche avanzate di training e deployment + rifinitura finale
 
-- [ ] 11 — Transfer Learning
-- [ ] 12 — Parameter-Efficient Fine-Tuning
-- [ ] 13 — Continual Learning
-- [ ] 14 — Federated Learning
-- [ ] 15 — Reinforcement Learning
+- [x] 11 — Transfer Learning
+- [x] 12 — Parameter-Efficient Fine-Tuning
+- [x] 13 — Continual Learning
+- [x] 14 — Federated Learning
+- [x] 15 — Reinforcement Learning
 - [ ] Rifinitura: responsive, performance, meta tags, favicon
 - [ ] Deploy finale
 - [ ] Verifica: sito completo, tutti i capitoli, pronto per la produzione
 
-**Stato**: `DA FARE`
+**Stato**: `IN CORSO` (capitoli completati, rimangono rifinitura e deploy)
 
 ---
 
