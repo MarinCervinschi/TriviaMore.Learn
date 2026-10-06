@@ -1,0 +1,236 @@
+---
+title: "Introduzione ai Big Data"
+order: 1
+course: "big-data"
+description: "Le cinque V dei Big Data, la pipeline di analisi e il ruolo del Data Scientist."
+---
+
+import Callout from '../../../components/Callout.astro';
+
+## Le cinque dimensioni fondamentali dei Big Data
+
+I **Big Data** si riferiscono a insiemi di dati la cui dimensione e complessità superano le capacità dei software di database tradizionali per la loro **cattura, memorizzazione, gestione e analisi**. Per estrarre valore da questi dati sono necessari **approcci di elaborazione alternativi**.
+
+Non esiste una definizione univoca, ma i Big Data sono comunemente caratterizzati da cinque dimensioni, note come le **"cinque V"**: Volume, Velocità, Varietà, Veridicità e Valore.
+
+### Le tre V classiche
+
+- **Volume**: l'enorme quantità di dati generati e archiviati. La gestione di tali volumi richiede soluzioni che vadano oltre i database relazionali tradizionali, come i **sistemi NoSQL** e l'**elaborazione distribuita**.
+- **Velocità**: la rapidità con cui i dati vengono generati, trasmessi ed elaborati. È cruciale per ottenere **feedback in tempo reale** e supportare decisioni tempestive.
+- **Varietà**: la diversità dei formati dei dati, che possono includere tabelle strutturate, log, JSON, XML, testo, immagini, video e audio. L'eterogeneità richiede processi di **integrazione** sofisticati per estrarre informazioni significative.
+
+### Le dimensioni aggiuntive
+
+- **Veridicità**: il grado di **affidabilità e qualità** dei dati. I dati possono essere incompleti, rumorosi o ambigui, rendendo essenziale la gestione dell'incertezza e la validazione dei risultati.
+- **Valore**: la capacità di trasformare i dati in **conoscenze e benefici concreti**, generando un vantaggio competitivo per l'organizzazione. Implica non solo l'analisi, ma anche la capacità di rendere i dati accessibili e di stimolare una **cultura data-driven**.
+
+| V | Domanda chiave | Implicazione tecnologica |
+|---|---|---|
+| **Volume** | Quanti dati? | NoSQL, elaborazione distribuita |
+| **Velocità** | Quanto in fretta arrivano / vanno elaborati? | Elaborazione in tempo reale |
+| **Varietà** | In quali formati? | Integrazione di dati eterogenei |
+| **Veridicità** | Quanto sono affidabili? | Gestione dell'incertezza, validazione |
+| **Valore** | Cosa se ne ricava? | Analisi, accessibilità, cultura data-driven |
+
+<Callout type="insight">
+
+Le implicazioni delle cinque dimensioni sono profonde: le fasi di **acquisizione, pulizia, integrazione e analisi** devono tenere conto dell'eterogeneità e della qualità dei dati, oltre che della necessità di estrarre valore pratico. L'elaborazione di dataset di grandi dimensioni richiede metodi che superano i database relazionali, adottando spesso **tecnologie NoSQL**, **elaborazione distribuita** e **tecniche di machine learning**.
+
+</Callout>
+
+## La pipeline dell'analisi dei Big Data
+
+L'analisi dei dati è un **percorso strutturato** che trasforma grandi quantità di dati grezzi in conoscenza utile per decisioni, azioni e innovazione. I Big Data riflettono **processi reali sottostanti** (sensori, simulazioni, esperimenti).
+
+Il ciclo di vita dell'analisi si articola in diverse fasi: **acquisizione**, **estrazione e pulizia**, **integrazione**, **modellazione** e **interpretazione**. Ogni fase presenta sfide tecniche specifiche (eterogeneità, inconsistenza, qualità dei dati) e richiede un approccio **interdisciplinare** che combina ingegneria dei dati, statistica, machine learning e NLP.
+
+```mermaid
+flowchart LR
+    A["1. Acquisizione"] --> B["2. Estrazione e pulizia"]
+    B --> C["3. Integrazione, aggregazione e rappresentazione"]
+    C --> D["4. Modellazione e analisi"]
+    D --> E["5. Interpretazione e uso"]
+    E -. "nuove ipotesi" .-> D
+```
+
+### 1. Acquisizione dei dati
+
+È la fase iniziale in cui i dati vengono raccolti da diverse fonti. I Big Data sono spesso troppo voluminosi per essere archiviati integralmente, rendendo essenziali il **filtraggio** e la **compressione**. L'acquisizione deve essere **efficiente e incrementale** per supportare un'elaborazione scalabile.
+
+**Sfide principali:**
+
+- **Volume e overflow**: gestire flussi continui di dati ad alta velocità.
+- **Filtraggio online**: progettare filtri che riducano il volume senza perdere informazioni preziose.
+- **Rilevamento di anomalie**: distinguere valori anomali (che possono indicare sensori difettosi o eventi critici) dal rumore.
+- **Eterogeneità delle fonti**: dati provenienti da sensori, esperimenti, log di sistemi, social media, ecc.
+- **Provenienza dei dati (data provenance)**: tracciare l'origine e le trasformazioni dei dati per garantire tracciabilità e responsabilità.
+
+**Aspetti tecnici:** incrementalità per l'ingestione progressiva; bilanciamento tra **perdita di informazione** e **riduzione dello spazio** di memorizzazione tramite filtraggio e compressione; protezione della **sicurezza e privacy** dei dati. Linguaggi di scripting come **Perl** e **Python** sono strumenti essenziali per manipolare flussi e trasformare dati durante l'acquisizione.
+
+### 2. Estrazione e pulizia delle informazioni
+
+Dopo l'acquisizione, le informazioni raccolte spesso non sono in un formato pronto per l'analisi. Questa fase mira a **estrarre i dati richiesti** e **riformattarli** in una struttura adatta all'analisi. La **pulizia** include la correzione di errori e la gestione di dati rumorosi, inconsistenti o incompleti.
+
+**Sfide principali:**
+
+- **Differenze di formato ed eterogeneità strutturale/semantica**: gestire dati con strutture diverse provenienti da fonti eterogenee.
+- **Fonti di errore**: dati provenienti da sensori difettosi, opinioni distorte o dati remoti obsoleti.
+- **Qualità dei dati**: gestire mancanze, incongruenze e il "caos linguistico", specialmente con testo o linguaggio naturale.
+
+**Aspetti tecnici:** **normalizzazione e standardizzazione** per allineare formati, tipi, unità e scale; gestione delle lacune tramite **imputazione** o robustezza alle assenze; tracciabilità dei **metadata** e del contesto di origine. L'uso di scripting e pipeline di pulizia (**data conditioning**, **data wrangling**) è cruciale per normalizzare i dati.
+
+### 3. Integrazione, aggregazione e rappresentazione dei dati
+
+Un'analisi efficace su larga scala richiede l'**integrazione di dati eterogenei** da molte fonti. Questa fase si concentra sulla fusione dei dati per risolvere l'eterogeneità strutturale e semantica, sebbene l'impegno economico possa essere elevato. L'integrazione porta alla produzione di **dati derivati** e solleva problemi di tracciabilità dell'origine.
+
+**Sfide principali:**
+
+- **Eterogeneità di strutture e semantiche**: schemi diversi richiedono mappature semantiche accurate.
+- **Costo e complessità**: l'integrazione completa è spesso onerosa in termini di risorse e tempo.
+- **Provenance e governance**: tracciare l'origine e le elaborazioni dei dati è cruciale per la fiducia e la riproducibilità.
+- **Dati su larga scala e "data islands"**: gestire dati che risiedono in sistemi eterogenei e non immediatamente integrabili.
+
+**Aspetti tecnici:** tecniche di **trasformazione e normalizzazione** per mappare etichette, schemi e semantiche; gestione della **derivazione** per tracciare la catena di trasformazioni; produzione di dataset derivati con responsabilità di tracciabilità. La scalabilità è supportata da strumenti e architetture come **NoSQL**, **MapReduce** e **Spark** per gestire grandi volumi di dati non relazionali o poco strutturati.
+
+### 4. Modellazione e analisi
+
+Questa fase si concentra sull'**estrazione di conoscenza** dai dati. I Big Data presentano rumore, dinamicità, eterogeneità e potenziale inaffidabilità, richiedendo approcci che possono differire dalle analisi statistiche tradizionali. La modellazione include **machine learning**, **statistica**, **data mining** e **analisi di correlazioni**.
+
+**Sfide principali:**
+
+- **Rumore, dinamismo ed eterogeneità**: gestire dati rumorosi, in continuo cambiamento e provenienti da fonti diverse.
+- **Scalabilità computazionale**: utilizzare tecniche di processamento distribuito (MapReduce, Hadoop, Spark) per dataset molto grandi.
+- **Complessità dei modelli**: scegliere tra modelli come regressione lineare, alberi decisionali, reti neurali ed ensemble per **bilanciare bias e varianza**.
+- **Selezione e ingegneria delle caratteristiche (feature engineering)**: definire quali attributi utilizzare e come trasformarli per migliorare le prestazioni.
+- **Interpretazione dei risultati**: fornire contesto, ipotesi e supportare decisioni tramite evidenze.
+
+**Aspetti tecnici:**
+
+- **Librerie di ML e deep learning**: Python con TensorFlow, PyTorch, Scikit-Learn; R con caret.
+- **Metodologie di apprendimento**: supervisionato vs non supervisionato.
+- **Pipeline ML classiche**: preparazione dati, addestramento, valutazione, validazione incrociata, testing.
+- **Overfitting e generalizzazione**, affrontati con metriche di valutazione come **precision**, **recall**, **F-measure**, **AUC** e **confusion matrix**.
+- **Modelli di riferimento**: regressione lineare, alberi, k-NN, clustering (k-means, DBSCAN), ensemble learning (Bagging, Boosting).
+
+### 5. Interpretazione e uso delle conoscenze
+
+È la fase finale, in cui i risultati dell'analisi vengono esaminati e utilizzati per **prendere decisioni**. È cruciale considerare ipotesi, vincoli e l'**intera catena analitica**, riconoscendo che le fonti di errore possono includere bug di sistema, assunzioni dei modelli o dati errati. L'obiettivo è **supportare il ragionamento umano**.
+
+La **prospettiva umana** è centrale: la **visual analytics** facilita l'interpretazione dei risultati attraverso visualizzazioni efficaci. La **collaborazione tra esperti** è fondamentale per formulare opinioni ben supportate dai dati e per ripetere l'analisi con diverse ipotesi.
+
+## Sfide comuni trasversali
+
+### Eterogeneità
+
+Gli algoritmi richiedono **input strutturati e omogenei**, a differenza degli esseri umani che possono gestire dati disordinati. Una sfida chiave è generare **metadata accurati** (data provenance) e tracciare dipendenze ed errori, poiché **un singolo errore di elaborazione può invalidare i risultati successivi**.
+
+### Inconsistenza e incompletezza
+
+I Big Data provenienti da fonti diverse sono spesso caratterizzati da incertezze, errori e valori mancanti. La **scala e la ridondanza** possono aiutare a riempire valori mancanti e verificare informazioni contrastanti. La **robustezza** è essenziale quando i dati non sono perfetti. Lavorare con il linguaggio umano aggiunge complessità a causa dell'**ambiguità semantica**, rendendo l'input umano (es. **crowdsourcing**) utile nei casi difficili.
+
+### Qualità dei dati
+
+Dati mancanti e incongruenti sono comuni. L'analisi deve essere **robusta** a tali lacune, impiegando strategie di **imputazione** e gestione dell'incertezza. Nel contesto del linguaggio naturale, la gestione di ambiguità e significati multipli richiede attenzione, poiché i modelli possono fallire senza contesto o annotazione adeguata.
+
+## Data Science e Big Data
+
+La **data science** è una disciplina multidisciplinare che combina matematica, statistica, intelligenza artificiale e ingegneria, con competenze di **business** e **storytelling**. La **visual analytics** è uno strumento chiave per comunicare i risultati e supportare le decisioni, rendendo i dati comprensibili all'utente finale.
+
+<Callout type="example">
+
+- **CDDB (Gracenote)**: ha trasformato la musica in dati, usando la **lunghezza delle tracce come firma digitale** per il riconoscimento degli album.
+- **Google**: ha usato i **log degli utenti** (click, errori di battitura) per migliorare il correttore ortografico e per **prevedere epidemie** (influenza).
+
+</Callout>
+
+### Valore generato dai Big Data
+
+L'analisi dei Big Data genera valore significativo per le organizzazioni in diverse aree:
+
+- **Trasparenza**: rendere i dati accessibili alle persone giuste, in tempo reale, aumenta la fiducia e la comprensione all'interno dell'organizzazione.
+- **Sperimentazione e miglioramento delle performance**: la raccolta continua di dati consente esperimenti su larga scala per comprendere i bisogni dei clienti e ottimizzare i processi, permettendo interventi mirati e misurabili.
+- **Segmentazione delle popolazioni**: l'analisi di grandi dataset permette di individuare segmenti di clienti con caratteristiche diverse, consentendo la personalizzazione di offerte e interventi di marketing.
+- **Supporto o automazione del processo decisionale**: analisi avanzate e algoritmi possono supportare o sostituire decisioni umane, riducendo i rischi e rivelando intuizioni altrimenti invisibili.
+- **Stimolo all'innovazione**: i Big Data forniscono le basi per lo sviluppo di nuove offerte, il miglioramento di prodotti esistenti e la creazione di modelli di business innovativi.
+
+## Introduzione alla Data Science
+
+La **Data Science** è una disciplina in rapida evoluzione che si colloca all'intersezione di diversi campi del sapere, con l'obiettivo primario di **estrarre conoscenza e valore dai dati**. Non è un campo monolitico, ma un approccio **intrinsecamente multidisciplinare** che combina principi e pratiche di matematica, statistica, intelligenza artificiale (AI) e ingegneria informatica. Il suo scopo è analizzare grandi volumi di dati per scoprire e spiegare **insight di business nascosti**.
+
+Può essere definita come lo **studio dei dati volto a estrarre informazioni significative** per il mondo del lavoro e del business, unendo metodo scientifico, matematica e statistica, programmazione specializzata, analisi avanzata, AI e persino storytelling.
+
+<Callout type="warning">
+
+È fondamentale distinguere la Data Science dalle semplici **"applicazioni guidate dai dati"**, che si limitano alla **gestione e presentazione** dei dati. La vera Data Science mira a una **comprensione profonda** e alla generazione di **conoscenza predittiva o prescrittiva**.
+
+</Callout>
+
+### Competenze fondamentali del Data Scientist
+
+Il ruolo del Data Scientist richiede un insieme di competenze **eterogeneo e ben bilanciato**. Studi di settore, come quello condotto sui Data Scientist di **Microsoft**, evidenziano l'importanza di un mix di skill in questi ambiti:
+
+- **Business / dominio specifico**: una profonda comprensione del settore di applicazione è cruciale. Il Data Scientist deve comprendere i problemi di business, formulare le domande giuste e interpretare i risultati nel contesto aziendale, trasformando i dati in decisioni strategiche.
+- **Statistica e matematica**: indispensabili per comprendere i dati, scegliere i modelli appropriati, interpretare i risultati e quantificare l'incertezza. Include probabilità, statistica inferenziale, algebra lineare e calcolo.
+- **Programmazione e ingegneria del software**: saper scrivere codice efficiente e scalabile. Python e R sono ampiamente utilizzati, insieme a librerie specifiche per l'analisi dati e il machine learning. È altrettanto importante la conoscenza di database (SQL, NoSQL) e di piattaforme di Big Data.
+- **Machine Learning (ML) e Big Data**: la padronanza degli algoritmi di ML, supervisionati e non, è centrale per costruire modelli predittivi, di classificazione, di clustering e per estrarre pattern complessi. Saper lavorare con grandi volumi di dati su piattaforme distribuite è un requisito sempre più diffuso.
+
+<Callout type="note">
+
+Lo studio sui Data Scientist in Microsoft ha rivelato che le competenze più citate sono: **Business**, **ML/Big Data**, **Matematica e Ricerca Operativa**, **Programmazione** e **Statistica**.
+
+</Callout>
+
+### Attività tipiche di un Data Scientist
+
+Le attività di un Data Scientist sono variegate e seguono generalmente una **pipeline di analisi dei dati**:
+
+1. **Acquisizione e raccolta dati**: identificare e raccogliere dati da fonti diverse, gestendo il **Volume** e la **Velocità** dei Big Data.
+2. **Estrazione, pulizia e annotazione**: estrarre le informazioni rilevanti, gestirne l'eterogeneità e pulire i dati da errori, valori mancanti o incongruenze (**Varietà** e **Veridicità**). Questo processo, noto come **data wrangling**, è spesso la fase più dispendiosa in termini di tempo.
+3. **Integrazione, aggregazione e rappresentazione**: combinare dati da fonti eterogenee, trasformarli in formati adatti all'analisi e rappresentarli efficacemente.
+4. **Analisi e modellazione**: applicare tecniche statistiche e algoritmi di ML per scoprire pattern, costruire modelli predittivi e trarre insight. Include la costruzione di modelli predittivi (**Modeling Specialist**) e l'uso di piattaforme cloud di Big Data.
+5. **Interpretazione e visualizzazione**: tradurre i risultati tecnici in insight comprensibili per gli stakeholder aziendali. La visual analytics gioca un ruolo chiave nel rendere i dati accessibili e nel far "raccontare la propria storia" ai dati.
+6. **Comunicazione degli insight**: presentare risultati e raccomandazioni ai leader aziendali, fungendo da **Insight Provider**.
+7. **Costruzione di piattaforme e data engineering**: alcuni Data Scientist si dedicano allo sviluppo di piattaforme di data engineering per raccogliere ed elaborare grandi quantità di dati (**Platform Builders**).
+8. **Operazionalizzazione degli insight**: integrare modelli e insight nel processo decisionale o nei prodotti aziendali.
+
+Le attività più comuni includono l'analisi dei dati di prodotto e dei clienti, la comunicazione dei risultati, la costruzione di modelli predittivi e l'uso di piattaforme cloud per l'analisi di grandi volumi di dati.
+
+### Sfide tipiche del Data Scientist
+
+Il percorso del Data Scientist è costellato di sfide che richiedono non solo competenze tecniche, ma anche **resilienza** e capacità di **problem-solving**:
+
+- **Qualità e disponibilità dei dati**: i dati sono spesso di scarsa qualità, incompleti, rumorosi o provengono da fonti non affidabili. Mancanza di dati, ritardi nella disponibilità, problemi di accesso e difficoltà nel trovare le fonti giuste sono ostacoli comuni. Il Data Scientist deve essere robusto rispetto a questi difetti e saper gestire l'incertezza.
+- **Preparazione dei dati**: integrare dati da fonti diverse (**"data islands"** o **"silos"**), comprenderne il significato (spesso poco documentato o ambiguo) e trasformarli nel formato corretto è un compito complesso e dispendioso.
+- **Scala e complessità computazionale**: gestire enormi volumi di dati presenta sfide computazionali significative. I workflow iterativi possono richiedere molto tempo e la visualizzazione rapida di grandi dataset è difficile. L'accesso agli strumenti giusti può essere complicato, poiché **non esiste uno strumento unico** che risolva la maggior parte dei problemi.
+- **Machine learning e modellazione**: scegliere e applicare correttamente gli algoritmi di ML, gestire il feature engineering, valutare diversi modelli, estrarre il segnale corretto dai dati e definire il livello di confidenza appropriato sono compiti complessi. Spesso i clienti si aspettano risultati "magici" senza una chiara definizione del problema, e il Data Scientist deve gestire le aspettative su accuratezza e tempi di sviluppo.
+- **Comunicazione e gestione delle aspettative**: convincere i team del valore della Data Science, ottenere supporto per la raccolta di dati di alta qualità e comunicare efficacemente gli insight a leader e stakeholder sono sfide interpersonali cruciali.
+- **Mantenersi aggiornati**: il campo è in continua evoluzione, con nuovi strumenti, tecniche e algoritmi; restare aggiornati pur avendo altre responsabilità è una sfida continua.
+- **Validazione e fiducia**: garantire correttezza e affidabilità dei risultati è fondamentale. Tecniche come la **cross-validation**, il confronto con dati storici o pubblicati, la validazione da parte del team e il controllo della distribuzione dei dati sono essenziali per costruire fiducia nei risultati.
+
+<Callout type="insight">
+
+In sintesi, il Data Scientist è una figura professionale **poliedrica**, essenziale per le organizzazioni che vogliono sfruttare il potenziale dei propri dati. Richiede una solida base tecnica, mentalità analitica, capacità di problem-solving e una forte attitudine alla **comunicazione** e alla **collaborazione**, per navigare la complessità del mondo dei dati e trasformarla in valore tangibile.
+
+</Callout>
+
+---
+
+## Riepilogo
+
+| Concetto | Descrizione |
+|---|---|
+| **Big Data** | Dati la cui dimensione e complessità superano le capacità dei database tradizionali; richiedono elaborazione alternativa |
+| **Cinque V** | Volume, Velocità, Varietà (classiche) + Veridicità e Valore |
+| **Pipeline di analisi** | Acquisizione → Estrazione e pulizia → Integrazione → Modellazione e analisi → Interpretazione |
+| **Acquisizione** | Raccolta incrementale con filtraggio online e compressione; anomalie e data provenance |
+| **Estrazione e pulizia** | Normalizzazione, standardizzazione, imputazione; data conditioning / data wrangling |
+| **Integrazione** | Fusione di fonti eterogenee, mappature semantiche, data islands; NoSQL, MapReduce, Spark |
+| **Modellazione e analisi** | ML, statistica, data mining; bias-varianza, feature engineering; precision, recall, F-measure, AUC |
+| **Interpretazione** | Supporto al ragionamento umano; visual analytics e collaborazione tra esperti |
+| **Sfide trasversali** | Eterogeneità, inconsistenza/incompletezza, qualità dei dati |
+| **Data provenance** | Tracciamento di origine e trasformazioni dei dati per tracciabilità e riproducibilità |
+| **Valore dei Big Data** | Trasparenza, sperimentazione, segmentazione, supporto alle decisioni, innovazione |
+| **Data Science** | Disciplina multidisciplinare per estrarre conoscenza predittiva/prescrittiva dai dati |
+| **Competenze del Data Scientist** | Business/dominio, statistica e matematica, programmazione, ML e Big Data |
+| **Ruoli** | Insight Provider, Modeling Specialist, Platform Builder |
+| **Sfide del Data Scientist** | Qualità dei dati, preparazione, scala, modellazione, comunicazione, aggiornamento, validazione |
